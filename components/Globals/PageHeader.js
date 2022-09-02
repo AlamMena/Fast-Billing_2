@@ -8,7 +8,7 @@ export default function PageHeader({ header, ubicationRoutes }) {
       <div role="presentation">
         <Breadcrumbs
           aria-label="breadcrumb"
-          separator={<CircleIcon className="w-1" />}
+          separator={<div className="w-1 h-1 rounded-full bg-neutral-500" />}
         >
           {ubicationRoutes.map((item, index) => {
             return (

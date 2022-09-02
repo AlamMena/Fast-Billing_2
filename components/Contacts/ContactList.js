@@ -39,7 +39,7 @@ export default function ContactList({ setFormOpen, setFormData, data }) {
   const columns = [
     {
       field: "id",
-      width: 100,
+      width: 90,
       headerName: "Id",
     },
     {
@@ -53,7 +53,7 @@ export default function ContactList({ setFormOpen, setFormData, data }) {
               className=" rounded-xl w-10 h-10"
               src="https://cdn-icons-png.flaticon.com/128/3135/3135768.png"
             />
-            <span className="font-semibold">{cells.row.name}</span>
+            <span className="font-semibold ">{cells.row.name}</span>
           </div>
         );
       },
@@ -65,7 +65,7 @@ export default function ContactList({ setFormOpen, setFormData, data }) {
     },
     {
       field: "phoneNumber",
-      width: 200,
+      width: 170,
       headerName: "Phone Number",
     },
     {
