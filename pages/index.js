@@ -1,6 +1,5 @@
 import Head from "next/head";
 import Image from "next/image";
-import styles from "../styles/Home.module.css";
 
 export default function Home() {
   return (
@@ -22,8 +21,9 @@ export default function Home() {
         </div>
         <div className="flex">
           <img
-            className=" md:w-72 h-full"
-            src="https://o.remove.bg/downloads/bca21c1b-8ee8-49c6-87d5-f9e1afd74d07/4fda4547e5a26974564b08bbd8753b4f-removebg-preview.png"
+            alt="welcome image"
+            className=" md:w-72 h-full w-64 "
+            src="/dashboard_welcome.png"
           ></img>
         </div>
 

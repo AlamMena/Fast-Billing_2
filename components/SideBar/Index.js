@@ -34,7 +34,7 @@ export default function Index() {
             className={` ${!open ? "flex" : "hidden"} md:hidden m-4`}
             onClick={() => setOpen(true)}
           />
-          <SearchRounded />
+          <SearchRounded className="cursor-pointer" />
         </div>
 
         <div className="flex items-center space-x-4">
