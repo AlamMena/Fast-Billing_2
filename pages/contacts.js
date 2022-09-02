@@ -21,7 +21,7 @@ export default function Contacts() {
     },
   ];
   return (
-    <div className="w-full px-8 md:pr-8 flex flex-col">
+    <div className="w-full md:px-0 px-4 md:pr-8 flex flex-col">
       <div className="flex w-full justify-between items-center pr-8">
         <div>
           <PageHeader header="Contacts" ubicationRoutes={ubicationsRoutes} />
@@ -33,7 +33,7 @@ export default function Contacts() {
             onClick={() => setFormOpen(true)}
             startIcon={<Add className="text-white" />}
           >
-            <span className="text-sm text-neutral-50 capitalize font-bold">
+            <span className="text-sm whitespace-nowrap text-neutral-50 capitalize font-bold">
               New contact
             </span>
           </Button>

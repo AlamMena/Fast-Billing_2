@@ -15,7 +15,7 @@ import {
   Tabs,
   TextField,
 } from "@mui/material";
-import { DataGrid } from "@mui/x-data-grid";
+import { DataGrid, GridToolBar } from "@mui/x-data-grid";
 import { useState } from "react";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
@@ -43,7 +43,7 @@ export default function ContactList({ setFormOpen, setFormData, data }) {
       headerName: "Id",
     },
     {
-      field: "Image",
+      field: "name",
       width: "250",
       headerName: "Name",
       renderCell: (cells) => {
@@ -189,6 +189,14 @@ export default function ContactList({ setFormOpen, setFormData, data }) {
 
       <div className="h-96 w-full my-2">
         <DataGrid
+          components={{ Toolbar: GridToolBar }}
+          onSelectionModelChange={(row) => {
+            Alert.fire({
+              title: <strong>Success!</strong>,
+              html: <span>{row.map((item) => item)}</span>,
+              icon: "success",
+            });
+          }}
           rows={[
             {
               id: 1,
@@ -199,7 +207,7 @@ export default function ContactList({ setFormOpen, setFormData, data }) {
               noIdentification: "402-1389-763-6",
             },
             {
-              id: 1,
+              id: 2,
               name: "Jhon Doe",
               image: "/",
               phoneNumber: "1-800-99212-1",
@@ -207,7 +215,7 @@ export default function ContactList({ setFormOpen, setFormData, data }) {
               noIdentification: "402-1389-763-6",
             },
             {
-              id: 2,
+              id: 3,
               name: "Dean Shum",
               image: "/",
               phoneNumber: "1-800-91223-1",
@@ -215,7 +223,7 @@ export default function ContactList({ setFormOpen, setFormData, data }) {
               noIdentification: "402-1389-763-6",
             },
             {
-              id: 3,
+              id: 4,
               name: "Julio Verne",
               image: "/",
               phoneNumber: "1-800-82023-1",
@@ -223,7 +231,7 @@ export default function ContactList({ setFormOpen, setFormData, data }) {
               noIdentification: "402-1389-763-6",
             },
             {
-              id: 4,
+              id: 5,
               name: "Chris Dalie",
               image: "/",
               phoneNumber: "1-800-12481-1",
