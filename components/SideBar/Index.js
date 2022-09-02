@@ -1,31 +1,26 @@
 import {
-  BoyRounded,
-  Dashboard,
-  Home,
-  HomeOutlined,
   HomeRounded,
   MenuBookRounded,
   MenuRounded,
-  Notifications,
-  NotificationsRounded,
   RoomRounded,
   RouteRounded,
-  SearchOffOutlined,
-  SearchOutlined,
   SearchRounded,
-  VerifiedUserRounded,
 } from "@mui/icons-material";
-import { Menu, MenuItem, Slide } from "@mui/material";
+import { Menu, MenuItem, Popover, Slide, Typography } from "@mui/material";
 import { useState } from "react";
 import { BiUser, BsGrid } from "react-icons/bi";
+import ProfilePopOver from "./ProfilePopOver";
+import NotificationPopOver from "./NotificationPopOver";
+
 export default function Index() {
   const [open, setOpen] = useState(true);
+
   return (
     <div className="flex flex-col ">
       <div
         className={`${
           !open && "hidden"
-        } md:hidden transition-all duration-300 bg-gradient-to-l from-neutral-700 bg-opacity-90 absolute inset-0 z-`}
+        } md:hidden transition-all duration-300 bg-gradient-to-l from-neutral-700 bg-opacity-90 absolute inset-0 z-50`}
         onClick={() => setOpen(false)}
       />
       <div className="md:ml-64 md:px-8 px-2 flex justify-between my-4 items-center shadow-sm">
@@ -39,15 +34,16 @@ export default function Index() {
 
         <div className="flex items-center space-x-4">
           <img
-            className="w-6 h-6 mx-2"
+            className="w-6 h-6 mx-2 appBar-button-animation"
             src="https://cdn-icons-png.flaticon.com/128/299/299901.png"
           />
-          <NotificationsRounded />
 
-          <img
+          <NotificationPopOver />
+          <ProfilePopOver />
+          {/* <img
             className="rounded-full w-12 h-12"
             src="https://cdn-icons-png.flaticon.com/128/2202/2202112.png"
-          />
+          /> */}
         </div>
       </div>
       <div
@@ -80,9 +76,12 @@ export default function Index() {
             { text: "Products", Icon: <RoomRounded /> },
             { text: "Contacts", Icon: <RouteRounded /> },
             { text: "Configuration", Icon: <MenuBookRounded /> },
-          ].map((item) => {
+          ].map((item, index) => {
             return (
-              <div className="flex items-center w-full space-x-2 text-slate-500 hover:bg-green-50 hover:text-green-600 py-2 px-4 rounded-xl cursor-pointer">
+              <div
+                key={index}
+                className="flex items-center w-full space-x-2 text-slate-500 hover:bg-green-50 hover:text-green-600 py-2 px-4 rounded-xl cursor-pointer"
+              >
                 {item.Icon}
                 <span className=" text-sm">{item.text}</span>
               </div>
@@ -95,9 +94,12 @@ export default function Index() {
           { text: "Products", Icon: <RoomRounded /> },
           { text: "Contacts", Icon: <RouteRounded /> },
           { text: "Configuration", Icon: <MenuBookRounded /> },
-        ].map((item) => {
+        ].map((item, index) => {
           return (
-            <div className="flex items-center w-full space-x-2 text-slate-500 hover:bg-green-50 hover:text-green-600 py-2 px-4 rounded-xl cursor-pointer">
+            <div
+              key={index}
+              className="flex items-center w-full space-x-2 text-slate-500 hover:bg-green-50 hover:text-green-600 py-2 px-4 rounded-xl cursor-pointer"
+            >
               {item.Icon}
               <span className=" text-sm">{item.text}</span>
             </div>
@@ -110,9 +112,12 @@ export default function Index() {
           { text: "Products", Icon: <RoomRounded /> },
           { text: "Contacts", Icon: <RouteRounded /> },
           { text: "Configuration", Icon: <MenuBookRounded /> },
-        ].map((item) => {
+        ].map((item, index) => {
           return (
-            <div className="flex items-center w-full space-x-2 text-slate-500 hover:bg-green-50 hover:text-green-600 py-2 px-4 rounded-xl cursor-pointer">
+            <div
+              key={index}
+              className="flex items-center w-full space-x-2 text-slate-500 hover:bg-green-50 hover:text-green-600 py-2 px-4 rounded-xl cursor-pointer"
+            >
               {item.Icon}
               <span className=" text-sm">{item.text}</span>
             </div>
@@ -125,9 +130,12 @@ export default function Index() {
           { text: "Products", Icon: <RoomRounded /> },
           { text: "Contacts", Icon: <RouteRounded /> },
           { text: "Configuration", Icon: <MenuBookRounded /> },
-        ].map((item) => {
+        ].map((item, index) => {
           return (
-            <div className="flex items-center w-full space-x-2 text-slate-500 hover:bg-green-50 hover:text-green-600 py-2 px-4 rounded-xl cursor-pointer">
+            <div
+              key={index}
+              className="flex items-center w-full space-x-2 text-slate-500 hover:bg-green-50 hover:text-green-600 py-2 px-4 rounded-xl cursor-pointer"
+            >
               {item.Icon}
               <span className=" text-sm">{item.text}</span>
             </div>

@@ -10,9 +10,10 @@ export default function PageHeader({ header, ubicationRoutes }) {
           aria-label="breadcrumb"
           separator={<CircleIcon className="w-1" />}
         >
-          {ubicationRoutes.map((item) => {
+          {ubicationRoutes.map((item, index) => {
             return (
               <Link
+                key={index}
                 underline="hover"
                 color="inherit"
                 className="text-sm"

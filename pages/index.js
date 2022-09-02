@@ -9,10 +9,10 @@ export default function Home() {
           <span className="font-semibold text-2xl tracking-wider">
             Welcome back Alam
           </span>
-          <span className="text-xs mt-4">
+          <p className="text-xs mt-4">
             If you are going to use a passage of Lorem Ipsum, you need to be
-            sure there isn't anything.
-          </span>
+            sure there is not anything
+          </p>
           <div className="flex w-full justify-center md:justify-start my-4">
             <button className=" my-4 shadow-sm w-24 bg-green-500 py-2 px-4 text-xs rounded-xl text-white">
               Go now
@@ -22,9 +22,9 @@ export default function Home() {
         <div className="flex">
           <img
             alt="welcome image"
-            className=" md:w-72 h-full w-64 "
+            className="md:w-72 h-full w-64"
             src="/dashboard_welcome.png"
-          ></img>
+          />
         </div>
 
         {/* <video

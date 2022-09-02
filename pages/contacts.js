@@ -21,22 +21,25 @@ export default function Contacts() {
     },
   ];
   return (
-    <div className="w-full pr-8 flex flex-col">
+    <div className="w-full px-8 md:pr-8 flex flex-col">
       <div className="flex w-full justify-between items-center pr-8">
-        <PageHeader header="Contacts" ubicationRoutes={ubicationsRoutes} />
-        <Button
-          className="shadow-xl rounded-xl py-2 bg-green-600 hover:bg-green-800"
-          variant="contained"
-          onClick={() => setFormOpen(true)}
-          startIcon={<Add className="text-white" />}
-          disableRipple
-        >
-          <span className="text-sm text-neutral-50 capitalize font-bold">
-            New contact
-          </span>
-        </Button>
+        <div>
+          <PageHeader header="Contacts" ubicationRoutes={ubicationsRoutes} />
+        </div>
+        <div className="flex">
+          <Button
+            className=" z-auto rounded-xl py-2 bg-green-600 hover:bg-green-800"
+            variant="contained"
+            onClick={() => setFormOpen(true)}
+            startIcon={<Add className="text-white" />}
+          >
+            <span className="text-sm text-neutral-50 capitalize font-bold">
+              New contact
+            </span>
+          </Button>
+        </div>
       </div>
-      <ContactList />
+      <ContactList setFormOpen={setFormOpen} />
       <ContactForm open={formOpen} setOpen={setFormOpen} />
     </div>
   );

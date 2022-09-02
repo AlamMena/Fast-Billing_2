@@ -29,6 +29,7 @@ function MyApp({ Component, pageProps }) {
         <SideBar />
         <div className="md:ml-72">
           <Component {...pageProps} />
+          <div className="my-8"></div>
         </div>
       </div>
     </ThemeProvider>

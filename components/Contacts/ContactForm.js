@@ -2,9 +2,13 @@ import {
   ArticleOutlined,
   BadgeOutlined,
   BadgeRounded,
+  ContactsOutlined,
+  ContactsRounded,
   PermIdentityRounded,
   PermIdentitySharp,
   PhoneOutlined,
+  RampRightOutlined,
+  RouteOutlined,
 } from "@mui/icons-material";
 import {
   Button,
@@ -16,6 +20,9 @@ import {
   InputAdornment,
   FormControl,
   InputLabel,
+  Select,
+  MenuItem,
+  FormHelperText,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -55,11 +62,7 @@ export default function ContactForm({ onSave, open, setOpen, data }) {
             <h2 className="text-xl font-bold">Contact Form </h2>
 
             <FormControl>
-              <InputLabel
-                className="text-sm"
-                size="small"
-                htmlFor="outlined-adornment-name"
-              >
+              <InputLabel size="small" htmlFor="outlined-adornment-name">
                 Full Name
               </InputLabel>
               <OutlinedInput
@@ -67,65 +70,82 @@ export default function ContactForm({ onSave, open, setOpen, data }) {
                 id="outlined-adornment-name"
                 label="Full Name"
                 size="small"
-                className="rounded-xl text-sm"
+                className="rounded-xl"
                 variant="outlined"
                 startAdornment={
                   <InputAdornment position="start">
-                    <BadgeOutlined className="text-sm" />
+                    <BadgeOutlined />
                   </InputAdornment>
                 }
               />
             </FormControl>
-            <div className="flex w-full space-x-4">
-              <FormControl>
-                <InputLabel
-                  className="text-sm"
-                  htmlFor="outlined-adornment-identification"
-                >
+            <div className="flex w-full items-center space-x-4">
+              {/* <FormControl>
+                <InputLabel htmlFor="outlined-adornment-identification'type">
                   Identification Type
                 </InputLabel>
                 <OutlinedInput
                   {...register("name")}
-                  id="outlined-adornment-identification"
+                  id="outlined-adornment-identification'type"
                   label="Identification Type"
                   size="small"
-                  className="rounded-xl text-sm"
+                  className="rounded-xl"
                   variant="outlined"
                   startAdornment={
                     <InputAdornment position="start">
-                      <ArticleOutlined className="text-sm" />
+                      <ArticleOutlined />
                     </InputAdornment>
                   }
                 />
+              </FormControl> */}
+              <FormControl className=" w-52">
+                <InputLabel id="select-type-identification">
+                  Identification type
+                </InputLabel>
+                <Select
+                  {...register("notificationType")}
+                  labelId="select-type-identification"
+                  id="select-type-identificationr"
+                  value={10}
+                  size="small"
+                  className="rounded-xl text-md"
+                  label="Identification type"
+                  startAdornment={
+                    <InputAdornment position="start">
+                      <ArticleOutlined />
+                    </InputAdornment>
+                  }
+                  // onChange={handleChange}
+                >
+                  <MenuItem className="text-sm" value={10}>
+                    cedula
+                  </MenuItem>
+                  <MenuItem value={20}>Pasaporte</MenuItem>
+                  <MenuItem value={30}>Rnc</MenuItem>
+                </Select>
+                {/* <FormHelperText>With label + helper text</FormHelperText> */}
               </FormControl>
               <FormControl>
-                <InputLabel
-                  className="text-sm"
-                  htmlFor="outlined-adornment-identification"
-                >
+                <InputLabel htmlFor="outlined-adornment-identification">
                   No. Identification
                 </InputLabel>
                 <OutlinedInput
                   {...register("name")}
-                  id="standard-basic"
+                  id="outlined-adornment-identification"
                   label=" No. Identification"
                   size="small"
-                  className="rounded-xl text-sm"
+                  className="rounded-xl text-md"
                   variant="outlined"
                   startAdornment={
                     <InputAdornment position="start">
-                      <ArticleOutlined className="text-sm" />
+                      <ArticleOutlined />
                     </InputAdornment>
                   }
                 />
               </FormControl>
             </div>
             <FormControl>
-              <InputLabel
-                className="text-sm"
-                size="small"
-                htmlFor="outlined-adornment-phone"
-              >
+              <InputLabel size="small" htmlFor="outlined-adornment-phone">
                 Phone Number
               </InputLabel>
               <OutlinedInput
@@ -133,11 +153,52 @@ export default function ContactForm({ onSave, open, setOpen, data }) {
                 id="outlined-adornment-phone"
                 label="Phone number"
                 size="small"
-                className="rounded-xl text-sm"
+                className="rounded-xl text-md"
                 variant="outlined"
                 startAdornment={
                   <InputAdornment position="start">
-                    <PhoneOutlined className="text-sm" />
+                    <PhoneOutlined />
+                  </InputAdornment>
+                }
+              />
+            </FormControl>
+            <FormControl className="w-full">
+              <InputLabel id="select-type-contact">Contact type</InputLabel>
+              <Select
+                {...register("notificationType")}
+                labelId="select-type-contact"
+                id="select-type-contact"
+                value={10}
+                size="small"
+                className="rounded-xl text-md"
+                label="Contact type"
+                startAdornment={
+                  <InputAdornment position="start">
+                    <ContactsOutlined />
+                  </InputAdornment>
+                }
+                // onChange={handleChange}
+              >
+                <MenuItem value={20}>Proveedor</MenuItem>
+                <MenuItem value={30}>Cliente</MenuItem>
+              </Select>
+              {/* <FormHelperText>With label + helper text</FormHelperText> */}
+            </FormControl>
+            <FormControl>
+              <InputLabel size="small" htmlFor="outlined-adornment-phone">
+                Address
+              </InputLabel>
+              <OutlinedInput
+                {...register("name")}
+                id="outlined-adornment-address"
+                label="Phone number"
+                multiline
+                size="small"
+                className="rounded-xl text-md"
+                variant="outlined"
+                startAdornment={
+                  <InputAdornment position="start">
+                    <RampRightOutlined />
                   </InputAdornment>
                 }
               />

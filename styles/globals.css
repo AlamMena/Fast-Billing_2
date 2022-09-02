@@ -41,3 +41,7 @@ a {
 .input-rounded .MuiOutlinedInput-root {
  @apply rounded-xl
 }
+
+.appBar-button-animation{
+@apply transition-all duration-200 cursor-pointer hover:scale-90
+}

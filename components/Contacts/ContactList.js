@@ -1,4 +1,10 @@
-import { Search, SearchOutlined, SearchRounded } from "@mui/icons-material";
+import {
+  DeleteOutline,
+  EditOutlined,
+  Search,
+  SearchOutlined,
+  SearchRounded,
+} from "@mui/icons-material";
 import {
   Autocomplete,
   Button,
@@ -13,6 +19,7 @@ import { DataGrid } from "@mui/x-data-grid";
 import { useState } from "react";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+import Alert from "../Globals/Alert";
 import StatusRow from "../Globals/StatusRow";
 
 export default function ContactList({ setFormOpen, setFormData, data }) {
@@ -36,7 +43,7 @@ export default function ContactList({ setFormOpen, setFormData, data }) {
       headerName: "Id",
     },
     {
-      fiels: "Image",
+      field: "Image",
       width: "250",
       headerName: "Name",
       renderCell: (cells) => {
@@ -62,7 +69,7 @@ export default function ContactList({ setFormOpen, setFormData, data }) {
       headerName: "Phone Number",
     },
     {
-      field: "Status",
+      field: "isDelete",
       width: "150",
       headerName: "Status",
       renderCell: (cells) => {
@@ -73,22 +80,23 @@ export default function ContactList({ setFormOpen, setFormData, data }) {
     {
       field: "Actions",
       sortable: false,
+      width: 200,
       renderCell: (cells) => {
         return (
           <div className="flex space-x-4">
             <a
               onClick={() => {
-                // setFormOpen(true);
+                setFormOpen(true);
                 // setFormData(cells.row);
-
-                MySwal.fire({
-                  title: <strong>Good job!</strong>,
-                  html: <i>You clicked the button!</i>,
-                  icon: "success",
-                });
+                // Alert.fire({
+                //   title: <strong>Good job!</strong>,
+                //   html: <i>You clicked the button!</i>,
+                //   icon: "success",
+                // });
               }}
               className="text-green-400 cursor-pointer"
             >
+              <EditOutlined className="text-green-400 mx-2" />
               Edit
             </a>
             <a
@@ -98,7 +106,7 @@ export default function ContactList({ setFormOpen, setFormData, data }) {
               }}
               className="text-red-500 cursor-pointer"
             >
-              Delete
+              <DeleteOutline className="text-red-500 mx-2" /> Delete
             </a>
           </div>
         );
@@ -179,9 +187,17 @@ export default function ContactList({ setFormOpen, setFormData, data }) {
         />
       </div>
 
-      <div className="h-96 w-full">
+      <div className="h-96 w-full my-2">
         <DataGrid
           rows={[
+            {
+              id: 1,
+              name: "Jhon Doe",
+              image: "/",
+              phoneNumber: "1-800-99212-1",
+              isDelete: true,
+              noIdentification: "402-1389-763-6",
+            },
             {
               id: 1,
               name: "Jhon Doe",
