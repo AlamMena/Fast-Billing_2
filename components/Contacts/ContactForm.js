@@ -191,10 +191,10 @@ export default function ContactForm({ onSave, open, setOpen, data }) {
               <OutlinedInput
                 {...register("name")}
                 id="outlined-adornment-address"
-                label="Phone number"
+                label="Address"
                 multiline
                 size="small"
-                className="rounded-xl text-md"
+                className="rounded-xl text-md h-24"
                 variant="outlined"
                 startAdornment={
                   <InputAdornment position="start">
