@@ -27,7 +27,7 @@ export default function Index() {
         <div className="flex items-center">
           <div className={` ${!open ? "flex " : "hidden"} m-4 md:hidden`}>
             <MenuRounded
-              className={` ${!open ? "hidden md:hidden" : "hidden"} m-4`}
+              className={` ${!open ? "flex md:hidden" : "hidden"} m-4`}
               onClick={() => setOpen(true)}
             />
           </div>
