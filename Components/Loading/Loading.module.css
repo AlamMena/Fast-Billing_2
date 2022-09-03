@@ -1,0 +1,15 @@
+.container {
+    @apply flex flex-col w-screen h-screen justify-center items-center;
+}
+
+.icon {
+    @apply animate-spin h-5 w-5 mr-4;
+}
+
+.img_container {
+    @apply flex justify-center w-36 mb-5 items-center;
+}
+
+.loading {
+    @apply flex flex-row;
+}

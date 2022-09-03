@@ -1,102 +1,199 @@
 import React from "react";
-import { TextField, Button, Checkbox, Link, Avatar } from "@mui/material";
-import { FaFacebookF, FaGoogle, FaGithub } from "react-icons/fa";
+import {
+  TextField,
+  Button,
+  Checkbox,
+  Link,
+  Avatar,
+  AvatarGroup,
+  Box,
+} from "@mui/material";
+import { FaGoogle } from "react-icons/fa";
+import { FiFacebook, FiGithub } from "react-icons/fi";
+import { useForm } from "react-hook-form";
+import useAuth from "../Auth/useAuth";
+import { useState } from "react";
 
 export default function Login() {
+  const { register, handleSubmit } = useForm();
+  const [error, setError] = useState(false);
+  const { LogIn } = useAuth();
+
+  const handleChange = () => {
+    setError(false);
+  };
+
+  const handleLogin = async (data) => {
+    try {
+      await LogIn(data);
+    } catch (error) {
+      console.log(error);
+      setError(true);
+    }
+  };
+
+  const avatars = [
+    {
+      alt: "Mario",
+      src: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT8DLCX8WkTXBhPLEdDSurXmr66XlwIpa_EuY4cpUS9WxexK-piyps9ivFHtbnltBgDq7g&usqp=CAU",
+      width: 40,
+      height: 40,
+    },
+    {
+      alt: "Mario",
+      src: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTwzF6ZipCh3_AcIho22fXQyvr2QSm2zZgq677xCnpS-IZor0dWyrrHQma6FUyGt2qXUFI&usqp=CAU",
+      width: 40,
+      height: 40,
+    },
+    {
+      alt: "Mario",
+      src: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTz6FOCo35CJu6oDizL-rBOxFRoB_txplyFcOpAlSP2-qpUJar1J9n0FfZWBvEcCZ_Yz1w&usqp=CAU",
+      width: 40,
+      height: 40,
+    },
+    {
+      alt: "Mario",
+      src: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSEO2XAm5iqp93uhaOFjtoOstSpBbDRlvBUuuWt9GZd5gy27yb5xZeveE8A_DjbIaGL7cQ&usqp=CAU",
+      width: 40,
+      height: 40,
+    },
+  ];
+
   return (
     <>
       {/* Login Page */}
       <div className="grid grid-cols-12 h-screen">
-        {/* Login Form */}
-        <div className=" md:col-span-5 col-span-12 flex items-center justify-center">
-          <div className="  h-96 w-96 p-2 m-2">
+        {/*---------------------------------- Login Form -------------------------------------*/}
+        <div className=" lg:ml-14 md:ml-0 lg:col-span-5 col-span-12 flex lg:items-center sm:items-baseline md:items-center pt-12 md:pt-0 justify-center bg-inherit lg:bg-inherit md:bg-gray-200">
+          <div className=" lg:bg-inherit bg-inherit md:bg-white md:h-fit md:w-80 md:shadow-lg shadow-none lg:shadow-none rounded-xl  lg:h-96 lg:w-80 h-96 w-96 md:py-10 md:p-4 p-2 m-2 lg:py-0 lg:p-2">
             <div>
               <Avatar
                 alt="Metaverse"
                 variant="square"
                 src="https://1000logos.net/wp-content/uploads/2016/11/meta-logo.png"
-                sx={{ width: 60, height: 50 }}
+                sx={{ width: 65, height: 50 }}
               />
             </div>
-            <div className=" text-3xl font-bold tracking-tighter">Sign In</div>
-            <div className="text-xs mb-3">
+            <div className=" text-3xl font-bold tracking-tighter mt-5">
+              Iniciar Sesion
+            </div>
+            <div className="text-xs mb-5">
               <span>No tienes una cuenta? </span>
               <Link href="#" underline="always">
                 <span>Crea una</span>
               </Link>
             </div>
             {/* Inputs */}
-            <div className="py-1">
-              <TextField
-                required
-                id="outlined-required"
-                label="Correo electronico"
-                size="small"
-                fullWidth
-              />
-            </div>
-            <div className="py-1">
-              <TextField
-                required
-                id="outlined-required"
-                label="Contrasena"
-                size="small"
-                type="password"
-                defaultValue=""
-                fullWidth
-              />
-            </div>
-            {/* Rembember me container */}
-            <div className="flex justify-between items-center mt-2">
-              <div className="flex items-center tracking-wide text-xs">
-                <Checkbox />
-                Recuerdame
+            <form onSubmit={handleSubmit((data) => handleLogin(data))}>
+              <div className="py-2">
+                <TextField
+                  required
+                  id="email"
+                  label="Correo electronico"
+                  {...register("email")}
+                  size="small"
+                  error={error}
+                  fullWidth
+                  autoComplete="off"
+                  // onChange={() => handleChange()}
+                />
               </div>
-              <div className="tracking-wide text-xs font-bold text-right">
-                <Link href="#" underline="always">
-                  {"Olvidaste la contrasena?"}
-                </Link>
+              <div className="py-2">
+                <TextField
+                  autoComplete="off"
+                  required
+                  id="password"
+                  error={error}
+                  helperText={error ? "No se ha encontrado el usuario" : ""}
+                  label="Contrasena"
+                  {...register("password")}
+                  size="small"
+                  type="password"
+                  fullWidth
+                  // onChange={() => handleChange()}
+                />
               </div>
-            </div>
-            {/* Sign In Button */}
-            <div className="p-3">
-              <Button
-                variant="contained"
-                color="primary"
-                fullWidth
-                className="bg-black"
-              >
-                Iniciar Sesion
-              </Button>
-            </div>
+
+              {/* Rembember me container */}
+              <div className="flex justify-between items-center mt-2">
+                <div className="flex items-center tracking-wide text-xs">
+                  <Checkbox />
+                  Recuerdame
+                </div>
+                <div className="tracking-wide text-xs font-bold text-right">
+                  <Link href="#" underline="always">
+                    {"Olvidaste la contrasena?"}
+                  </Link>
+                </div>
+              </div>
+              {/* Sign In Button */}
+              <div className="p-3">
+                <Button
+                  variant="contained"
+                  color="primary"
+                  fullWidth
+                  className="bg-blue-600 rounded-full"
+                  type="submit"
+                >
+                  Iniciar Sesion
+                </Button>
+              </div>
+            </form>
             <hr className="my-4"></hr>
             {/* Icons container */}
             <div className="flex justify-around mt-5">
-              <Button variant="outlined" size="large">
-                <FaFacebookF />
+              <Button
+                variant="outlined"
+                size="large"
+                className=" border-neutral-400 text-neutral-400 hover:text-blue-400 rounded-full"
+              >
+                <FiFacebook />
               </Button>
-              <Button variant="outlined">
+              <Button
+                variant="outlined"
+                size="large"
+                className=" border-neutral-400 text-neutral-400 hover:text-blue-400 rounded-full"
+              >
                 <FaGoogle />
               </Button>
-              <Button variant="outlined">
-                <FaGithub />
+              <Button
+                variant="outlined"
+                size="large"
+                className=" border-neutral-400 text-neutral-400 hover:text-blue-400 rounded-full"
+              >
+                <FiGithub />
               </Button>
             </div>
           </div>
         </div>
-        {/* Login background */}
-        <div className=" hidden md:flex md:col-span-7 bg-black">
-          <div className=" items-center flex flex-col p-4">
-            <div className=" text-white text-4xl">
-              Welcome to Fast Billing 2
+        {/* ---------------------------------- Login background -------------------------------------- */}
+        <div className=" hidden lg:flex lg:col-span-7 bg-[url('https://wallpapercave.com/wp/5IAcOt1.jpg')] lg:items-center">
+          <div className=" px-20">
+            {/* Title and subtitle */}
+            <div className=" text-white text-5xl p-3 font-bold">
+              Bienvenido a <div> nuestra comunidad</div>
             </div>
-            <div className=" text-white">
+            <div className=" text-white p-3">
               Lorem ipsum dolor sit amet consectetur adipisicing elit. Saepe non
-              reiciendis voluptates consectetur culpa? Sequi voluptatem quidem
-              ex tenetur quibusdam ipsum doloribus quos similique, consequatur
-              beatae eaque est libero harum magni iure distinctio optio.
-              Praesentium cum illum et nulla ipsa eaque rerum sint cupiditate
-              voluptatum.
+              reiciendis voluptates consectetur culpa? Sequi voluptatem quidem e
+            </div>
+            {/* Avatars */}
+            <div className="flex items-center py-4 px-3 ">
+              <AvatarGroup max={4}>
+                {avatars.map((item, index) => {
+                  return (
+                    <Avatar
+                      key={index}
+                      alt={item.alt}
+                      src={item.src}
+                      sx={{ width: item.width, height: item.height }}
+                    />
+                  );
+                })}
+              </AvatarGroup>
+              <div className="text-white px-4 text-xs">
+                Es tu turno de unirte a nosotros
+              </div>
             </div>
           </div>
         </div>
