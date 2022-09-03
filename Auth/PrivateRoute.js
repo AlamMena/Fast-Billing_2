@@ -16,14 +16,15 @@ export default function PrivateRouter({ children }) {
 
   useEffect(() => {
     auth.onAuthStateChanged(function (user) {
-      setTimeout(() => {
-        setIsLoading(true);
-        setTimeout(() => {
-          setIsLoading(false);
-          setUser(user);
-        }, 1000);
-      }, 1000);
-
+      // setTimeout(() => {
+      //   setIsLoading(true);
+      //   setTimeout(() => {
+      //     setIsLoading(false);
+      //     setUser(user);
+      //   }, 1000);
+      // }, 1000);
+      setIsLoading(false);
+      setUser(user);
       axios.create({
         baseURL: "http://localhost:8080/",
         headers: {
