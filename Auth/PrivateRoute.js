@@ -4,6 +4,7 @@ import Login from "../pages/Login";
 import axios from "axios";
 import auth from "../FireBase/FireBaseAuth";
 import Loading from "../Components/Loading/Loading";
+import Index from "../pages/index";
 
 export default function PrivateRouter({ children }) {
   const [isLoading, setIsLoading] = useState(true);
@@ -33,7 +34,7 @@ export default function PrivateRouter({ children }) {
   }, []);
   if (user) {
     if (pathname === "/login") {
-      return <Login />;
+      return <Index />;
     }
     return children;
   } else if (!isLoading && !user) {

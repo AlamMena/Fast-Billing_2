@@ -26,6 +26,7 @@ export default function Login() {
   const handleLogin = async (data) => {
     try {
       await LogIn(data);
+      console.log("Hola");
     } catch (error) {
       console.log(error);
       setError(true);
@@ -95,7 +96,7 @@ export default function Login() {
                   error={error}
                   fullWidth
                   autoComplete="off"
-                  // onChange={() => handleChange()}
+                  onChange={() => handleChange()}
                 />
               </div>
               <div className="py-2">
@@ -110,7 +111,7 @@ export default function Login() {
                   size="small"
                   type="password"
                   fullWidth
-                  // onChange={() => handleChange()}
+                  onChange={() => handleChange()}
                 />
               </div>
 
