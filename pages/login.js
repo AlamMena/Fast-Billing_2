@@ -71,7 +71,7 @@ export default function Login() {
               <Avatar
                 alt="Metaverse"
                 variant="square"
-                src="https://1000logos.net/wp-content/uploads/2016/11/meta-logo.png"
+                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ3bAlqaZSh0mViahdE_MNIduBQZBWwyBEZtA&usqp=CAU"
                 sx={{ width: 65, height: 50 }}
               />
             </div>
@@ -96,7 +96,6 @@ export default function Login() {
                   error={error}
                   fullWidth
                   autoComplete="off"
-                  onChange={() => handleChange()}
                 />
               </div>
               <div className="py-2">
@@ -111,7 +110,6 @@ export default function Login() {
                   size="small"
                   type="password"
                   fullWidth
-                  onChange={() => handleChange()}
                 />
               </div>
 
@@ -146,21 +144,21 @@ export default function Login() {
               <Button
                 variant="outlined"
                 size="large"
-                className=" border-neutral-400 text-neutral-400 hover:text-blue-400 rounded-full"
+                className="hover:text-green-600 rounded-full"
               >
                 <FiFacebook />
               </Button>
               <Button
                 variant="outlined"
                 size="large"
-                className=" border-neutral-400 text-neutral-400 hover:text-blue-400 rounded-full"
+                className="hover:text-green-600 rounded-full"
               >
                 <FaGoogle />
               </Button>
               <Button
                 variant="outlined"
                 size="large"
-                className=" border-neutral-400 text-neutral-400 hover:text-blue-400 rounded-full"
+                className="hover:text-green-600 rounded-full"
               >
                 <FiGithub />
               </Button>
@@ -168,7 +166,7 @@ export default function Login() {
           </div>
         </div>
         {/* ---------------------------------- Login background -------------------------------------- */}
-        <div className=" hidden lg:flex lg:col-span-7 bg-[url('https://wallpapercave.com/wp/5IAcOt1.jpg')] lg:items-center">
+        <div className=" hidden lg:flex lg:col-span-7 bg-[url('https://cdn.dribbble.com/users/373274/screenshots/10805897/media/6e234812bc4204db2848082933592e54.png')] lg:items-center">
           <div className=" px-20">
             {/* Title and subtitle */}
             <div className=" text-white text-5xl p-3 font-bold">
