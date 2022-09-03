@@ -25,10 +25,13 @@ export default function Index() {
       />
       <div className="md:ml-64 md:px-8 px-2 flex justify-between my-4 items-center shadow-sm">
         <div className="flex items-center">
-          <MenuRounded
-            className={` ${!open ? "flex" : "hidden"} md:hidden m-4`}
-            onClick={() => setOpen(true)}
-          />
+          <div className={` ${!open ? "flex " : "hidden"} m-4 md:hidden`}>
+            <MenuRounded
+              className={` ${!open ? "hidden md:hidden" : "hidden"} m-4`}
+              onClick={() => setOpen(true)}
+            />
+          </div>
+
           <SearchRounded className="cursor-pointer" />
         </div>
 

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import Login from "../pages/Login";
+import Login from "../pages/login";
 import axios from "axios";
 import auth from "../FireBase/FireBaseAuth";
 import Loading from "../Components/Loading/Loading";
@@ -16,14 +16,15 @@ export default function PrivateRouter({ children }) {
 
   useEffect(() => {
     auth.onAuthStateChanged(function (user) {
-      setTimeout(() => {
-        setIsLoading(true);
-        setTimeout(() => {
-          setIsLoading(false);
-          setUser(user);
-        }, 1000);
-      }, 1000);
-
+      // setTimeout(() => {
+      //   setIsLoading(true);
+      //   setTimeout(() => {
+      //     setIsLoading(false);
+      //     setUser(user);
+      //   }, 1000);
+      // }, 1000);
+      setIsLoading(false);
+      setUser(user);
       axios.create({
         baseURL: "http://localhost:8080/",
         headers: {

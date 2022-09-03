@@ -24,25 +24,40 @@ import {
   MenuItem,
   FormHelperText,
 } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "react-toastify";
 import Alert from "../Globals/Alert";
 
 export default function ContactForm({ onSave, open, setOpen, data }) {
   const { handleSubmit, register, reset } = useForm({ defaultValues: data });
+  const toastId = useRef(null);
+
   const onSubmit = async (data) => {
     // await onSave(data);
-    Alert.fire({
-      title: <strong>Success!</strong>,
-      html: <span>Contact successfully saved</span>,
-      icon: "success",
+    // Alert.fire({
+    //   title: <strong>Success!</strong>,
+    //   html: <span>Contact successfully saved</span>,
+    //   icon: "success",
+    // });
+    // setTimeout(() => {
+    //   Alert.fire({
+    //     title: <strong>Ops, something went wrong!</strong>,
+    //     icon: "error",
+    //   });
+    // }, 1000);
+
+    toastId.current = toast("Please wait...", {
+      type: toast.TYPE.LOADING,
     });
+
     setTimeout(() => {
-      Alert.fire({
-        title: <strong>Ops, something went wrong!</strong>,
-        icon: "error",
+      toast.update(toastId.current, {
+        type: toast.TYPE.SUCCESS,
+        autoClose: 5000,
+        render: "Success",
       });
-    }, 1000);
+    }, 2000);
 
     setOpen(false);
   };

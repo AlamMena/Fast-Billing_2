@@ -7,6 +7,8 @@ import { AuthProvider } from "firebase/auth";
 import PrivateRouter from "../Auth/PrivateRoute";
 import AuthContext from "../Auth/AuthContext";
 import useAuth from "../Auth/useAuth";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function MyApp({ Component, pageProps }) {
   const { user } = useAuth();
@@ -41,6 +43,7 @@ function MyApp({ Component, pageProps }) {
               <SideBar />
               <div className="md:ml-72">
                 <Component {...pageProps} />
+                <ToastContainer />
               </div>
             </StyledEngineProvider>
           </PrivateRouter>
