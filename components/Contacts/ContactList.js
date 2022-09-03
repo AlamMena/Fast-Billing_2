@@ -141,7 +141,6 @@ export default function ContactList({ setFormOpen, setFormData, data }) {
         <Tabs
           value={value}
           onChange={handleChange}
-          textColor="green"
           className="text-neutral-500"
           TabIndicatorProps={{
             style: {
@@ -197,51 +196,11 @@ export default function ContactList({ setFormOpen, setFormData, data }) {
               icon: "success",
             });
           }}
-          rows={[
-            {
-              id: 1,
-              name: "Jhon Doe",
-              image: "/",
-              phoneNumber: "1-800-99212-1",
-              isDelete: true,
-              noIdentification: "402-1389-763-6",
-            },
-            {
-              id: 2,
-              name: "Jhon Doe",
-              image: "/",
-              phoneNumber: "1-800-99212-1",
-              isDelete: true,
-              noIdentification: "402-1389-763-6",
-            },
-            {
-              id: 3,
-              name: "Dean Shum",
-              image: "/",
-              phoneNumber: "1-800-91223-1",
-              isDelete: false,
-              noIdentification: "402-1389-763-6",
-            },
-            {
-              id: 4,
-              name: "Julio Verne",
-              image: "/",
-              phoneNumber: "1-800-82023-1",
-              isDelete: true,
-              noIdentification: "402-1389-763-6",
-            },
-            {
-              id: 5,
-              name: "Chris Dalie",
-              image: "/",
-              phoneNumber: "1-800-12481-1",
-              isDelete: false,
-              noIdentification: "402-1389-763-6",
-            },
-          ]}
+          rows={data.data}
           columns={columns}
           className="p-2"
           pageSize={5}
+          loading={data.isLoading}
           rowsPerPageOptions={[5]}
           checkboxSelection
           disableSelectionOnClick

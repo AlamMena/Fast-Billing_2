@@ -133,10 +133,10 @@ export default function ContactForm({ onSave, open, setOpen, data }) {
                   // onChange={handleChange}
                 >
                   <MenuItem className="text-sm" value={10}>
-                    cedula
+                    Cedula
                   </MenuItem>
                   <MenuItem value={20}>Pasaporte</MenuItem>
-                  <MenuItem value={30}>Rnc</MenuItem>
+                  <MenuItem value={30}>RNC</MenuItem>
                 </Select>
                 {/* <FormHelperText>With label + helper text</FormHelperText> */}
               </FormControl>
