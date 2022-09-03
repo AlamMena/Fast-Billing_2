@@ -72,7 +72,7 @@ export default function Login() {
                 alt="Metaverse"
                 variant="square"
                 src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ3bAlqaZSh0mViahdE_MNIduBQZBWwyBEZtA&usqp=CAU"
-                sx={{ width: 65, height: 50 }}
+                sx={{ width: 65, height: 65 }}
               />
             </div>
             <div className=" text-3xl font-bold tracking-tighter mt-5">
@@ -131,7 +131,7 @@ export default function Login() {
                   variant="contained"
                   color="primary"
                   fullWidth
-                  className="bg-blue-600 rounded-full"
+                  className="rounded-full text-white"
                   type="submit"
                 >
                   Iniciar Sesion

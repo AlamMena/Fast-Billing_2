@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import Login from "../pages/Login";
+import login from "../pages/login";
 import axios from "axios";
 import auth from "../FireBase/FireBaseAuth";
 import Loading from "../Components/Loading/Loading";
@@ -34,7 +34,7 @@ export default function PrivateRouter({ children }) {
   }, []);
   if (user) {
     if (pathname === "/login") {
-      return <Index />;
+      return <Login />;
     }
     return children;
   } else if (!isLoading && !user) {
