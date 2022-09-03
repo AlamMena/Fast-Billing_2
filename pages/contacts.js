@@ -6,12 +6,13 @@ import ContactForm from "../components/Contacts/ContactForm";
 import ContactList from "../components/Contacts/ContactList";
 import PageHeader from "../components/Globals/PageHeader";
 import { toast } from "react-toastify";
+
 export default function Contacts() {
   const [formOpen, setFormOpen] = useState(false);
   const [data, setData] = useState({ isLoading: true, data: [] });
 
   const { axiosInstance } = useAxios();
-  const ubicationsRoutes = [
+  const locationRoutes = [
     {
       text: "Dashboard",
       link: "/",
@@ -42,7 +43,7 @@ export default function Contacts() {
     <div className="w-full md:px-0 px-4 md:pr-8 flex flex-col">
       <div className="flex w-full justify-between items-center pr-8">
         <div>
-          <PageHeader header="Contacts" ubicationRoutes={ubicationsRoutes} />
+          <PageHeader header="Contacts" locationRoutes={locationRoutes} />
         </div>
         <div className="flex">
           <Button

@@ -11,9 +11,12 @@ import { useState } from "react";
 import { BiUser, BsGrid } from "react-icons/bi";
 import ProfilePopOver from "./ProfilePopOver";
 import NotificationPopOver from "./NotificationPopOver";
+import { useRouter } from "next/router";
 
 export default function Index() {
   const [open, setOpen] = useState(true);
+
+  const router = useRouter();
 
   return (
     <div className="flex flex-col ">
@@ -77,12 +80,21 @@ export default function Index() {
 
           {[
             { text: "Products", Icon: <RoomRounded /> },
-            { text: "Contacts", Icon: <RouteRounded /> },
+            { text: "Contactos", Icon: <RouteRounded />, path: "./contacts" },
+            {
+              text: "Categorias",
+              Icon: <RouteRounded />,
+              path: "./categories",
+            },
+            { text: "Marcas", Icon: <RouteRounded />, path: "./brands" },
             { text: "Configuration", Icon: <MenuBookRounded /> },
           ].map((item, index) => {
             return (
               <div
                 key={index}
+                onClick={() => {
+                  router.push(item.path);
+                }}
                 className="flex items-center w-full space-x-2 text-slate-500 hover:bg-green-50 hover:text-green-600 py-2 px-4 rounded-xl cursor-pointer"
               >
                 {item.Icon}
@@ -112,7 +124,7 @@ export default function Index() {
         <h2 className=" mt-4 px-4 my-4 ">Invoice </h2>
 
         {[
-          { text: "Products", Icon: <RoomRounded /> },
+          { text: "Contacts List", Icon: <RoomRounded /> },
           { text: "Contacts", Icon: <RouteRounded /> },
           { text: "Configuration", Icon: <MenuBookRounded /> },
         ].map((item, index) => {

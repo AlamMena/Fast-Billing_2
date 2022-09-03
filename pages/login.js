@@ -19,17 +19,13 @@ export default function Login() {
   const [error, setError] = useState(false);
   const { LogIn } = useAuth();
 
-  const handleChange = () => {
-    setError(false);
-  };
-
   const handleLogin = async (data) => {
     try {
       await LogIn(data);
-      console.log("Hola");
     } catch (error) {
       console.log(error);
       setError(true);
+      setTimeout(() => setError(false), 3000);
     }
   };
 
@@ -167,7 +163,7 @@ export default function Login() {
             </div>
           </div>
         </div>
-        {/* ---------------------------------- Login background -------------------------------------- */}
+        {/*-------------------------------- Login background -------------------------------- */}
         <div className=" hidden lg:flex lg:col-span-7 bg-[url('https://cdn.dribbble.com/users/373274/screenshots/10805897/media/6e234812bc4204db2848082933592e54.png')] lg:items-center">
           <div className=" px-20">
             {/* Title and subtitle */}
