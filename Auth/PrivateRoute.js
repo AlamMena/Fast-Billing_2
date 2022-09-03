@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import login from "../pages/login";
+import Login from "../pages/login";
 import axios from "axios";
 import auth from "../FireBase/FireBaseAuth";
 import Loading from "../Components/Loading/Loading";

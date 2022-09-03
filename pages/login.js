@@ -128,13 +128,15 @@ export default function Login() {
               {/* Sign In Button */}
               <div className="p-3">
                 <Button
+                  className=" rounded-full bg-green-600"
                   variant="contained"
                   color="primary"
                   fullWidth
-                  className="rounded-full text-white"
                   type="submit"
                 >
-                  Iniciar Sesion
+                  <span className=" text-white font-bold tracking-wider">
+                    Iniciar Sesion
+                  </span>
                 </Button>
               </div>
             </form>

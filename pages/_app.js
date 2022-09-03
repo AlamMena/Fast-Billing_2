@@ -24,29 +24,24 @@ function MyApp({ Component, pageProps }) {
   });
 
   return (
-    <>
-      <ThemeProvider theme={theme}>
-        <div className="flex flex-col">
-          <link rel="preconnect" href="https://fonts.googleapis.com" />
-          <link rel="preconnect" href="https://fonts.gstatic.com" />
-          <link
-            href="https://fonts.googleapis.com/css2?family=Varela+Round&display=swap"
-            rel="stylesheet"
-          />
-        </div>
-
+    <ThemeProvider theme={theme}>
+      <link rel="preconnect" href="https://fonts.googleapis.com" />
+      <link rel="preconnect" href="https://fonts.gstatic.com" />
+      <link
+        href="https://fonts.googleapis.com/css2?family=Varela+Round&display=swap"
+        rel="stylesheet"
+      />
+      <StyledEngineProvider injectFirst>
         <AuthContext.Provider value={user}>
           <PrivateRouter>
-            <StyledEngineProvider injectFirst>
-              <SideBar />
-              <div className="md:ml-72">
-                <Component {...pageProps} />
-              </div>
-            </StyledEngineProvider>
+            <SideBar />
+            <div className="md:ml-72">
+              <Component {...pageProps} />
+            </div>
           </PrivateRouter>
         </AuthContext.Provider>
-      </ThemeProvider>
-    </>
+      </StyledEngineProvider>
+    </ThemeProvider>
   );
 }
 
