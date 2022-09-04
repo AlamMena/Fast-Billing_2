@@ -1,17 +1,4 @@
-import {
-  ArticleOutlined,
-  BadgeOutlined,
-  BadgeRounded,
-  ContactsOutlined,
-  ContactsRounded,
-  PermIdentityRounded,
-  PermIdentitySharp,
-  PhoneOutlined,
-  RampRightOutlined,
-  RouteOutlined,
-} from "@mui/icons-material";
-import FactCheckIcon from "@mui/icons-material/FactCheck";
-import DescriptionIcon from "@mui/icons-material/Description";
+import CategoryIcon from "@mui/icons-material/Category";
 import {
   Button,
   Dialog,
@@ -31,7 +18,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import Alert from "../Globals/Alert";
 
-export default function BrandForm({ open, setOpen, data }) {
+export default function CategoryForm({ open, setOpen, data }) {
   const { handleSubmit, register, reset } = useForm({
     defaultValues: data,
   });
@@ -81,38 +68,19 @@ export default function BrandForm({ open, setOpen, data }) {
               <h2 className="text-xl font-bold">Formulario de Marca </h2>
 
               <FormControl label="">
-                <InputLabel size="large" htmlFor="outlined-adornment-name">
-                  Nombre de la marca
+                <InputLabel size="small" htmlFor="outlined-adornment-name">
+                  Nombre de la categoria
                 </InputLabel>
                 <OutlinedInput
                   {...register("name")}
                   id="outlined-adornment-name"
-                  label="Nombre de la marca"
-                  size="small"
+                  label="Nombre de la categoria"
+                  size="large"
                   className="rounded-xl"
                   variant="outlined"
                   startAdornment={
                     <InputAdornment position="start">
-                      <FactCheckIcon />
-                    </InputAdornment>
-                  }
-                />
-              </FormControl>
-              <FormControl>
-                <InputLabel size="small" htmlFor="outlined-adornment-phone">
-                  Description de la marca
-                </InputLabel>
-                <OutlinedInput
-                  {...register("description")}
-                  id="outlined-adornment-address"
-                  label="Descripcion de la marca"
-                  multiline
-                  size="small"
-                  className="rounded-xl text-md h-24"
-                  variant="outlined"
-                  startAdornment={
-                    <InputAdornment position="start">
-                      <DescriptionIcon />
+                      <CategoryIcon />
                     </InputAdornment>
                   }
                 />
