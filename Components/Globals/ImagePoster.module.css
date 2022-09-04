@@ -1,0 +1,44 @@
+/* Container */
+.container {
+    @apply bg-white rounded-lg my-3 mx-3;
+}
+
+.content {
+    @apply relative cursor-pointer outline outline-1 outline-neutral-300 shadow-sm px-4 py-2 rounded-lg;
+}
+
+.image_input {
+    @apply bg-black cursor-pointer absolute inset-0 opacity-0 z-10;
+}
+
+.title {
+    @apply cursor-pointer;
+}
+
+/* List */
+
+.list_container {
+    @apply relative mx-auto grid grid-cols-12 outline-dashed outline-neutral-200 space-y-2 md:space-y-0 bg-gray-100 rounded-lg px-4 py-8 my-4;
+}
+
+.list_title {
+    @apply text-sm text-neutral-400 absolute w-full flex justify-center h-16 items-center;
+}
+
+/* Image */
+
+.img_container {
+    @apply col-span-12 md:col-span-3 m-3;
+}
+
+.img_content {
+    @apply relative;
+}
+
+.img {
+    @apply w-full h-24 cursor-pointer shadow-md rounded-lg;
+}
+
+.icon {
+    @apply text-neutral-400 text-lg absolute top-0 right-0 -mt-2;
+}

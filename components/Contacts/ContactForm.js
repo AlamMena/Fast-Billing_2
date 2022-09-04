@@ -25,13 +25,27 @@ import {
   FormHelperText,
 } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
+import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
+
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import Alert from "../Globals/Alert";
+import ImagePoster from "../Globals/ImagePoster";
 
 export default function ContactForm({ onSave, open, setOpen, data }) {
   const { handleSubmit, register, reset } = useForm({ defaultValues: data });
   const toastId = useRef(null);
+
+  const [images, setImages] = useState([]);
+  const [file, setFile] = useState();
+
+  const postImage = async () => {
+    const storage = getStorage(app);
+    const storageRef = ref(storage, "products");
+    const response = await uploadBytes(storageRef, file);
+    const url = await getDownloadURL(response.ref);
+    return url;
+  };
 
   const onSubmit = async (data) => {
     // await onSave(data);
@@ -216,6 +230,13 @@ export default function ContactForm({ onSave, open, setOpen, data }) {
                     <RampRightOutlined />
                   </InputAdornment>
                 }
+              />
+            </FormControl>
+            <FormControl>
+              <ImagePoster
+                images={images}
+                setImages={setImages}
+                setFile={setFile}
               />
             </FormControl>
             <div className="flex w-full justify-end space-x-4">

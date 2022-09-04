@@ -14,7 +14,7 @@ import NotificationPopOver from "./NotificationPopOver";
 import { useRouter } from "next/router";
 
 export default function Index() {
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
 
   const router = useRouter();
 
@@ -79,7 +79,7 @@ export default function Index() {
           </div>
 
           {[
-            { text: "Products", Icon: <RoomRounded /> },
+            { text: "Products", Icon: <RoomRounded />, path: "./products" },
             { text: "Contactos", Icon: <RouteRounded />, path: "./contacts" },
             {
               text: "Categorias",
