@@ -15,6 +15,9 @@ import {
 } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
 import IconButton from "@mui/material/IconButton";
+import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
+
+import ImagePoster from "../Globals/ImagePoster";
 import PhotoCamera from "@mui/icons-material/PhotoCamera";
 
 import { useForm } from "react-hook-form";
@@ -25,6 +28,17 @@ export default function CategoryForm({ open, setOpen, data }) {
   const { handleSubmit, register, reset } = useForm({
     defaultValues: data,
   });
+
+  const [images, setImages] = useState([]);
+  const [file, setFile] = useState();
+
+  const postImage = async () => {
+    const storage = getStorage(app);
+    const storageRef = ref(storage, "products");
+    const response = await uploadBytes(storageRef, file);
+    const url = await getDownloadURL(response.ref);
+    return url;
+  };
 
   const onSubmit = async (data) => {
     await onSave(data);
@@ -89,29 +103,11 @@ export default function CategoryForm({ open, setOpen, data }) {
                 />
               </FormControl>
               <FormControl>
-                <div className="flex w-full">
-                  <Button
-                    variant="contained"
-                    component="label"
-                    className="w-full text-white"
-                  >
-                    Upload
-                    <input
-                      hidden
-                      accept="image/*"
-                      type="file"
-                      {...register("imageUrl")}
-                    />
-                  </Button>
-                  <IconButton
-                    color="primary"
-                    aria-label="upload picture"
-                    component="label"
-                  >
-                    <input hidden disabled accept="image/*" type="file" />
-                    <PhotoCamera />
-                  </IconButton>
-                </div>
+                <ImagePoster
+                  images={images}
+                  setImages={setImages}
+                  setFile={setFile}
+                />
               </FormControl>
               <div className="flex w-full justify-end space-x-4">
                 <Button
