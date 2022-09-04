@@ -136,7 +136,7 @@ export default function ContactList({ setFormOpen, setFormData, data }) {
     setValue(newValue);
   };
   return (
-    <div className="flex flex-col h-full  w-full shadow-lg rounded-xl">
+    <div className="flex flex-col h-full  w-full shadow-lg rounded-xl my-3">
       <div className=" bg-slate-200 rounded-t-lg">
         <Tabs
           value={value}
@@ -177,6 +177,7 @@ export default function ContactList({ setFormOpen, setFormData, data }) {
         <OutlinedInput
           id="input-with-icon-adornment"
           className="input-rounded rounded-xl"
+          placeholder="Buscar contactos..."
           fullWidth
           startAdornment={
             <InputAdornment position="start">

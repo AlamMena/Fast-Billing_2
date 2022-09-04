@@ -83,7 +83,7 @@ export default function CategoryList({ setFormOpen, data }) {
 
   return (
     <>
-      <div className="flex flex-col h-full  w-full shadow-lg rounded-xl">
+      <div className="flex flex-col h-full  w-full shadow-lg rounded-xl my-3">
         <div className=" bg-slate-200 rounded-t-lg">
           <Tabs
             value={value}
@@ -106,6 +106,7 @@ export default function CategoryList({ setFormOpen, data }) {
             id="input-with-icon-adornment"
             className="input-rounded rounded-xl"
             fullWidth
+            placeholder="Buscar categorias..."
             startAdornment={
               <InputAdornment position="start">
                 <SearchRounded className="text-slate-400" />

@@ -42,7 +42,16 @@ export default function BrandForm({ onSave, open, setOpen, data }) {
     defaultValues: data,
   });
 
-  const chip = [{ alt: "Ana", src: "/static/images/avatar/1.jpg" }];
+  const [menuValue, setMenuValue] = useState("");
+
+  const chip = [
+    { alt: "Ana", src: "/static/images/avatar/1.jpg" },
+    { alt: "TrapKing", src: "/static/images/avatar/1.jpg" },
+    { alt: "Eldiablo", src: "/static/images/avatar/1.jpg" },
+    { alt: "Yagaloski", src: "/static/images/avatar/1.jpg" },
+    { alt: "Pibull", src: "/static/images/avatar/1.jpg" },
+    { alt: "Junior", src: "/static/images/avatar/1.jpg" },
+  ];
 
   const onSubmit = async (data) => {
     console.log(data);
@@ -127,12 +136,12 @@ export default function BrandForm({ onSave, open, setOpen, data }) {
                 />
               </FormControl>
               <FormControl className="w-full">
-                <InputLabel id="select-type-contact">Proovedores</InputLabel>
+                <InputLabel id="select-type-contact">Proveedores</InputLabel>
                 <Select
                   {...register("provider")}
                   id="select-type-contact"
-                  value={10}
-                  size="medium"
+                  value={menuValue}
+                  size="small"
                   className="rounded-xl text-md"
                   label="Proovedores"
                   startAdornment={
@@ -143,19 +152,26 @@ export default function BrandForm({ onSave, open, setOpen, data }) {
                   // onChange={handleChange}
                 >
                   {chip.map((item, index) => {
-                    <MenuItem value={10} className="w-full" key={index}>
-                      <Chip
-                        avatar={
-                          <Avatar
-                            alt={item.alt}
-                            src={item.src}
-                            position="start"
-                          />
-                        }
-                        label="Avatar"
-                        variant="outlined"
-                      />
-                    </MenuItem>;
+                    return (
+                      <MenuItem
+                        value={index}
+                        className="w-full"
+                        key={index}
+                        onClick={() => setMenuValue(index)}
+                      >
+                        <Chip
+                          avatar={
+                            <Avatar
+                              alt="Avatar"
+                              src={item.src}
+                              position="start"
+                            />
+                          }
+                          label={item.alt}
+                          variant="outlined"
+                        />
+                      </MenuItem>
+                    );
                   })}
                 </Select>
                 {/* <FormHelperText>With label + helper text</FormHelperText> */}

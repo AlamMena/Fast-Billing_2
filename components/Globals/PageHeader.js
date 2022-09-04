@@ -3,7 +3,7 @@ import CircleIcon from "@mui/icons-material/Circle";
 
 export default function PageHeader({ header, locationRoutes }) {
   return (
-    <div className="flex flex-col my-4 p-4 space-y-4">
+    <div className="flex flex-col my-2 p-4 space-y-4">
       <h1 className="font-semibold text-2xl ">{header}</h1>
       <div role="presentation">
         <Breadcrumbs
