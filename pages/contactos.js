@@ -6,6 +6,7 @@ import ContactForm from "../components/Contacts/ContactForm";
 import ContactList from "../components/Contacts/ContactList";
 import PageHeader from "../components/Globals/PageHeader";
 import { toast } from "react-toastify";
+import axios from "axios";
 
 export default function Contacts() {
   const [formOpen, setFormOpen] = useState(false);
@@ -29,10 +30,25 @@ export default function Contacts() {
 
   const setDataAsync = async () => {
     try {
-      const response = await axiosInstance.get("/contacts?limit=20&page=2");
-      setData({ isLoading: false, Data: response.data });
+      const response = await axiosInstance.get("v1/contacts?page=1&limit=2");
+      setData({ isLoading: false, data: response.data });
     } catch (error) {
       toast.error(`Opps!, something went wrong${error}`);
+      setData({ isLoading: false, data: [] });
+    }
+  };
+
+  const upsertAsync = async (data) => {
+    try {
+      if (data._id) {
+        await axiosInstance.put("v1/contact", data);
+      } else {
+        await axiosInstance.put("v1/contact", data);
+      }
+      await setDataAsync();
+    } catch (error) {
+      toast.error(`Opps!, something went wrong${error}`);
+      setData({ isLoading: false, data: [] });
     }
   };
 

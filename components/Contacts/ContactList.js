@@ -38,7 +38,7 @@ export default function ContactList({ setFormOpen, setFormData, data }) {
   });
   const columns = [
     {
-      field: "id",
+      field: "_id",
       width: 90,
       headerName: "Id",
     },
@@ -190,6 +190,7 @@ export default function ContactList({ setFormOpen, setFormData, data }) {
       <div className="h-96 w-full my-2">
         <DataGrid
           components={{ Toolbar: GridToolBar }}
+          getRowId={(row) => row._id}
           onSelectionModelChange={(row) => {
             Alert.fire({
               title: <strong>Success!</strong>,
