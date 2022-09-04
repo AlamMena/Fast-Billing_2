@@ -12,6 +12,8 @@ import {
 } from "@mui/icons-material";
 import FactCheckIcon from "@mui/icons-material/FactCheck";
 import DescriptionIcon from "@mui/icons-material/Description";
+import IconButton from "@mui/material/IconButton";
+import CoPresentIcon from "@mui/icons-material/CoPresent";
 import {
   Button,
   Dialog,
@@ -23,21 +25,28 @@ import {
   FormControl,
   InputLabel,
   Select,
+  Chip,
+  Avatar,
   MenuItem,
   FormHelperText,
 } from "@mui/material";
+import PhotoCamera from "@mui/icons-material/PhotoCamera";
+
 import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import Alert from "../Globals/Alert";
 
-export default function BrandForm({ open, setOpen, data }) {
+export default function BrandForm({ onSave, open, setOpen, data }) {
   const { handleSubmit, register, reset } = useForm({
     defaultValues: data,
   });
 
+  const chip = [{ alt: "Ana", src: "/static/images/avatar/1.jpg" }];
+
   const onSubmit = async (data) => {
-    await onSave(data);
+    console.log(data);
+    // await onSave(data);
     // Alert.fire({
     //   title: <strong>Success!</strong>,
     //   html: <span>Contact successfully saved</span>,
@@ -80,7 +89,7 @@ export default function BrandForm({ open, setOpen, data }) {
             >
               <h2 className="text-xl font-bold">Formulario de Marca </h2>
 
-              <FormControl label="">
+              <FormControl>
                 <InputLabel size="large" htmlFor="outlined-adornment-name">
                   Nombre de la marca
                 </InputLabel>
@@ -107,8 +116,8 @@ export default function BrandForm({ open, setOpen, data }) {
                   id="outlined-adornment-address"
                   label="Descripcion de la marca"
                   multiline
-                  size="small"
-                  className="rounded-xl text-md h-24"
+                  size="large"
+                  className="rounded-xl text-md"
                   variant="outlined"
                   startAdornment={
                     <InputAdornment position="start">
@@ -117,16 +126,76 @@ export default function BrandForm({ open, setOpen, data }) {
                   }
                 />
               </FormControl>
+              <FormControl className="w-full">
+                <InputLabel id="select-type-contact">Proovedores</InputLabel>
+                <Select
+                  {...register("provider")}
+                  id="select-type-contact"
+                  value={10}
+                  size="medium"
+                  className="rounded-xl text-md"
+                  label="Proovedores"
+                  startAdornment={
+                    <InputAdornment position="start">
+                      <CoPresentIcon />
+                    </InputAdornment>
+                  }
+                  // onChange={handleChange}
+                >
+                  {chip.map((item, index) => {
+                    <MenuItem value={10} className="w-full" key={index}>
+                      <Chip
+                        avatar={
+                          <Avatar
+                            alt={item.alt}
+                            src={item.src}
+                            position="start"
+                          />
+                        }
+                        label="Avatar"
+                        variant="outlined"
+                      />
+                    </MenuItem>;
+                  })}
+                </Select>
+                {/* <FormHelperText>With label + helper text</FormHelperText> */}
+              </FormControl>
+              <FormControl>
+                <div className="flex w-full">
+                  <Button
+                    variant="contained"
+                    component="label"
+                    className="w-full text-white"
+                  >
+                    Upload
+                    <input
+                      hidden
+                      accept="image/*"
+                      type="file"
+                      {...register("imageUrl")}
+                    />
+                  </Button>
+                  <IconButton
+                    color="primary"
+                    aria-label="upload picture"
+                    component="label"
+                  >
+                    <input hidden disabled accept="image/*" type="file" />
+                    <PhotoCamera />
+                  </IconButton>
+                </div>
+              </FormControl>
               <div className="flex w-full justify-end space-x-4">
                 <Button
                   variant="contained"
                   type="submit"
                   color="secondary"
                   size="medium"
-                  className=" w-28 bg-green-600 text-white rounded-2xl"
+                  className=" w-28 bg-green-500 text-white rounded-2xl"
                 >
                   Salvar
                 </Button>
+
                 {/* <Button
                 variant="contained"
                 type="submit"

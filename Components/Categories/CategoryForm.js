@@ -14,6 +14,9 @@ import {
   FormHelperText,
 } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
+import IconButton from "@mui/material/IconButton";
+import PhotoCamera from "@mui/icons-material/PhotoCamera";
+
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import Alert from "../Globals/Alert";
@@ -67,7 +70,7 @@ export default function CategoryForm({ open, setOpen, data }) {
             >
               <h2 className="text-xl font-bold">Formulario de Marca </h2>
 
-              <FormControl label="">
+              <FormControl>
                 <InputLabel size="small" htmlFor="outlined-adornment-name">
                   Nombre de la categoria
                 </InputLabel>
@@ -75,7 +78,7 @@ export default function CategoryForm({ open, setOpen, data }) {
                   {...register("name")}
                   id="outlined-adornment-name"
                   label="Nombre de la categoria"
-                  size="large"
+                  size="small"
                   className="rounded-xl"
                   variant="outlined"
                   startAdornment={
@@ -84,6 +87,31 @@ export default function CategoryForm({ open, setOpen, data }) {
                     </InputAdornment>
                   }
                 />
+              </FormControl>
+              <FormControl>
+                <div className="flex w-full">
+                  <Button
+                    variant="contained"
+                    component="label"
+                    className="w-full text-white"
+                  >
+                    Upload
+                    <input
+                      hidden
+                      accept="image/*"
+                      type="file"
+                      {...register("imageUrl")}
+                    />
+                  </Button>
+                  <IconButton
+                    color="primary"
+                    aria-label="upload picture"
+                    component="label"
+                  >
+                    <input hidden disabled accept="image/*" type="file" />
+                    <PhotoCamera />
+                  </IconButton>
+                </div>
               </FormControl>
               <div className="flex w-full justify-end space-x-4">
                 <Button
