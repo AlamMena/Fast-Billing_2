@@ -34,7 +34,6 @@ import ImagePoster from "../Globals/ImagePoster";
 
 export default function ContactForm({ onSave, open, setOpen, data }) {
   const { handleSubmit, register, reset } = useForm({ defaultValues: data });
-  const toastId = useRef(null);
 
   const [images, setImages] = useState([]);
   const [file, setFile] = useState();
@@ -48,31 +47,7 @@ export default function ContactForm({ onSave, open, setOpen, data }) {
   };
 
   const onSubmit = async (data) => {
-    // await onSave(data);
-    // Alert.fire({
-    //   title: <strong>Success!</strong>,
-    //   html: <span>Contact successfully saved</span>,
-    //   icon: "success",
-    // });
-    // setTimeout(() => {
-    //   Alert.fire({
-    //     title: <strong>Ops, something went wrong!</strong>,
-    //     icon: "error",
-    //   });
-    // }, 1000);
-
-    toastId.current = toast("Please wait...", {
-      type: toast.TYPE.LOADING,
-    });
-
-    setTimeout(() => {
-      toast.update(toastId.current, {
-        type: toast.TYPE.SUCCESS,
-        autoClose: 5000,
-        render: "Success",
-      });
-    }, 2000);
-
+    await onSave(data);
     setOpen(false);
   };
 
@@ -109,24 +84,6 @@ export default function ContactForm({ onSave, open, setOpen, data }) {
               />
             </FormControl>
             <div className="flex w-full items-center space-x-4">
-              {/* <FormControl>
-                <InputLabel htmlFor="outlined-adornment-identification'type">
-                  Identification Type
-                </InputLabel>
-                <OutlinedInput
-                  {...register("name")}
-                  id="outlined-adornment-identification'type"
-                  label="Identification Type"
-                  size="small"
-                  className="rounded-xl"
-                  variant="outlined"
-                  startAdornment={
-                    <InputAdornment position="start">
-                      <ArticleOutlined />
-                    </InputAdornment>
-                  }
-                />
-              </FormControl> */}
               <FormControl className=" w-52">
                 <InputLabel id="select-type-identification">
                   Identification type
@@ -159,7 +116,7 @@ export default function ContactForm({ onSave, open, setOpen, data }) {
                   No. Identification
                 </InputLabel>
                 <OutlinedInput
-                  {...register("name")}
+                  {...register("noIdentification")}
                   id="outlined-adornment-identification"
                   label=" No. Identification"
                   size="small"
@@ -178,7 +135,7 @@ export default function ContactForm({ onSave, open, setOpen, data }) {
                 Phone Number
               </InputLabel>
               <OutlinedInput
-                {...register("name")}
+                {...register("phone")}
                 id="outlined-adornment-phone"
                 label="Phone number"
                 size="small"
@@ -194,7 +151,7 @@ export default function ContactForm({ onSave, open, setOpen, data }) {
             <FormControl className="w-full">
               <InputLabel id="select-type-contact">Contact type</InputLabel>
               <Select
-                {...register("notificationType")}
+                {...register("type")}
                 labelId="select-type-contact"
                 id="select-type-contact"
                 value={10}

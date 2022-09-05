@@ -86,6 +86,7 @@ export default function ContactList({ setFormOpen, setFormData, data }) {
           <div className="flex space-x-4">
             <a
               onClick={() => {
+                setFormData(cells.row);
                 setFormOpen(true);
                 // setFormData(cells.row);
                 // Alert.fire({

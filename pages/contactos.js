@@ -1,7 +1,7 @@
 import { Add } from "@mui/icons-material";
 import useAxios from "../Axios/Axios";
 import { Button } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import ContactForm from "../components/Contacts/ContactForm";
 import ContactList from "../components/Contacts/ContactList";
 import PageHeader from "../components/Globals/PageHeader";
@@ -11,6 +11,8 @@ import axios from "axios";
 export default function Contacts() {
   const [formOpen, setFormOpen] = useState(false);
   const [data, setData] = useState({ isLoading: true, data: [] });
+  const [formData, setFormData] = useState();
+  const toastId = useRef(null);
 
   const { axiosInstance } = useAxios();
   const locationRoutes = [
@@ -30,7 +32,7 @@ export default function Contacts() {
 
   const setDataAsync = async () => {
     try {
-      const response = await axiosInstance.get("v1/contacts?page=1&limit=2");
+      const response = await axiosInstance.get("v1/contacts?page=1&limit=200");
       setData({ isLoading: false, data: response.data });
     } catch (error) {
       toast.error(`Opps!, something went wrong${error}`);
@@ -40,12 +42,21 @@ export default function Contacts() {
 
   const upsertAsync = async (data) => {
     try {
+      toastId.current = toast("Please wait...", {
+        type: toast.TYPE.LOADING,
+      });
       if (data._id) {
         await axiosInstance.put("v1/contact", data);
       } else {
-        await axiosInstance.put("v1/contact", data);
+        await axiosInstance.post("v1/contact", data);
       }
       await setDataAsync();
+
+      toast.update(toastId.current, {
+        type: toast.TYPE.SUCCESS,
+        autoClose: 5000,
+        render: "Success",
+      });
     } catch (error) {
       toast.error(`Opps!, something went wrong${error}`);
       setData({ isLoading: false, data: [] });
@@ -65,7 +76,10 @@ export default function Contacts() {
           <Button
             className=" z-auto rounded-xl py-2 bg-green-600 hover:bg-green-800"
             variant="contained"
-            onClick={() => setFormOpen(true)}
+            onClick={() => {
+              setFormOpen(true);
+              setFormData({});
+            }}
             startIcon={<Add className="text-white" />}
           >
             <span className="text-sm whitespace-nowrap text-neutral-50 capitalize font-bold">
@@ -74,8 +88,17 @@ export default function Contacts() {
           </Button>
         </div>
       </div>
-      <ContactList setFormOpen={setFormOpen} data={data} />
-      <ContactForm open={formOpen} setOpen={setFormOpen} />
+      <ContactList
+        setFormOpen={setFormOpen}
+        data={data}
+        setFormData={setFormData}
+      />
+      <ContactForm
+        open={formOpen}
+        setOpen={setFormOpen}
+        onSave={upsertAsync}
+        data={formData}
+      />
     </div>
   );
 }
