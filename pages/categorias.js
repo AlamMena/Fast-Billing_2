@@ -12,6 +12,8 @@ export default function Categories() {
   const [formOpen, setFormOpen] = useState(false);
   const [categories, setCategories] = useState({ isLoading: true, data: [] });
 
+  const { axiosInstance } = useAxios();
+
   const locationRoutes = [
     {
       text: "Dashboard",
@@ -29,8 +31,10 @@ export default function Categories() {
 
   const setCategoriesAsync = async () => {
     try {
-      const response = await axiosInstance.get("/categories?limit=20&page=2");
-      setCategories({ isLoading: false, Data: response.data });
+      const response = await axiosInstance.get(
+        "/v1/categories?limit=20&page=1"
+      );
+      setCategories({ isLoading: false, data: response.data });
     } catch (error) {
       //    toast.error(`Opps!, something went wrong${error}`);
     }

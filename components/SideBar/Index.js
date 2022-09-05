@@ -79,14 +79,14 @@ export default function Index() {
           </div>
 
           {[
-            { text: "Products", Icon: <RoomRounded />, path: "./products" },
-            { text: "Contactos", Icon: <RouteRounded />, path: "./contacts" },
+            { text: "Products", Icon: <RoomRounded />, path: "./productos" },
+            { text: "Contactos", Icon: <RouteRounded />, path: "./contactos" },
             {
               text: "Categorias",
               Icon: <RouteRounded />,
-              path: "./categories",
+              path: "./categorias",
             },
-            { text: "Marcas", Icon: <RouteRounded />, path: "./brands" },
+            { text: "Marcas", Icon: <RouteRounded />, path: "./marcas" },
             { text: "Configuration", Icon: <MenuBookRounded /> },
           ].map((item, index) => {
             return (

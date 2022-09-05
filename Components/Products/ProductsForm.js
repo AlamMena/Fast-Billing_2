@@ -33,6 +33,7 @@ export default function ProductsForm({ open, setOpen, data }) {
     defaultValues: data,
   });
 
+  const [isLoading, setIsLoading] = useState(false);
   const [images, setImages] = useState([]);
   const [file, setFile] = useState();
 
@@ -91,7 +92,7 @@ export default function ProductsForm({ open, setOpen, data }) {
               <h2 className="text-xl font-bold">Formulario de Productos </h2>
 
               <FormControl>
-                <InputLabel size="large" htmlFor="outlined-adornment-name">
+                <InputLabel size="normal" htmlFor="outlined-adornment-name">
                   Nombre del producto
                 </InputLabel>
                 <OutlinedInput
@@ -117,7 +118,7 @@ export default function ProductsForm({ open, setOpen, data }) {
                   id="outlined-adornment-address"
                   label="Descripcion del producto"
                   multiline
-                  size="large"
+                  size="normal"
                   className="rounded-xl text-md"
                   variant="outlined"
                   startAdornment={
@@ -129,7 +130,7 @@ export default function ProductsForm({ open, setOpen, data }) {
               </FormControl>
               <div className="flex w-full space-x-4 items-center">
                 <FormControl>
-                  <InputLabel size="large" htmlFor="outlined-adornment-name">
+                  <InputLabel size="normal" htmlFor="outlined-adornment-name">
                     Precio
                   </InputLabel>
                   <OutlinedInput
@@ -148,7 +149,7 @@ export default function ProductsForm({ open, setOpen, data }) {
                   />
                 </FormControl>
                 <FormControl>
-                  <InputLabel size="large" htmlFor="outlined-adornment-name">
+                  <InputLabel size="normal" htmlFor="outlined-adornment-name">
                     Costo{" "}
                   </InputLabel>
                   <OutlinedInput

@@ -1,11 +1,4 @@
-import { useEffect, useState } from "react";
-import app from "../../Firebase/FirebaseAppConfig";
-import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
-import {
-  AiFillDelete,
-  AiOutlineClose,
-  AiOutlineCloseCircle,
-} from "react-icons/ai";
+import { AiOutlineCloseCircle } from "react-icons/ai";
 import styles from "./ImagePoster.module.css";
 
 export default function ImagePoster({ images, setImages, setFile }) {
@@ -31,7 +24,7 @@ export default function ImagePoster({ images, setImages, setFile }) {
           onChange={handleImageInput}
           className={styles.image_input}
         ></input>
-        <span className={styles.title}>Select an image</span>
+        <span className={styles.title}>Selecciona una imagen</span>
       </div>
       <div className={styles.list_container}>
         <span className={styles.list_title}>Listado de imagenes</span>
