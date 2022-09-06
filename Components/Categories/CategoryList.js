@@ -15,7 +15,7 @@ import {
 import { useState } from "react";
 import { DataGrid, GridToolBar } from "@mui/x-data-grid";
 import Alert from "../Globals/Alert";
-import StatusRow from "../Globals/StatusRow";
+import StatusRow from "../Globals/StatusRow.js";
 
 export default function CategoryList({ setFormOpen, data }) {
   const [value, setValue] = useState("one");

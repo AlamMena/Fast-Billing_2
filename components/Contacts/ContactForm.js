@@ -33,10 +33,20 @@ import Alert from "../Globals/Alert";
 import ImagePoster from "../Globals/ImagePoster";
 
 export default function ContactForm({ onSave, open, setOpen, data }) {
-  const { handleSubmit, register, reset } = useForm({ defaultValues: data });
+  const {
+    handleSubmit,
+    register,
+    reset,
+    formState: { errors },
+  } = useForm({
+    defaultValues: data,
+  });
 
   const [images, setImages] = useState([]);
   const [file, setFile] = useState();
+
+  const [contactType, setContactType] = useState(1);
+  const [identificationType, setIdentificationType] = useState(1);
 
   const postImage = async () => {
     const storage = getStorage(app);
@@ -47,7 +57,13 @@ export default function ContactForm({ onSave, open, setOpen, data }) {
   };
 
   const onSubmit = async (data) => {
-    await onSave(data);
+    const dataParsed = {
+      address: "none",
+      imageUrl: "default",
+      IsDeleted: false,
+      ...data,
+    };
+    await onSave(dataParsed);
     setOpen(false);
   };
 
@@ -66,21 +82,24 @@ export default function ContactForm({ onSave, open, setOpen, data }) {
             <h2 className="text-xl font-bold">Contact Form </h2>
 
             <FormControl>
-              <InputLabel size="small" htmlFor="outlined-adornment-name">
-                Full Name
-              </InputLabel>
-              <OutlinedInput
-                {...register("name")}
+              <TextField
+                {...register("name", {
+                  required: true,
+                })}
                 id="outlined-adornment-name"
                 label="Full Name"
                 size="small"
-                className="rounded-xl"
+                error={errors.name && "value"}
+                className="input-rounded"
+                helperText={errors.name && `El campo es 'nombre' requerido`}
                 variant="outlined"
-                startAdornment={
-                  <InputAdornment position="start">
-                    <BadgeOutlined />
-                  </InputAdornment>
-                }
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <BadgeOutlined />
+                    </InputAdornment>
+                  ),
+                }}
               />
             </FormControl>
             <div className="flex w-full items-center space-x-4">
@@ -89,10 +108,13 @@ export default function ContactForm({ onSave, open, setOpen, data }) {
                   Identification type
                 </InputLabel>
                 <Select
-                  {...register("notificationType")}
+                  {...register("noIdentificationType")}
                   labelId="select-type-identification"
                   id="select-type-identificationr"
-                  value={10}
+                  value={identificationType}
+                  onChange={(params) =>
+                    setIdentificationType(params.target.value)
+                  }
                   size="small"
                   className="rounded-xl text-md"
                   label="Identification type"
@@ -103,49 +125,54 @@ export default function ContactForm({ onSave, open, setOpen, data }) {
                   }
                   // onChange={handleChange}
                 >
-                  <MenuItem className="text-sm" value={10}>
-                    Cedula
-                  </MenuItem>
-                  <MenuItem value={20}>Pasaporte</MenuItem>
-                  <MenuItem value={30}>RNC</MenuItem>
+                  <MenuItem value={1}>Cedula</MenuItem>
+                  <MenuItem value={2}>Pasaporte</MenuItem>
+                  <MenuItem value={3}>RNC</MenuItem>
                 </Select>
                 {/* <FormHelperText>With label + helper text</FormHelperText> */}
               </FormControl>
               <FormControl>
-                <InputLabel htmlFor="outlined-adornment-identification">
-                  No. Identification
-                </InputLabel>
-                <OutlinedInput
-                  {...register("noIdentification")}
+                <TextField
+                  {...register("noIdentification", { required: true })}
                   id="outlined-adornment-identification"
                   label=" No. Identification"
                   size="small"
-                  className="rounded-xl text-md"
+                  className="input-rounded text-md"
                   variant="outlined"
-                  startAdornment={
-                    <InputAdornment position="start">
-                      <ArticleOutlined />
-                    </InputAdornment>
+                  error={errors.noIdentification}
+                  helperText={
+                    errors.noIdentification &&
+                    `El campo 'no.Identificaion es requerido'`
                   }
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <ArticleOutlined
+                          className={`${
+                            errors.noIdentification && "text-red-500"
+                          } `}
+                        />
+                      </InputAdornment>
+                    ),
+                  }}
                 />
               </FormControl>
             </div>
             <FormControl>
-              <InputLabel size="small" htmlFor="outlined-adornment-phone">
-                Phone Number
-              </InputLabel>
-              <OutlinedInput
+              <TextField
                 {...register("phone")}
                 id="outlined-adornment-phone"
                 label="Phone number"
                 size="small"
-                className="rounded-xl text-md"
+                className="input-rounded text-md"
                 variant="outlined"
-                startAdornment={
-                  <InputAdornment position="start">
-                    <PhoneOutlined />
-                  </InputAdornment>
-                }
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <PhoneOutlined />
+                    </InputAdornment>
+                  ),
+                }}
               />
             </FormControl>
             <FormControl className="w-full">
@@ -154,7 +181,8 @@ export default function ContactForm({ onSave, open, setOpen, data }) {
                 {...register("type")}
                 labelId="select-type-contact"
                 id="select-type-contact"
-                value={10}
+                value={contactType}
+                onChange={(params) => setContactType(params.target.value)}
                 size="small"
                 className="rounded-xl text-md"
                 label="Contact type"
@@ -165,29 +193,10 @@ export default function ContactForm({ onSave, open, setOpen, data }) {
                 }
                 // onChange={handleChange}
               >
-                <MenuItem value={20}>Proveedor</MenuItem>
-                <MenuItem value={30}>Cliente</MenuItem>
+                <MenuItem value={1}>Cliente</MenuItem>
+                <MenuItem value={2}>Proveedor</MenuItem>
               </Select>
               {/* <FormHelperText>With label + helper text</FormHelperText> */}
-            </FormControl>
-            <FormControl>
-              <InputLabel size="small" htmlFor="outlined-adornment-phone">
-                Address
-              </InputLabel>
-              <OutlinedInput
-                {...register("name")}
-                id="outlined-adornment-address"
-                label="Address"
-                multiline
-                size="small"
-                className="rounded-xl text-md h-24"
-                variant="outlined"
-                startAdornment={
-                  <InputAdornment position="start">
-                    <RampRightOutlined />
-                  </InputAdornment>
-                }
-              />
             </FormControl>
             <FormControl>
               <ImagePoster
@@ -196,7 +205,18 @@ export default function ContactForm({ onSave, open, setOpen, data }) {
                 setFile={setFile}
               />
             </FormControl>
+
             <div className="flex w-full justify-end space-x-4">
+              <Button
+                variant="contained"
+                type="button"
+                color="secondary"
+                onClick={() => setOpen(false)}
+                size="medium"
+                className=" w-28 text-green-600 bg-white shadow-none hover:bg-transparent "
+              >
+                Cancel
+              </Button>
               <Button
                 variant="contained"
                 type="submit"

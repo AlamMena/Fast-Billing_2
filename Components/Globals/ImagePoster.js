@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { AiOutlineCloseCircle } from "react-icons/ai";
-import styles from "./ImagePoster.module.css";
+import styles from "./ImagePosterCss.module.css";
 
 export default function ImagePoster({ images, setImages, setFile }) {
   const postImage = async (file) => {

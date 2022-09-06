@@ -17,25 +17,21 @@ import {
 } from "@mui/material";
 import { DataGrid, GridToolBar } from "@mui/x-data-grid";
 import { useState } from "react";
+import { toast } from "react-toastify";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import Alert from "../Globals/Alert";
 import StatusRow from "../Globals/StatusRow";
 
-export default function ContactList({ setFormOpen, setFormData, data }) {
-  // confirm dialog state
-  const [confirmOpen, setConfirmOpen] = useState(false);
-  const [itemToDelete, setItemToDelete] = useState();
+export default function ContactList({
+  setFormOpen,
+  setFormData,
+  data,
+  setItemToDelete,
+  setConfirmOpen,
+}) {
+  let value = "one";
 
-  const [value, setValue] = useState("one");
-
-  // alert states
-  const [alert, setAlert] = useState(false);
-  const MySwal = withReactContent(Swal);
-  const [alertParams, setAlertParams] = useState({
-    severity: "success",
-    title: "",
-  });
   const columns = [
     {
       field: "_id",
@@ -69,11 +65,11 @@ export default function ContactList({ setFormOpen, setFormData, data }) {
       headerName: "Phone Number",
     },
     {
-      field: "isDelete",
+      field: "IsDelete",
       width: "150",
       headerName: "Status",
       renderCell: (cells) => {
-        return <StatusRow active={cells.row.isDelete} />;
+        return <StatusRow active={!cells.row.IsDeleted} />;
       },
     },
 
@@ -102,8 +98,8 @@ export default function ContactList({ setFormOpen, setFormData, data }) {
             </a>
             <a
               onClick={() => {
-                setConfirmOpen(true);
                 setItemToDelete(cells.row);
+                setConfirmOpen(true);
               }}
               className="text-red-500 cursor-pointer"
             >
@@ -115,33 +111,12 @@ export default function ContactList({ setFormOpen, setFormData, data }) {
     },
   ];
 
-  const handleConfirmForm = () => {
-    setConfirmOpen(false);
-    try {
-      // dispatch(deleteCategory(itemToDelete));
-      setAlertParams({
-        severity: "success",
-        title: "category deleted successfully",
-      });
-      setAlert(true);
-    } catch (error) {
-      setAlertParams({
-        severity: "error",
-        title: "Oops!, something went wrong, try later",
-      });
-      setAlert(true);
-    }
-  };
-
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
-  };
   return (
     <div className="flex flex-col h-full  w-full shadow-lg rounded-xl my-3">
       <div className=" bg-slate-200 rounded-t-lg">
         <Tabs
           value={value}
-          onChange={handleChange}
+          // onChange={handleChange}
           className="text-neutral-500"
           TabIndicatorProps={{
             style: {
