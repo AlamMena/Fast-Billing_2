@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { AiOutlineCloseCircle } from "react-icons/ai";
-import styles from "./ImagePosterCss.module.css";
+import { AiOutlineCloseCircle } from "react-icons/ai";
+import styles from "./ImagePoster.module.css";
 
 export default function ImagePoster({ images, setImages, setFile }) {
   const postImage = async (file) => {
@@ -25,7 +26,7 @@ export default function ImagePoster({ images, setImages, setFile }) {
           onChange={handleImageInput}
           className={styles.image_input}
         ></input>
-        <span className={styles.title}>Select an image</span>
+        <span className={styles.title}>Selecciona una imagen</span>
       </div>
       <div className={styles.list_container}>
         <span className={styles.list_title}>Listado de imagenes</span>

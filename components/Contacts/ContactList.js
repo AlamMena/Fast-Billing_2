@@ -60,7 +60,7 @@ export default function ContactList({
       headerName: "Identification",
     },
     {
-      field: "phoneNumber",
+      field: "phone",
       width: 170,
       headerName: "Phone Number",
     },

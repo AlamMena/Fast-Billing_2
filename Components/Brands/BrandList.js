@@ -22,29 +22,24 @@ export default function BrandList({ setFormOpen, data }) {
 
   const columns = [
     {
-      field: "id",
-      width: 90,
-      headerName: "Id",
-    },
-    {
       field: "name",
-      width: 260,
+      width: 220,
       headerName: "Nombre",
     },
     {
       field: "description",
-      width: 300,
+      width: 270,
       headerName: "Descripcion",
     },
 
     {
       field: "supliers",
-      width: 150,
+      width: 190,
       headerName: "Proveedores",
     },
     {
       field: "isDelete",
-      width: "150",
+      width: 150,
       headerName: "Estatus",
       renderCell: (cells) => {
         return <StatusRow active={cells.row.isDelete} />;
@@ -54,7 +49,7 @@ export default function BrandList({ setFormOpen, data }) {
     {
       field: "Acciones",
       sortable: false,
-      width: 150,
+      width: 190,
       renderCell: (cells) => {
         return (
           <div className="flex space-x-4">
@@ -129,6 +124,7 @@ export default function BrandList({ setFormOpen, data }) {
         <div className="h-96 w-full my-2">
           <DataGrid
             components={{ Toolbar: GridToolBar }}
+            getRowId={(row) => row._id}
             onSelectionModelChange={(row) => {
               Alert.fire({
                 title: <strong>Success!</strong>,

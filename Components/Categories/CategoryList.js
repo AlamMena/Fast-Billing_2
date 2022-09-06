@@ -22,17 +22,12 @@ export default function CategoryList({ setFormOpen, data }) {
 
   const columns = [
     {
-      field: "id",
-      width: 90,
-      headerName: "Id",
-    },
-    {
-      field: "name",
+      field: "Name",
       width: 460,
-      headerName: "Nombre de Categoria",
+      headerName: "Nombre",
     },
     {
-      field: "isDelete",
+      field: "IsDeleted",
       width: "150",
       headerName: "Estatus",
       renderCell: (cells) => {
@@ -43,7 +38,7 @@ export default function CategoryList({ setFormOpen, data }) {
     {
       field: "Acciones",
       sortable: false,
-      width: 150,
+      width: 190,
       renderCell: (cells) => {
         return (
           <div className="flex space-x-4">
@@ -118,6 +113,7 @@ export default function CategoryList({ setFormOpen, data }) {
         <div className="h-96 w-full my-2">
           <DataGrid
             components={{ Toolbar: GridToolBar }}
+            getRowId={(row) => row._id}
             onSelectionModelChange={(row) => {
               Alert.fire({
                 title: <strong>Success!</strong>,

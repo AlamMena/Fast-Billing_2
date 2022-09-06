@@ -31,10 +31,12 @@ export default function Brand() {
 
   const setBrandsAsync = async () => {
     try {
-      const response = await axiosInstance.get("/brands?limit=20&page=2");
-      setBrands({ isLoading: false, Data: response.data });
+      const response = await axiosInstance.get("v1/brands?limit=20&page=1");
+      setBrands({ isLoading: false, data: response.data });
+      console.log(response);
     } catch (error) {
-      //    toast.error(`Opps!, something went wrong${error}`);
+      toast.error(`Opps!, something went wrong${error}`);
+      setBrands({ isLoading: false, data: [] });
     }
   };
 

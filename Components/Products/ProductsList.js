@@ -23,12 +23,12 @@ export default function ProductsList({ setFormOpen, data }) {
   const columns = [
     {
       field: "name",
-      width: 460,
+      width: 360,
       headerName: "Nombre del Producto",
     },
 
     {
-      field: "isCreatedAt",
+      field: "CreatedAt",
       width: 150,
       headerName: "Creado en",
     },
@@ -44,12 +44,15 @@ export default function ProductsList({ setFormOpen, data }) {
       field: "price",
       width: 100,
       headerName: "Precio",
+      renderCell: (cells) => {
+        return <>${cells.row.price}</>;
+      },
     },
 
     {
       field: "Acciones",
       sortable: false,
-      width: 100,
+      width: 180,
       renderCell: (cells) => {
         return (
           <div className="flex space-x-4">
@@ -124,6 +127,7 @@ export default function ProductsList({ setFormOpen, data }) {
         <div className="h-96 w-full my-2">
           <DataGrid
             components={{ Toolbar: GridToolBar }}
+            getRowId={(row) => row._id}
             onSelectionModelChange={(row) => {
               Alert.fire({
                 title: <strong>Success!</strong>,

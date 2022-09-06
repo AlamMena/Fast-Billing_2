@@ -101,6 +101,21 @@ export default function Index() {
             },
             { text: "Marcas", Icon: <StorefrontRounded />, path: "./marcas" },
             { text: "Configuration", Icon: <SettingsRounded /> },
+            { text: "Products", Icon: <RoomRounded />, path: "./productos" },
+            { text: "Contactos", Icon: <RouteRounded />, path: "./contactos" },
+            {
+              text: "Categorias",
+              Icon: <RouteRounded />,
+              path: "./categorias",
+            },
+            { text: "Marcas", Icon: <RouteRounded />, path: "./marcas" },
+            {
+              text: "Crear Factura",
+              Icon: <RouteRounded />,
+              path: "./crearfactura",
+            },
+
+            { text: "Configuration", Icon: <MenuBookRounded /> },
           ].map((item, index) => {
             return (
               <div
