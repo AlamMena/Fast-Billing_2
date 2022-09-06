@@ -1,10 +1,15 @@
 import {
+  CategoryRounded,
+  ContactPageRounded,
   HomeRounded,
+  Inventory2Rounded,
   MenuBookRounded,
   MenuRounded,
   RoomRounded,
   RouteRounded,
   SearchRounded,
+  SettingsRounded,
+  StorefrontRounded,
 } from "@mui/icons-material";
 import { Menu, MenuItem, Popover, Slide, Typography } from "@mui/material";
 import { useState } from "react";
@@ -79,6 +84,7 @@ export default function Index() {
           </div>
 
           {[
+<<<<<<< HEAD
             { text: "Products", Icon: <RoomRounded />, path: "./productos" },
             { text: "Contactos", Icon: <RouteRounded />, path: "./contactos" },
             {
@@ -94,6 +100,25 @@ export default function Index() {
             },
 
             { text: "Configuration", Icon: <MenuBookRounded /> },
+=======
+            {
+              text: "Products",
+              Icon: <Inventory2Rounded />,
+              path: "./productos",
+            },
+            {
+              text: "Contactos",
+              Icon: <ContactPageRounded />,
+              path: "./contactos",
+            },
+            {
+              text: "Categorias",
+              Icon: <CategoryRounded />,
+              path: "./categorias",
+            },
+            { text: "Marcas", Icon: <StorefrontRounded />, path: "./marcas" },
+            { text: "Configuration", Icon: <SettingsRounded /> },
+>>>>>>> new
           ].map((item, index) => {
             return (
               <div
@@ -109,7 +134,7 @@ export default function Index() {
             );
           })}
         </div>
-        <h2 className=" mt-4 px-4 my-4 ">Products </h2>
+        {/* <h2 className=" mt-4 px-4 my-4 ">Products </h2>
 
         {[
           { text: "Products", Icon: <RoomRounded /> },
@@ -161,7 +186,7 @@ export default function Index() {
               <span className=" text-sm">{item.text}</span>
             </div>
           );
-        })}
+        })} */}
       </div>
     </div>
   );

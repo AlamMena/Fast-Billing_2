@@ -1,16 +1,27 @@
 import { Add } from "@mui/icons-material";
 import useAxios from "../Axios/Axios";
 import { Button } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import ContactForm from "../components/Contacts/ContactForm";
 import ContactList from "../components/Contacts/ContactList";
 import PageHeader from "../components/Globals/PageHeader";
 import { toast } from "react-toastify";
 import axios from "axios";
+import ConfirmationForm from "../Components/Globals/ConfirmationForm";
 
 export default function Contacts() {
-  const [formOpen, setFormOpen] = useState(false);
+  // list data
   const [data, setData] = useState({ isLoading: true, data: [] });
+
+  // upsert states
+  const [formOpen, setFormOpen] = useState(false);
+  const [formData, setFormData] = useState();
+
+  // confirmation form states
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [itemToDelete, setItemToDelete] = useState();
+
+  const toastId = useRef(null);
 
   const { axiosInstance } = useAxios();
   const locationRoutes = [
@@ -30,7 +41,7 @@ export default function Contacts() {
 
   const setDataAsync = async () => {
     try {
-      const response = await axiosInstance.get("v1/contacts?page=1&limit=2");
+      const response = await axiosInstance.get("v1/contacts?page=1&limit=200");
       setData({ isLoading: false, data: response.data });
     } catch (error) {
       toast.error(`Opps!, something went wrong${error}`);
@@ -40,12 +51,42 @@ export default function Contacts() {
 
   const upsertAsync = async (data) => {
     try {
-      if (data._id) {
+      toastId.current = toast("Please wait...", {
+        type: toast.TYPE.LOADING,
+      });
+      if (data._id !== undefined) {
         await axiosInstance.put("v1/contact", data);
+        console.log(data);
       } else {
-        await axiosInstance.put("v1/contact", data);
+        await axiosInstance.post("v1/contact", data);
       }
       await setDataAsync();
+
+      toast.update(toastId.current, {
+        type: toast.TYPE.SUCCESS,
+        autoClose: 5000,
+        render: "Success",
+      });
+    } catch (error) {
+      toast.error(`Opps!, something went wrong${error}`);
+      setData({ isLoading: false, data: [] });
+    }
+  };
+
+  const deleteAsync = async () => {
+    try {
+      toastId.current = toast("Please wait...", {
+        type: toast.TYPE.LOADING,
+      });
+      await axiosInstance.delete(`v1/contact?id=${itemToDelete._id}`);
+      toast.update(toastId.current, {
+        type: toast.TYPE.SUCCESS,
+        autoClose: 5000,
+        render: "Success",
+      });
+      setConfirmOpen(false);
+      await setDataAsync();
+      console.log(data);
     } catch (error) {
       toast.error(`Opps!, something went wrong${error}`);
       setData({ isLoading: false, data: [] });
@@ -65,7 +106,10 @@ export default function Contacts() {
           <Button
             className=" z-auto rounded-xl py-2 bg-green-600 hover:bg-green-800"
             variant="contained"
-            onClick={() => setFormOpen(true)}
+            onClick={() => {
+              setFormOpen(true);
+              setFormData({});
+            }}
             startIcon={<Add className="text-white" />}
           >
             <span className="text-sm whitespace-nowrap text-neutral-50 capitalize font-bold">
@@ -74,8 +118,19 @@ export default function Contacts() {
           </Button>
         </div>
       </div>
-      <ContactList setFormOpen={setFormOpen} data={data} />
-      <ContactForm open={formOpen} setOpen={setFormOpen} />
+      <ContactList
+        setFormOpen={setFormOpen}
+        data={data}
+        setFormData={setFormData}
+        setItemToDelete={setItemToDelete}
+        setConfirmOpen={setConfirmOpen}
+      />
+      <ContactForm open={formOpen} setOpen={setFormOpen} onSave={upsertAsync} />
+      <ConfirmationForm
+        open={confirmOpen}
+        setOpen={setConfirmOpen}
+        onConfirm={deleteAsync}
+      />
     </div>
   );
 }
