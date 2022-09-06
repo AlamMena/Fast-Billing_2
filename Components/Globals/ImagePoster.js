@@ -1,3 +1,5 @@
+import { useEffect, useState } from "react";
+import { AiOutlineCloseCircle } from "react-icons/ai";
 import { AiOutlineCloseCircle } from "react-icons/ai";
 import styles from "./ImagePoster.module.css";
 
