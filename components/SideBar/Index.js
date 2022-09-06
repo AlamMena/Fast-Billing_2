@@ -84,23 +84,12 @@ export default function Index() {
           </div>
 
           {[
-<<<<<<< HEAD
-            { text: "Products", Icon: <RoomRounded />, path: "./productos" },
-            { text: "Contactos", Icon: <RouteRounded />, path: "./contactos" },
-            {
-              text: "Categorias",
-              Icon: <RouteRounded />,
-              path: "./categorias",
-            },
-            { text: "Marcas", Icon: <RouteRounded />, path: "./marcas" },
             {
               text: "Crear Factura",
               Icon: <RouteRounded />,
               path: "./crearfactura",
             },
 
-            { text: "Configuration", Icon: <MenuBookRounded /> },
-=======
             {
               text: "Products",
               Icon: <Inventory2Rounded />,
@@ -118,7 +107,6 @@ export default function Index() {
             },
             { text: "Marcas", Icon: <StorefrontRounded />, path: "./marcas" },
             { text: "Configuration", Icon: <SettingsRounded /> },
->>>>>>> new
           ].map((item, index) => {
             return (
               <div
