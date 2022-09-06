@@ -25,7 +25,6 @@ export default function PrivateRouter({ children }) {
       // }, 1000);
       setIsLoading(false);
       setUser(user);
-      console.log(user);
       axios.create({
         baseURL: "http://localhost:8080/",
         headers: {
