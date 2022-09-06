@@ -87,6 +87,12 @@ export default function Index() {
               path: "./categorias",
             },
             { text: "Marcas", Icon: <RouteRounded />, path: "./marcas" },
+            {
+              text: "Crear Factura",
+              Icon: <RouteRounded />,
+              path: "./crearfactura",
+            },
+
             { text: "Configuration", Icon: <MenuBookRounded /> },
           ].map((item, index) => {
             return (

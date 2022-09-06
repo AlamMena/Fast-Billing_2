@@ -64,7 +64,7 @@ export default function ContactList({ setFormOpen, setFormData, data }) {
       headerName: "Identification",
     },
     {
-      field: "phoneNumber",
+      field: "phone",
       width: 170,
       headerName: "Phone Number",
     },
