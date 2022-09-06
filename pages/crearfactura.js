@@ -20,6 +20,7 @@ import { Add, DateRangeRounded, Edit } from "@mui/icons-material";
 import { MobileDatePicker } from "@mui/x-date-pickers";
 import { useForm } from "react-hook-form";
 import InvoiceContact from "../Components/CreateInvoice/InvoiceContact";
+import InvoiceDetail from "../Components/CreateInvoice/InvoiceDetails";
 
 export default function CreateInvoice() {
   const { handleSubmit, register, reset } = useForm({});
@@ -209,6 +210,7 @@ export default function CreateInvoice() {
         {/* Details */}
         <div className="p-5">
           <span className=" text-xl text-neutral-400">Detalles:</span>
+          <InvoiceDetail />
         </div>
         <Divider orientation="horizontal" variant="middle" flexItem></Divider>
         {/* Discount and Taxes */}

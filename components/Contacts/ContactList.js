@@ -1,14 +1,10 @@
 import {
   DeleteOutline,
   EditOutlined,
-  Search,
-  SearchOutlined,
   SearchRounded,
 } from "@mui/icons-material";
 import {
   Autocomplete,
-  Button,
-  Input,
   InputAdornment,
   OutlinedInput,
   Tab,
@@ -16,12 +12,9 @@ import {
   TextField,
 } from "@mui/material";
 import { DataGrid, GridToolBar } from "@mui/x-data-grid";
-import { useState } from "react";
-import { toast } from "react-toastify";
-import Swal from "sweetalert2";
-import withReactContent from "sweetalert2-react-content";
-import Alert from "../Globals/Alert";
-import StatusRow from "../Globals/StatusRow";
+
+import Alert from "../Globals/Alert.js";
+import StatusRow from "../Globals/StatusRow.js";
 
 export default function ContactList({
   setFormOpen,
