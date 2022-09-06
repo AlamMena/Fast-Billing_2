@@ -1,5 +1,5 @@
 import "../styles/globals.css";
-import SideBar from "../components/SideBar/Index";
+import SideBar from "../Components/SideBar/Index.js";
 import { createTheme } from "@mui/material";
 import { ThemeProvider } from "@emotion/react";
 import { StyledEngineProvider } from "@mui/material";
