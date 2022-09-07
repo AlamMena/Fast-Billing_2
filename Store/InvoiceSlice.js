@@ -4,7 +4,8 @@ const initialState = {
   companyId: 1,
   branchId: 1,
   invoiceTypeId: 1,
-  contactInfo: {},
+  beneficiary: { name: "Alex", phone: "590354035", address: "el calenton" },
+  recipient: { name: "el yala", phone: "590354035", address: "el calenton" },
   payment: {
     total: 0,
     type: "",
@@ -25,10 +26,20 @@ const initialState = {
 };
 
 const invoiceSlice = createSlice({
-  name: invoice,
-  initialState,
-  reducer: {},
+  name: "invoice",
+  initialState: initialState,
+  reducers: {
+    updateBeneficiary: (state, { payload }) => {
+      state.beneficiary.name = payload.name;
+      state.beneficiary.address = payload.address;
+      state.beneficiary.phone = payload.phone;
+    },
+    updateRecipient: (state, { payload }) => {
+      state.recipient.name = payload.name;
+      state.recipient.address = payload.address;
+      state.recipient.phone = payload.phone;
+    },
+  },
 });
-
-export const {} = invoiceSlice.actions;
+export const { updateBeneficiary, updateRecipient } = invoiceSlice.actions;
 export default invoiceSlice.reducer;

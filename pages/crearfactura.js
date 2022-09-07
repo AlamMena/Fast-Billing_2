@@ -15,17 +15,38 @@ import {
   MenuItem,
   TextField,
 } from "@mui/material";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Add, DateRangeRounded, Edit } from "@mui/icons-material";
 import { MobileDatePicker } from "@mui/x-date-pickers";
 import { useForm } from "react-hook-form";
-import InvoiceContact from "../Components/CreateInvoice/InvoiceContact";
 import InvoiceDetail from "../Components/CreateInvoice/InvoiceDetails";
+import { toast } from "react-toastify";
+import useAxios from "../Axios/Axios";
+import {
+  InvoiceRecipient,
+  InvoiceBeneficiary,
+} from "../Components/CreateInvoice/InvoiceContact";
+import SelectPopUp from "../Components/CreateInvoice/SelectPopUp";
 
 export default function CreateInvoice() {
   const { handleSubmit, register, reset } = useForm({});
   const [creationDate, setCreationDate] = useState(dayjs(undefined));
   const [dueDate, setDueDate] = useState(dayjs(undefined));
+  const [openSelect, setOpenSelect] = useState(false);
+  const [contact, setContact] = useState("");
+  const [data, setData] = useState({ isLoading: true, data: [] });
+
+  const { axiosInstance } = useAxios();
+
+  const setDataAsync = async () => {
+    try {
+      const response = await axiosInstance.get("v1/contacts?page=1&limit=200");
+      setData({ isLoading: false, data: response.data });
+    } catch (error) {
+      toast.error(`Opps!, something went wrong${error}`);
+      setData({ isLoading: false, data: [] });
+    }
+  };
 
   const handleCreationDateChange = (value) => {
     setCreationDate(value);
@@ -49,6 +70,10 @@ export default function CreateInvoice() {
       link: "/User/list",
     },
   ];
+
+  useEffect(() => {
+    setDataAsync();
+  }, []);
   return (
     <div className="w-full md:px-0 px-4 md:pr-8 flex flex-col pb-5">
       <div className="flex w-full justify-between items-center pr-8 ">
@@ -56,6 +81,12 @@ export default function CreateInvoice() {
           <PageHeader header="Crear Factura" locationRoutes={locationRoutes} />
         </div>
       </div>
+      <SelectPopUp
+        open={openSelect}
+        setOpenSelect={setOpenSelect}
+        contact={contact}
+        contactos={data.data}
+      />
       {/* Invoice  */}
       <div className="flex flex-col h-full w-full shadow-lg rounded-xl my-3">
         {/* Sender and Receiver */}
@@ -67,11 +98,14 @@ export default function CreateInvoice() {
                 startIcon={<Edit />}
                 className="h-10 font-bold"
                 size="small"
+                onClick={() => {
+                  setOpenSelect(true), setContact("beneficiente");
+                }}
               >
                 Cambiar
               </Button>
             </div>
-            <InvoiceContact />
+            <InvoiceBeneficiary />
           </Grid>
           <Divider
             orientation="vertical"
@@ -96,11 +130,14 @@ export default function CreateInvoice() {
                 startIcon={<Add />}
                 className="h-10 font-bold"
                 size="small"
+                onClick={() => {
+                  setOpenSelect(true), setContact("recipiente");
+                }}
               >
                 Anadir
               </Button>
             </div>
-            {/* <InvoiceContact /> */}
+            <InvoiceRecipient />
           </Grid>
         </Grid>
         {/* Invoice settings Inputs */}

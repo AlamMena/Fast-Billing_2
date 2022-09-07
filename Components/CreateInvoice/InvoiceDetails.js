@@ -103,7 +103,11 @@ export default function InvoiceDetail() {
       </Grid>
       {/* Delete Icon */}
       <div className="flex justify-end py-5">
-        <Button startIcon={<Delete />} size="small" className=" text-red-600">
+        <Button
+          startIcon={<Delete />}
+          size="small"
+          className=" text-red-600 hover:bg-red-100"
+        >
           Eliminar
         </Button>
       </div>
