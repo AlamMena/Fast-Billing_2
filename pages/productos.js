@@ -3,7 +3,7 @@ import { Add } from "@mui/icons-material";
 import useAxios from "../Axios/Axios";
 import { Button } from "@mui/material";
 import { useEffect, useState } from "react";
-import PageHeader from "../components/Globals/PageHeader";
+import PageHeader from "../Components/Globals/PageHeader";
 import { toast } from "react-toastify";
 import CategoryList from "../Components/Categories/CategoryList";
 import CategoryForm from "../Components/Categories/CategoryForm";

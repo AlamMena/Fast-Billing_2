@@ -1,5 +1,5 @@
 import React from "react";
-import PageHeader from "../components/Globals/PageHeader";
+import PageHeader from "../Components/Globals/PageHeader";
 import dayjs from "dayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
