@@ -9,18 +9,13 @@ import { InvoiceRecipient } from "./InvoiceContact";
 import { useDispatch } from "react-redux";
 import { updateBeneficiary, updateRecipient } from "../../Store/InvoiceSlice";
 
-export default function SelectPopUp({
-  open,
-  setOpenSelect,
-  contact,
-  contactos,
-}) {
+export default function SelectPopUp({ open, setOpenSelect, type, contactos }) {
   const dispatch = useDispatch();
 
   const handleContact = (item) => {
-    if (contact === "beneficiente") {
+    if (type === "beneficiente") {
       dispatch(updateBeneficiary(item));
-    } else if (contact === "recipiente") {
+    } else if (type === "recipiente") {
       dispatch(updateRecipient(item));
     }
   };
@@ -45,7 +40,7 @@ export default function SelectPopUp({
   });
   return (
     <Dialog open={open} fullWidth={true} maxWidth={"sm"}>
-      <DialogTitle>Selecciona un {contact}</DialogTitle>
+      <DialogTitle>Selecciona un {type}</DialogTitle>
       <DialogContent dividers={true}>{contacts}</DialogContent>
       <DialogActions>
         <Button onClick={() => setOpenSelect(false)}>Cerrar</Button>

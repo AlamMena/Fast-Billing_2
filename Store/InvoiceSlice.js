@@ -39,7 +39,11 @@ const invoiceSlice = createSlice({
       state.recipient.address = payload.address;
       state.recipient.phone = payload.phone;
     },
+    updateDiscount: (state, actions) => {
+      state.discountAmount = Math.abs(actions.payload) * -1;
+    },
   },
 });
-export const { updateBeneficiary, updateRecipient } = invoiceSlice.actions;
+export const { updateBeneficiary, updateRecipient, updateDiscount } =
+  invoiceSlice.actions;
 export default invoiceSlice.reducer;

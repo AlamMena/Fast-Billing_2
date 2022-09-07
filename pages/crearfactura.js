@@ -27,16 +27,22 @@ import {
   InvoiceBeneficiary,
 } from "../Components/CreateInvoice/InvoiceContact";
 import SelectPopUp from "../Components/CreateInvoice/SelectPopUp";
+import { useDispatch } from "react-redux";
+import { updateDiscount } from "../Store/InvoiceSlice";
+import { useSelector } from "react-redux";
 
 export default function CreateInvoice() {
   const { handleSubmit, register, reset } = useForm({});
   const [creationDate, setCreationDate] = useState(dayjs(undefined));
   const [dueDate, setDueDate] = useState(dayjs(undefined));
   const [openSelect, setOpenSelect] = useState(false);
-  const [contact, setContact] = useState("");
+  const [type, setType] = useState("");
   const [data, setData] = useState({ isLoading: true, data: [] });
+  const invoice = useSelector((state) => state.invoice);
+  const { discountAmount } = invoice;
 
   const { axiosInstance } = useAxios();
+  const dispatch = useDispatch();
 
   const setDataAsync = async () => {
     try {
@@ -48,6 +54,12 @@ export default function CreateInvoice() {
     }
   };
 
+  const handleDiscount = (e) => {
+    dispatch(updateDiscount(e));
+  };
+
+  // Handle Creation and Due date of Invoice
+
   const handleCreationDateChange = (value) => {
     setCreationDate(value);
   };
@@ -55,6 +67,8 @@ export default function CreateInvoice() {
   const handleDueDateChange = (value) => {
     setDueDate(value);
   };
+
+  // Location Routes
 
   const locationRoutes = [
     {
@@ -84,7 +98,7 @@ export default function CreateInvoice() {
       <SelectPopUp
         open={openSelect}
         setOpenSelect={setOpenSelect}
-        contact={contact}
+        type={type}
         contactos={data.data}
       />
       {/* Invoice  */}
@@ -99,7 +113,7 @@ export default function CreateInvoice() {
                 className="h-10 font-bold"
                 size="small"
                 onClick={() => {
-                  setOpenSelect(true), setContact("beneficiente");
+                  setOpenSelect(true), setType("beneficiente");
                 }}
               >
                 Cambiar
@@ -131,7 +145,7 @@ export default function CreateInvoice() {
                 className="h-10 font-bold"
                 size="small"
                 onClick={() => {
-                  setOpenSelect(true), setContact("recipiente");
+                  setOpenSelect(true), setType("recipiente");
                 }}
               >
                 Anadir
@@ -175,6 +189,7 @@ export default function CreateInvoice() {
                   label="Estatus"
                   size="large"
                   type="number"
+                  value={10}
                   className="rounded-xl"
                   variant="outlined"
                   startAdornment={
@@ -265,10 +280,10 @@ export default function CreateInvoice() {
                 Descuento
               </InputLabel>
               <OutlinedInput
-                {...register("discount")}
                 id="outlined-adornment-name"
                 label="Descuento"
                 size="small"
+                onChange={(e) => handleDiscount(e.target.value)}
                 type="number"
                 className="rounded-xl"
                 variant="outlined"
@@ -298,7 +313,9 @@ export default function CreateInvoice() {
           </div>
           <div className="flex justify-end p-2">
             <span className="">Descuento:</span>
-            <span className=" w-32 text-right overflow-hidden">-</span>
+            <span className=" w-32 text-right overflow-hidden">
+              {discountAmount}
+            </span>
           </div>
           <div className="flex justify-end p-2">
             <span className="">Taxes:</span>
