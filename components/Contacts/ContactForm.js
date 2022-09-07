@@ -1,4 +1,5 @@
 import {
+  AlternateEmail,
   ArticleOutlined,
   BadgeOutlined,
   BadgeRounded,
@@ -29,7 +30,7 @@ import { toast } from "react-toastify";
 import Alert from "../Globals/Alert";
 import ImagePoster from "../Globals/ImagePoster";
 
-export default function ContactForm({ onSave, open, setOpen, data }) {
+export default function ContactForm({ onSave, open, setOpen, data, setFile }) {
   const {
     handleSubmit,
     register,
@@ -40,23 +41,13 @@ export default function ContactForm({ onSave, open, setOpen, data }) {
   });
 
   const [images, setImages] = useState([]);
-  const [file, setFile] = useState();
 
   const [contactType, setContactType] = useState(1);
   const [identificationType, setIdentificationType] = useState(1);
 
-  const postImage = async () => {
-    const storage = getStorage(app);
-    const storageRef = ref(storage, "products");
-    const response = await uploadBytes(storageRef, file);
-    const url = await getDownloadURL(response.ref);
-    return url;
-  };
-
   const onSubmit = async (data) => {
     const dataParsed = {
       address: "none",
-      imageUrl: "default",
       IsDeleted: false,
       ...data,
     };
@@ -66,6 +57,7 @@ export default function ContactForm({ onSave, open, setOpen, data }) {
 
   useEffect(() => {
     reset(data);
+    setImages([data && data.imageUrl]);
   }, [data]);
 
   return (

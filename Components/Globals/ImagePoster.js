@@ -1,15 +1,9 @@
+import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
+import app from "../../Firebase/FirebaseAppConfig";
 import { AiOutlineCloseCircle } from "react-icons/ai";
 import styles from "./ImagePosterCss.module.css";
 
 export default function ImagePoster({ images, setImages, setFile }) {
-  const postImage = async (file) => {
-    try {
-      setUrl("images", [url]);
-      console.log(url);
-    } catch (error) {
-      console.log(error);
-    }
-  };
   const handleImageInput = (e) => {
     const url = URL.createObjectURL(e.target.files[0]);
     setFile(e.target.files[0]);
@@ -50,3 +44,16 @@ export default function ImagePoster({ images, setImages, setFile }) {
     </div>
   );
 }
+
+const postImage = async (file) => {
+  try {
+    const storage = getStorage(app);
+    const storageRef = ref(storage, "contacts");
+    const response = await uploadBytes(storageRef, file);
+    const url = await getDownloadURL(response.ref);
+    return url;
+  } catch (error) {
+    alert(error);
+  }
+};
+export { postImage };

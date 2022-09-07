@@ -2,9 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import Login from "../pages/login";
 import axios from "axios";
-import auth from "../FireBase/FireBaseAuth";
+import auth from "../Firebase/FirebaseAuth";
 import Loading from "../Components/Loading/Loading";
-import Index from "../pages/index";
 
 export default function PrivateRouter({ children }) {
   const [isLoading, setIsLoading] = useState(true);

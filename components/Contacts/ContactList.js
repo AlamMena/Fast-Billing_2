@@ -28,39 +28,55 @@ export default function ContactList({
   const columns = [
     {
       field: "_id",
-      width: 90,
+      width: 120,
       headerName: "Id",
     },
     {
       field: "name",
-      width: "250",
+      width: "300",
       headerName: "Name",
       renderCell: (cells) => {
         return (
           <div className="flex space-x-4 items-center">
             <img
               className=" rounded-xl w-10 h-10"
-              src="https://cdn-icons-png.flaticon.com/128/3135/3135768.png"
+              src={
+                cells.row.imageUrl
+                  ? cells.row.imageUrl
+                  : "https://cdn-icons-png.flaticon.com/128/3135/3135768.png"
+              }
             />
             <span className="font-semibold ">{cells.row.name}</span>
           </div>
         );
       },
     },
-    {
-      field: "noIdentification",
-      width: 200,
-      headerName: "Identification",
-    },
+
     {
       field: "phone",
-      width: 170,
+      width: 190,
       headerName: "Phone Number",
     },
     {
-      field: "IsDelete",
+      field: "type",
       width: "150",
-      headerName: "Status",
+      headerName: "Type",
+      renderCell: (cells) => {
+        return (
+          <StatusRow
+            color={cells.row.type == 1 ? "bg-yellow-400" : "bg-orange-400"}
+            textColor={
+              cells.row.type == 1 ? "text-yellow-900" : "text-bg-yellow-900"
+            }
+            text={cells.row.type == 1 ? "Cliente" : "Proveedor"}
+          />
+        );
+      },
+    },
+    {
+      field: "isDeleted",
+      width: "150",
+      headerName: "Estatus",
       renderCell: (cells) => {
         return <StatusRow active={!cells.row.IsDeleted} />;
       },

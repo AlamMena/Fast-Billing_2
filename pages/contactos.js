@@ -6,7 +6,7 @@ import ContactForm from "../Components/Contacts/ContactForm";
 import ContactList from "../Components/Contacts/ContactList";
 import PageHeader from "../Components/Globals/PageHeader";
 import { toast } from "react-toastify";
-import axios from "axios";
+import { postImage } from "../Components/Globals/ImagePoster";
 import ConfirmationForm from "../Components/Globals/ConfirmationForm";
 
 export default function Contacts() {
@@ -16,6 +16,8 @@ export default function Contacts() {
   // upsert states
   const [formOpen, setFormOpen] = useState(false);
   const [formData, setFormData] = useState();
+
+  const [imageFile, setImageFile] = useState();
 
   // confirmation form states
   const [confirmOpen, setConfirmOpen] = useState(false);
@@ -51,24 +53,41 @@ export default function Contacts() {
 
   const upsertAsync = async (data) => {
     try {
+      // loading toast
       toastId.current = toast("Please wait...", {
         type: toast.TYPE.LOADING,
       });
-      if (data._id !== undefined) {
-        await axiosInstance.put("v1/contact", data);
-        console.log(data);
-      } else {
-        await axiosInstance.post("v1/contact", data);
+
+      // if there is any file
+      let imageUrl = "";
+      if (imageFile) {
+        imageUrl = await postImage(imageFile);
       }
+      const parsedData = { ...data, imageUrl };
+
+      // logic
+      if (data._id !== undefined) {
+        // if the item exists
+        await axiosInstance.put("v1/contact", parsedData);
+      } else {
+        // if the item dosent exists
+        await axiosInstance.post("v1/contact", parsedData);
+      }
+
+      // getting data back
       await setDataAsync();
 
+      // success toast
       toast.update(toastId.current, {
         type: toast.TYPE.SUCCESS,
         autoClose: 5000,
         render: "Success",
       });
     } catch (error) {
+      // error toast
       toast.error(`Opps!, something went wrong${error}`);
+
+      // removing data from page
       setData({ isLoading: false, data: [] });
     }
   };
@@ -125,7 +144,14 @@ export default function Contacts() {
         setItemToDelete={setItemToDelete}
         setConfirmOpen={setConfirmOpen}
       />
-      <ContactForm open={formOpen} setOpen={setFormOpen} onSave={upsertAsync} />
+      <ContactForm
+        open={formOpen}
+        setOpen={setFormOpen}
+        data={formData}
+        onSave={upsertAsync}
+        setFile={setImageFile}
+        file={imageFile}
+      />
       <ConfirmationForm
         open={confirmOpen}
         setOpen={setConfirmOpen}
