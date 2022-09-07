@@ -34,7 +34,7 @@ export default function ContactList({
     {
       field: "name",
       width: "300",
-      headerName: "Name",
+      headerName: "Contacto",
       renderCell: (cells) => {
         return (
           <div className="flex space-x-4 items-center">
@@ -55,12 +55,12 @@ export default function ContactList({
     {
       field: "phone",
       width: 190,
-      headerName: "Phone Number",
+      headerName: "Telefono",
     },
     {
       field: "type",
       width: "150",
-      headerName: "Type",
+      headerName: "Tipo",
       renderCell: (cells) => {
         return (
           <StatusRow
@@ -83,7 +83,7 @@ export default function ContactList({
     },
 
     {
-      field: "Actions",
+      field: "Acciones",
       sortable: false,
       width: 200,
       renderCell: (cells) => {
