@@ -39,13 +39,11 @@ function MyApp({ Component, pageProps }) {
         <AuthContext.Provider value={user}>
           <PrivateRouter>
             <Provider store={store}>
-              <StyledEngineProvider injectFirst>
-                <SideBar />
-                <div className="md:ml-72">
-                  <Component {...pageProps} />
-                  <ToastContainer />
-                </div>
-              </StyledEngineProvider>
+              <SideBar />
+              <div className="md:ml-72">
+                <Component {...pageProps} />
+                <ToastContainer />
+              </div>
             </Provider>
           </PrivateRouter>
         </AuthContext.Provider>

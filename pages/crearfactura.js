@@ -39,7 +39,7 @@ export default function CreateInvoice() {
   const [type, setType] = useState("");
   const [data, setData] = useState({ isLoading: true, data: [] });
   const invoice = useSelector((state) => state.invoice);
-  const { discountAmount } = invoice;
+  const { discountAmount, subTotal, total } = invoice;
 
   const { axiosInstance } = useAxios();
   const dispatch = useDispatch();
@@ -309,12 +309,14 @@ export default function CreateInvoice() {
         <div className=" p-4 flex flex-col">
           <div className="flex justify-end p-2">
             <span className="">Subtotal:</span>
-            <span className=" w-32 text-right overflow-hidden">$12</span>
+            <span className=" w-32 text-right overflow-hidden">
+              ${subTotal}
+            </span>
           </div>
           <div className="flex justify-end p-2">
             <span className="">Descuento:</span>
-            <span className=" w-32 text-right overflow-hidden">
-              {discountAmount}
+            <span className=" w-32 text-right overflow-hidden text-red-600">
+              -${discountAmount}
             </span>
           </div>
           <div className="flex justify-end p-2">
@@ -323,7 +325,7 @@ export default function CreateInvoice() {
           </div>
           <div className="flex justify-end p-2 font-bold">
             <span className="">Precio Total:</span>
-            <span className=" w-32 text-right overflow-hidden">$12</span>
+            <span className=" w-32 text-right overflow-hidden">${total}</span>
           </div>
         </div>
       </div>

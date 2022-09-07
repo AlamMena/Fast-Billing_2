@@ -5,7 +5,7 @@ const initialState = {
   branchId: 1,
   invoiceTypeId: 1,
   beneficiary: { name: "Alex", phone: "590354035", address: "el calenton" },
-  recipient: { name: "el yala", phone: "590354035", address: "el calenton" },
+  recipient: {},
   payment: {
     total: 0,
     type: "",
@@ -40,7 +40,7 @@ const invoiceSlice = createSlice({
       state.recipient.phone = payload.phone;
     },
     updateDiscount: (state, actions) => {
-      state.discountAmount = Math.abs(actions.payload) * -1;
+      state.discountAmount = Math.abs(actions.payload);
     },
   },
 });
