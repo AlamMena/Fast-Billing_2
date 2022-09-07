@@ -1,16 +1,33 @@
+import { defaultConfig } from "next/dist/server/config-shared";
 import React from "react";
+import { useSelector } from "react-redux";
 
-export default function InvoiceContact() {
+export function InvoiceBeneficiary() {
+  const { beneficiary } = useSelector((state) => state.invoice);
+
   return (
     <div className="p-3 flex flex-col space-y-1">
       {/* Name */}
-      <span className="font-bold">Jose Alejandro</span>
+      <span className="font-bold">{beneficiary.name}</span>
       {/* Address */}
-      <span className="text-sm">
-        Direccion: 19034 Verna Unions Apt. 164 - Honolulu, RI / 87535
-      </span>
+      <span className="text-sm">Direccion: {beneficiary.address}</span>
       {/* Phone */}
-      <span className="text-sm">Tel: 0981203-090</span>
+      <span className="text-sm">Tel: {beneficiary.phone}</span>
+    </div>
+  );
+}
+
+export function InvoiceRecipient() {
+  const { recipient } = useSelector((state) => state.invoice);
+
+  return (
+    <div className="p-3 flex flex-col space-y-1">
+      {/* Name */}
+      <span className="font-bold">{recipient.name}</span>
+      {/* Address */}
+      <span className="text-sm">Direccion: {recipient.address}</span>
+      {/* Phone */}
+      <span className="text-sm">Tel: {recipient.phone}</span>
     </div>
   );
 }

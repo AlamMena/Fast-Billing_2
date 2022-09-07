@@ -9,6 +9,8 @@ import AuthContext from "../Auth/AuthContext";
 import useAuth from "../Auth/useAuth";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { Provider } from "react-redux";
+import { store } from "../Store/Store";
 
 function MyApp({ Component, pageProps }) {
   const { user } = useAuth();
@@ -36,13 +38,13 @@ function MyApp({ Component, pageProps }) {
       <StyledEngineProvider injectFirst>
         <AuthContext.Provider value={user}>
           <PrivateRouter>
-            <StyledEngineProvider injectFirst>
+            <Provider store={store}>
               <SideBar />
               <div className="md:ml-72">
                 <Component {...pageProps} />
                 <ToastContainer />
               </div>
-            </StyledEngineProvider>
+            </Provider>
           </PrivateRouter>
         </AuthContext.Provider>
       </StyledEngineProvider>

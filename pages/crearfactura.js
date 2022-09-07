@@ -15,17 +15,50 @@ import {
   MenuItem,
   TextField,
 } from "@mui/material";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Add, DateRangeRounded, Edit } from "@mui/icons-material";
 import { MobileDatePicker } from "@mui/x-date-pickers";
 import { useForm } from "react-hook-form";
-import InvoiceContact from "../Components/CreateInvoice/InvoiceContact";
 import InvoiceDetail from "../Components/CreateInvoice/InvoiceDetails";
+import { toast } from "react-toastify";
+import useAxios from "../Axios/Axios";
+import {
+  InvoiceRecipient,
+  InvoiceBeneficiary,
+} from "../Components/CreateInvoice/InvoiceContact";
+import SelectPopUp from "../Components/CreateInvoice/SelectPopUp";
+import { useDispatch } from "react-redux";
+import { updateDiscount } from "../Store/InvoiceSlice";
+import { useSelector } from "react-redux";
 
 export default function CreateInvoice() {
   const { handleSubmit, register, reset } = useForm({});
   const [creationDate, setCreationDate] = useState(dayjs(undefined));
   const [dueDate, setDueDate] = useState(dayjs(undefined));
+  const [openSelect, setOpenSelect] = useState(false);
+  const [type, setType] = useState("");
+  const [data, setData] = useState({ isLoading: true, data: [] });
+  const invoice = useSelector((state) => state.invoice);
+  const { discountAmount, subTotal, total } = invoice;
+
+  const { axiosInstance } = useAxios();
+  const dispatch = useDispatch();
+
+  const setDataAsync = async () => {
+    try {
+      const response = await axiosInstance.get("v1/contacts?page=1&limit=200");
+      setData({ isLoading: false, data: response.data });
+    } catch (error) {
+      toast.error(`Opps!, something went wrong${error}`);
+      setData({ isLoading: false, data: [] });
+    }
+  };
+
+  const handleDiscount = (e) => {
+    dispatch(updateDiscount(e));
+  };
+
+  // Handle Creation and Due date of Invoice
 
   const handleCreationDateChange = (value) => {
     setCreationDate(value);
@@ -34,6 +67,8 @@ export default function CreateInvoice() {
   const handleDueDateChange = (value) => {
     setDueDate(value);
   };
+
+  // Location Routes
 
   const locationRoutes = [
     {
@@ -49,6 +84,10 @@ export default function CreateInvoice() {
       link: "/User/list",
     },
   ];
+
+  useEffect(() => {
+    setDataAsync();
+  }, []);
   return (
     <div className="w-full md:px-0 px-4 md:pr-8 flex flex-col pb-5">
       <div className="flex w-full justify-between items-center pr-8 ">
@@ -56,6 +95,12 @@ export default function CreateInvoice() {
           <PageHeader header="Crear Factura" locationRoutes={locationRoutes} />
         </div>
       </div>
+      <SelectPopUp
+        open={openSelect}
+        setOpenSelect={setOpenSelect}
+        type={type}
+        contactos={data.data}
+      />
       {/* Invoice  */}
       <div className="flex flex-col h-full w-full shadow-lg rounded-xl my-3">
         {/* Sender and Receiver */}
@@ -67,11 +112,14 @@ export default function CreateInvoice() {
                 startIcon={<Edit />}
                 className="h-10 font-bold"
                 size="small"
+                onClick={() => {
+                  setOpenSelect(true), setType("beneficiente");
+                }}
               >
                 Cambiar
               </Button>
             </div>
-            <InvoiceContact />
+            <InvoiceBeneficiary />
           </Grid>
           <Divider
             orientation="vertical"
@@ -96,11 +144,14 @@ export default function CreateInvoice() {
                 startIcon={<Add />}
                 className="h-10 font-bold"
                 size="small"
+                onClick={() => {
+                  setOpenSelect(true), setType("recipiente");
+                }}
               >
                 Anadir
               </Button>
             </div>
-            {/* <InvoiceContact /> */}
+            <InvoiceRecipient />
           </Grid>
         </Grid>
         {/* Invoice settings Inputs */}
@@ -138,6 +189,7 @@ export default function CreateInvoice() {
                   label="Estatus"
                   size="large"
                   type="number"
+                  value={10}
                   className="rounded-xl"
                   variant="outlined"
                   startAdornment={
@@ -228,10 +280,10 @@ export default function CreateInvoice() {
                 Descuento
               </InputLabel>
               <OutlinedInput
-                {...register("discount")}
                 id="outlined-adornment-name"
                 label="Descuento"
                 size="small"
+                onChange={(e) => handleDiscount(e.target.value)}
                 type="number"
                 className="rounded-xl"
                 variant="outlined"
@@ -257,11 +309,15 @@ export default function CreateInvoice() {
         <div className=" p-4 flex flex-col">
           <div className="flex justify-end p-2">
             <span className="">Subtotal:</span>
-            <span className=" w-32 text-right overflow-hidden">$12</span>
+            <span className=" w-32 text-right overflow-hidden">
+              ${subTotal}
+            </span>
           </div>
           <div className="flex justify-end p-2">
             <span className="">Descuento:</span>
-            <span className=" w-32 text-right overflow-hidden">-</span>
+            <span className=" w-32 text-right overflow-hidden text-red-600">
+              -${discountAmount}
+            </span>
           </div>
           <div className="flex justify-end p-2">
             <span className="">Taxes:</span>
@@ -269,7 +325,7 @@ export default function CreateInvoice() {
           </div>
           <div className="flex justify-end p-2 font-bold">
             <span className="">Precio Total:</span>
-            <span className=" w-32 text-right overflow-hidden">$12</span>
+            <span className=" w-32 text-right overflow-hidden">${total}</span>
           </div>
         </div>
       </div>

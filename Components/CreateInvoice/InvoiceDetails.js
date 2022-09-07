@@ -18,7 +18,7 @@ export default function InvoiceDetail() {
     <div className="py-4">
       {/* Inputs */}
       <Grid container spacing={1} className="flex space-x-0">
-        <Grid item xs={12} md={4}>
+        <Grid item xs={12} md={3}>
           {" "}
           <FormControl className="w-full">
             <InputLabel size="small" htmlFor="outlined-adornment-name">
@@ -49,7 +49,7 @@ export default function InvoiceDetail() {
             />
           </FormControl>
         </Grid>
-        <Grid item xs={12} md={2}>
+        <Grid item xs={12} md={1}>
           {" "}
           <FormControl className="w-full">
             <InputLabel size="small" htmlFor="outlined-adornment-name">
@@ -66,7 +66,7 @@ export default function InvoiceDetail() {
             />
           </FormControl>
         </Grid>
-        <Grid item xs={12} md={1}>
+        <Grid item xs={12} md={2}>
           {" "}
           <FormControl className="w-full">
             <InputLabel size="small" htmlFor="outlined-adornment-name">
@@ -83,7 +83,7 @@ export default function InvoiceDetail() {
             />
           </FormControl>
         </Grid>
-        <Grid item xs={12} md={1}>
+        <Grid item xs={12} md={2}>
           {" "}
           <FormControl className="w-full">
             <InputLabel size="small" htmlFor="outlined-adornment-name">
@@ -103,7 +103,11 @@ export default function InvoiceDetail() {
       </Grid>
       {/* Delete Icon */}
       <div className="flex justify-end py-5">
-        <Button startIcon={<Delete />} size="small" className=" text-red-600">
+        <Button
+          startIcon={<Delete />}
+          size="small"
+          className=" text-red-600 hover:bg-red-100"
+        >
           Eliminar
         </Button>
       </div>
