@@ -40,10 +40,57 @@ const invoiceSlice = createSlice({
       state.recipient.phone = payload.phone;
     },
     updateDiscount: (state, actions) => {
-      state.discountAmount = Math.abs(actions.payload);
+      let num = Math.abs(actions.payload);
+      state.discountAmount = num;
+    },
+    updateTaxes: (state, actions) => {
+      let num = Math.abs(actions.payload);
+      state.taxesAmount = num;
+    },
+    addItem: (state, { payload }) => {
+      const newDetail = {
+        _id: payload._id,
+        name: payload.name,
+        quantity: 1,
+        price: payload.price,
+        description: payload.description,
+        total: payload.price,
+      };
+      state.details = [...state.details, newDetail];
+    },
+    removeItem: (state, actions) => {
+      const itemId = actions.payload;
+      state.details = state.details.filter((item) => item._id !== itemId);
+    },
+
+    calculateSubTotal: (state) => {
+      let quantity = 0;
+      let subTotal = 0;
+      let q;
+      state.details.forEach((item) => {
+        quantity += item.quantity;
+        subTotal += item.quantity * item.price;
+      });
+
+      state.quantity = quantity;
+      state.subTotal = subTotal;
+    },
+    calculateTotal: (state) => {
+      let totaldisc = state.subTotal - state.discountAmount;
+      let total = totaldisc + state.taxesAmount;
+
+      state.total = total;
     },
   },
 });
-export const { updateBeneficiary, updateRecipient, updateDiscount } =
-  invoiceSlice.actions;
+export const {
+  updateBeneficiary,
+  updateRecipient,
+  updateDiscount,
+  updateTaxes,
+  addItem,
+  removeItem,
+  calculateTotal,
+  calculateSubTotal,
+} = invoiceSlice.actions;
 export default invoiceSlice.reducer;

@@ -28,18 +28,21 @@ import {
 } from "../Components/CreateInvoice/InvoiceContact";
 import SelectPopUp from "../Components/CreateInvoice/SelectPopUp";
 import { useDispatch } from "react-redux";
-import { updateDiscount } from "../Store/InvoiceSlice";
+import { updateDiscount, updateTaxes, addItem } from "../Store/InvoiceSlice";
 import { useSelector } from "react-redux";
+import SelectProducts from "../Components/CreateInvoice/SelectProducts";
 
 export default function CreateInvoice() {
   const { handleSubmit, register, reset } = useForm({});
   const [creationDate, setCreationDate] = useState(dayjs(undefined));
   const [dueDate, setDueDate] = useState(dayjs(undefined));
   const [openSelect, setOpenSelect] = useState(false);
+  const [openProductPop, setProductPopUp] = useState(false);
   const [type, setType] = useState("");
   const [data, setData] = useState({ isLoading: true, data: [] });
+  const [products, setProducts] = useState({ isLoading: true, data: [] });
   const invoice = useSelector((state) => state.invoice);
-  const { discountAmount, subTotal, total } = invoice;
+  const { discountAmount, subTotal, total, taxesAmount } = invoice;
 
   const { axiosInstance } = useAxios();
   const dispatch = useDispatch();
@@ -51,6 +54,16 @@ export default function CreateInvoice() {
     } catch (error) {
       toast.error(`Opps!, something went wrong${error}`);
       setData({ isLoading: false, data: [] });
+    }
+  };
+
+  const setProductsAsync = async () => {
+    try {
+      const response = await axiosInstance.get("v1/products?limit=20&page=1");
+      setProducts({ isLoading: false, data: response.data });
+    } catch (error) {
+      toast.error(`Opps!, something went wrong${error}`);
+      setProducts({ isLoading: false, data: [] });
     }
   };
 
@@ -87,6 +100,7 @@ export default function CreateInvoice() {
 
   useEffect(() => {
     setDataAsync();
+    setProductsAsync();
   }, []);
   return (
     <div className="w-full md:px-0 px-4 md:pr-8 flex flex-col pb-5">
@@ -100,6 +114,11 @@ export default function CreateInvoice() {
         setOpenSelect={setOpenSelect}
         type={type}
         contactos={data.data}
+      />
+      <SelectProducts
+        data={products.data}
+        open={openProductPop}
+        setProductPop={setProductPopUp}
       />
       {/* Invoice  */}
       <div className="flex flex-col h-full w-full shadow-lg rounded-xl my-3">
@@ -160,12 +179,12 @@ export default function CreateInvoice() {
             <Grid item xs={12} md={3}>
               <FormControl className="w-full">
                 <InputLabel size="normal" htmlFor="outlined-adornment-name">
-                  Invoice Number
+                  Numero de Factura
                 </InputLabel>
                 <OutlinedInput
                   {...register("invoiceNo")}
                   id="outlined-adornment-name"
-                  label="Invoice Number"
+                  label="Numero de Factura"
                   size="large"
                   type="number"
                   className="rounded-xl"
@@ -262,7 +281,7 @@ export default function CreateInvoice() {
         {/* Details */}
         <div className="p-5">
           <span className=" text-xl text-neutral-400">Detalles:</span>
-          <InvoiceDetail />
+          <InvoiceDetail products={products} />
         </div>
         <Divider orientation="horizontal" variant="middle" flexItem></Divider>
         {/* Discount and Taxes */}
@@ -271,6 +290,7 @@ export default function CreateInvoice() {
             startIcon={<Add />}
             className="h-12 font-bold text-xs justify-start items-center "
             size="small"
+            onClick={() => setProductPopUp(true)}
           >
             Anadir nuevo detalle
           </Button>
@@ -297,6 +317,7 @@ export default function CreateInvoice() {
                 {...register("discount")}
                 id="outlined-adornment-name"
                 label="Taxes"
+                onChange={(e) => dispatch(updateTaxes(e.target.value))}
                 type="number"
                 size="small"
                 className="rounded-xl"
@@ -321,7 +342,9 @@ export default function CreateInvoice() {
           </div>
           <div className="flex justify-end p-2">
             <span className="">Taxes:</span>
-            <span className=" w-32 text-right overflow-hidden">-</span>
+            <span className=" w-32 text-right overflow-hidden">
+              ${taxesAmount}
+            </span>
           </div>
           <div className="flex justify-end p-2 font-bold">
             <span className="">Precio Total:</span>
