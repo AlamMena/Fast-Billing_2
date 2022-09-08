@@ -34,7 +34,6 @@ export default function Products() {
     try {
       const response = await axiosInstance.get("v1/products?limit=20&page=1");
       setProducts({ isLoading: false, data: response.data });
-      console.log(response);
     } catch (error) {
       toast.error(`Opps!, something went wrong${error}`);
       setProducts({ isLoading: false, data: [] });

@@ -23,7 +23,7 @@ export default function SelectPopUp({ open, setOpenSelect, type, contactos }) {
   const contacts = contactos.map((item, index) => {
     return (
       <div
-        className="p-3 flex flex-col space-y-1 cursor-pointer hover:bg-green-100 "
+        className="p-3 flex flex-col space-y-1 cursor-pointer hover:bg-green-100 w-full "
         key={index}
         onClick={() => {
           handleContact(item), setOpenSelect(false);
