@@ -1,12 +1,17 @@
 import {
+  ArticleRounded,
   DeleteOutline,
   EditOutlined,
   SearchRounded,
 } from "@mui/icons-material";
 import {
   Autocomplete,
+  FormControl,
   InputAdornment,
+  InputLabel,
+  MenuItem,
   OutlinedInput,
+  Select,
   Tab,
   Tabs,
   TextField,
@@ -26,7 +31,7 @@ export default function ContactList({
 }) {
   const [statusTab, setStatusTab] = useState("All");
   const [dataFiltered, setDataFiltered] = useState(data);
-  const [typeFilter, setTypeFilter] = useState({ label: "Todos", id: 0 });
+  const [typeFilter, setTypeFilter] = useState(0);
 
   useEffect(() => {
     const newData = getDataFilterdByTab(statusTab);
@@ -144,15 +149,14 @@ export default function ContactList({
     setStatusTab(value);
     const newData = getDataFilterdByTab(value);
     setDataFiltered(newData);
-    setTypeFilter({ label: "Todos", id: 0 });
+    setTypeFilter(0);
   };
 
-  const handleTypeChange = (event, newValue) => {
+  const handleTypeChange = (newValue) => {
     setTypeFilter(newValue);
 
     const dataResult = getDataFilterdByTab(statusTab);
-    if (newValue.id === 0) {
-      alert(newValue.id);
+    if (newValue === 0) {
       setDataFiltered({
         isLoading: false,
         data: dataResult.data,
@@ -161,7 +165,7 @@ export default function ContactList({
       setDataFiltered({
         isLoading: false,
         data: dataResult.data.filter(
-          (item) => item.type == newValue.id.toString()
+          (item) => item.type == newValue.toString()
         ),
       });
     }
@@ -186,8 +190,26 @@ export default function ContactList({
           <Tab className=" capitalize" value="Disable" label="Inactivos" />
         </Tabs>
       </div>
-      <div className="flex items-center space-x-4 px-4">
-        <Autocomplete
+      <div className="flex items-center space-x-4 px-4 mt-4">
+        <FormControl className="w-44">
+          <InputLabel id="select-type-label">Tipos</InputLabel>
+          <Select
+            labelId="select-type-label"
+            id="id"
+            value={typeFilter}
+            onChange={(e) => handleTypeChange(e.target.value)}
+            size="large"
+            className="rounded-xl text-md"
+            label="Tipos"
+            // onChange={handleChange}
+          >
+            <MenuItem value={0}>Todos</MenuItem>
+            <MenuItem value={1}>Clientes</MenuItem>
+            <MenuItem value={2}>Proveedores</MenuItem>
+          </Select>
+        </FormControl>
+
+        {/* <Autocomplete
           disablePortal
           id="combo-box-demo"
           className="my-4 "
@@ -207,18 +229,20 @@ export default function ContactList({
               label="Tipos"
             />
           )}
-        />
-        <OutlinedInput
-          id="input-with-icon-adornment"
-          className="input-rounded rounded-xl"
-          placeholder="Buscar contactos..."
-          fullWidth
-          startAdornment={
-            <InputAdornment position="start">
-              <SearchRounded className="text-slate-400" />
-            </InputAdornment>
-          }
-        />
+        /> */}
+        <FormControl className="w-full">
+          <OutlinedInput
+            id="input-with-icon-adornment"
+            className="input-rounded rounded-xl"
+            placeholder="Buscar contactos..."
+            fullWidth
+            startAdornment={
+              <InputAdornment position="start">
+                <SearchRounded className="text-slate-400" />
+              </InputAdornment>
+            }
+          />
+        </FormControl>
       </div>
 
       <div className="h-96 w-full my-2">
