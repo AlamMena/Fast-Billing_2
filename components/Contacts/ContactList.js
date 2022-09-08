@@ -12,6 +12,7 @@ import {
   TextField,
 } from "@mui/material";
 import { DataGrid, GridToolBar } from "@mui/x-data-grid";
+import { useEffect, useState } from "react";
 
 import Alert from "../Globals/Alert.js";
 import StatusRow from "../Globals/StatusRow.js";
@@ -23,7 +24,14 @@ export default function ContactList({
   setItemToDelete,
   setConfirmOpen,
 }) {
-  let value = "one";
+  const [statusTab, setStatusTab] = useState("All");
+  const [dataFiltered, setDataFiltered] = useState(data);
+  const [typeFilter, setTypeFilter] = useState({ label: "Todos", id: 0 });
+
+  useEffect(() => {
+    const newData = getDataFilterdByTab(statusTab);
+    setDataFiltered(newData);
+  }, [data]);
 
   const columns = [
     {
@@ -93,12 +101,6 @@ export default function ContactList({
               onClick={() => {
                 setFormData(cells.row);
                 setFormOpen(true);
-                // setFormData(cells.row);
-                // Alert.fire({
-                //   title: <strong>Good job!</strong>,
-                //   html: <i>You clicked the button!</i>,
-                //   icon: "success",
-                // });
               }}
               className="text-green-400 cursor-pointer"
             >
@@ -120,12 +122,57 @@ export default function ContactList({
     },
   ];
 
+  const getDataFilterdByTab = (value) => {
+    let newData = { isLoading: true, data: [] };
+
+    if (value === "All") {
+      newData = data;
+    } else if (value === "Active") {
+      newData = {
+        isLoading: false,
+        data: data.data.filter((item) => !item.IsDeleted),
+      };
+    } else if (value === "Disable") {
+      newData = {
+        isLoading: false,
+        data: data.data.filter((item) => item.IsDeleted),
+      };
+    }
+    return newData;
+  };
+  const handleTabChange = (e, value) => {
+    setStatusTab(value);
+    const newData = getDataFilterdByTab(value);
+    setDataFiltered(newData);
+    setTypeFilter({ label: "Todos", id: 0 });
+  };
+
+  const handleTypeChange = (event, newValue) => {
+    setTypeFilter(newValue);
+
+    const dataResult = getDataFilterdByTab(statusTab);
+    if (newValue.id === 0) {
+      alert(newValue.id);
+      setDataFiltered({
+        isLoading: false,
+        data: dataResult.data,
+      });
+    } else {
+      setDataFiltered({
+        isLoading: false,
+        data: dataResult.data.filter(
+          (item) => item.type == newValue.id.toString()
+        ),
+      });
+    }
+  };
+
   return (
     <div className="flex flex-col h-full  w-full shadow-lg rounded-xl my-3">
       <div className=" bg-slate-200 rounded-t-lg">
         <Tabs
-          value={value}
-          // onChange={handleChange}
+          value={statusTab}
+          onChange={handleTabChange}
           className="text-neutral-500"
           TabIndicatorProps={{
             style: {
@@ -134,9 +181,9 @@ export default function ContactList({
           }}
           aria-label="secondary tabs example"
         >
-          <Tab className=" capitalize" value="one" label="All" active />
-          <Tab className=" capitalize" value="two" label="Active" />
-          <Tab className=" capitalize" value="three" label="Disable" />
+          <Tab className=" capitalize" value="All" label="Todos" />
+          <Tab className=" capitalize" value="Active" label="Activos" />
+          <Tab className=" capitalize" value="Disable" label="Inactivos" />
         </Tabs>
       </div>
       <div className="flex items-center space-x-4 px-4">
@@ -144,10 +191,12 @@ export default function ContactList({
           disablePortal
           id="combo-box-demo"
           className="my-4 "
+          value={typeFilter.label}
+          onChange={handleTypeChange}
           options={[
-            { label: "All" },
-            { label: "Clients" },
-            { label: "Suppliers" },
+            { label: "Todos", id: 0 },
+            { label: "Clientes", id: 1 },
+            { label: "Proveedores", id: 2 },
           ]}
           sx={{ width: 300 }}
           renderInput={(params) => (
@@ -155,7 +204,7 @@ export default function ContactList({
               className="text-sm input-rounded"
               size="small"
               {...params}
-              label="Type"
+              label="Tipos"
             />
           )}
         />
@@ -183,11 +232,11 @@ export default function ContactList({
               icon: "success",
             });
           }}
-          rows={data.data}
+          rows={dataFiltered.data}
           columns={columns}
           className="p-2"
           pageSize={5}
-          loading={data.isLoading}
+          loading={dataFiltered.isLoading}
           rowsPerPageOptions={[5]}
           checkboxSelection
           disableSelectionOnClick

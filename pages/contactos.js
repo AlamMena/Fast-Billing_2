@@ -28,15 +28,11 @@ export default function Contacts() {
   const { axiosInstance } = useAxios();
   const locationRoutes = [
     {
-      text: "Dashboard",
+      text: "Home",
       link: "/",
     },
     {
-      text: "User",
-      link: "/User",
-    },
-    {
-      text: "List",
+      text: "Contactos",
       link: "/User/list",
     },
   ];
@@ -132,7 +128,7 @@ export default function Contacts() {
             startIcon={<Add className="text-white" />}
           >
             <span className="text-sm whitespace-nowrap text-neutral-50 capitalize font-bold">
-              New contact
+              Nuevo contacto
             </span>
           </Button>
         </div>
