@@ -114,13 +114,11 @@ export default function ContactForm({ onSave, open, setOpen, data, setFile }) {
                       <ArticleOutlined />
                     </InputAdornment>
                   }
-                  // onChange={handleChange}
                 >
                   <MenuItem value={1}>Cedula</MenuItem>
                   <MenuItem value={2}>Pasaporte</MenuItem>
                   <MenuItem value={3}>RNC</MenuItem>
                 </Select>
-                {/* <FormHelperText>With label + helper text</FormHelperText> */}
               </FormControl>
               <FormControl>
                 <TextField
@@ -185,12 +183,10 @@ export default function ContactForm({ onSave, open, setOpen, data, setFile }) {
                     <ContactsOutlined />
                   </InputAdornment>
                 }
-                // onChange={handleChange}
               >
                 <MenuItem value={1}>Cliente</MenuItem>
                 <MenuItem value={2}>Proveedor</MenuItem>
               </Select>
-              {/* <FormHelperText>With label + helper text</FormHelperText> */}
             </FormControl>
             <FormControl>
               <ImagePoster
@@ -221,15 +217,6 @@ export default function ContactForm({ onSave, open, setOpen, data, setFile }) {
               >
                 Save
               </Button>
-              {/* <Button
-                variant="contained"
-                type="submit"
-                color="secondary"
-                size="medium"
-                className="w-28 bg-red-600 text-white rounded-2xl"
-              >
-                Cancel
-              </Button> */}
             </div>
           </form>
         </Dialog>
