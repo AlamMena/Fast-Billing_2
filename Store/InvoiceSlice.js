@@ -39,6 +39,19 @@ const invoiceSlice = createSlice({
       state.recipient.address = payload.address;
       state.recipient.phone = payload.phone;
     },
+    updateItemPrice: (state, { payload }) => {
+      const obj = {
+        value: payload.value,
+        id: payload.id,
+      };
+      const itemPrice = state.details.find((item) => item._id === obj.id);
+      console.log(payload.value);
+      // if (payload.value <= 1) {
+      //   itemPrice.price = 1;
+      // } else {
+      //   itemPrice.price = payload.value;
+      // }
+    },
     updateDiscount: (state, actions) => {
       let num = Math.abs(actions.payload);
       state.discountAmount = num;
@@ -59,8 +72,8 @@ const invoiceSlice = createSlice({
       state.details = [...state.details, newDetail];
     },
     removeItem: (state, actions) => {
-      const itemId = actions.payload;
-      state.details = state.details.filter((item) => item._id !== itemId);
+      let itemId = actions.payload;
+      state.details = state.details.filter((item, i) => item._id !== itemId);
     },
 
     calculateSubTotal: (state) => {
@@ -83,9 +96,11 @@ const invoiceSlice = createSlice({
     },
   },
 });
+
 export const {
   updateBeneficiary,
   updateRecipient,
+  updateItemPrice,
   updateDiscount,
   updateTaxes,
   addItem,

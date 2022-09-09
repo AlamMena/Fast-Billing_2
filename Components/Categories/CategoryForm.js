@@ -10,6 +10,7 @@ import {
   FormControl,
   InputLabel,
   Select,
+  Autocomplete,
   MenuItem,
   FormHelperText,
 } from "@mui/material";
@@ -39,6 +40,15 @@ export default function CategoryForm({ open, setOpen, data }) {
     const url = await getDownloadURL(response.ref);
     return url;
   };
+
+  const chip = [
+    { name: "Ana", src: "/static/images/avatar/1.jpg" },
+    { name: "TrapKing", src: "/static/images/avatar/1.jpg" },
+    { name: "Eldiablo", src: "/static/images/avatar/1.jpg" },
+    { name: "Yagaloski", src: "/static/images/avatar/1.jpg" },
+    { name: "Pibull", src: "/static/images/avatar/1.jpg" },
+    { name: "Junior", src: "/static/images/avatar/1.jpg" },
+  ];
 
   const onSubmit = async (data) => {
     await onSave(data);
@@ -80,7 +90,7 @@ export default function CategoryForm({ open, setOpen, data }) {
           <Dialog open={open} onClose={() => setOpen(false)}>
             <form
               onSubmit={handleSubmit(onSubmit)}
-              className="flex flex-col p-8 space-y-6 px-10"
+              className="flex flex-col p-8 space-y-5 px-10"
             >
               <h2 className="text-xl font-bold">Formulario de Marca </h2>
 
@@ -100,6 +110,22 @@ export default function CategoryForm({ open, setOpen, data }) {
                       <CategoryIcon />
                     </InputAdornment>
                   }
+                />
+              </FormControl>
+              <FormControl>
+                <Autocomplete
+                  onChange={{ ...register("supliers") }}
+                  multiple
+                  options={chip}
+                  freeSolo
+                  getOptionLabel={(chip) => chip.name}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      variant="standard"
+                      label="Proveedores"
+                    />
+                  )}
                 />
               </FormControl>
               <FormControl>
