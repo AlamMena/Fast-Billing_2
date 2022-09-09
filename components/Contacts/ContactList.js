@@ -262,7 +262,7 @@ export default function ContactList({
           pageSize={5}
           loading={dataFiltered.isLoading}
           rowsPerPageOptions={[5]}
-          checkboxSelection
+          // checkboxSelection
           disableSelectionOnClick
           experimentalFeatures={{ newEditingApi: true }}
         />

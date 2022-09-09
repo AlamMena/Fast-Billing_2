@@ -33,7 +33,7 @@ export default function Contacts() {
     },
     {
       text: "Contactos",
-      link: "/User/list",
+      link: "/contactos",
     },
   ];
 
@@ -47,7 +47,7 @@ export default function Contacts() {
     }
   };
 
-  const upsertAsync = async (data) => {
+  const upsertAsync = async (requestData) => {
     try {
       // loading toast
       toastId.current = toast("Please wait...", {
@@ -55,21 +55,23 @@ export default function Contacts() {
       });
 
       // if there is any file
-      let imageUrl = "";
+
+      let imageUrl = requestData ? requestData.imageUrl : null;
       if (imageFile) {
         imageUrl = await postImage(imageFile);
       }
-      const parsedData = { ...data, imageUrl };
+
+      const parsedData = { ...requestData, imageUrl };
 
       // logic
-      if (data._id !== undefined) {
+      if (requestData._id !== undefined) {
         // if the item exists
         await axiosInstance.put("v1/contact", parsedData);
       } else {
         // if the item dosent exists
         await axiosInstance.post("v1/contact", parsedData);
       }
-
+      setImageFile(null);
       // getting data back
       await setDataAsync();
 
