@@ -10,6 +10,7 @@ import {
   Dialog,
   Input,
   TextField,
+  Autocomplete,
   InputOutlined,
   OutlinedInput,
   InputAdornment,
@@ -44,6 +45,14 @@ export default function ProductsForm({ open, setOpen, data }) {
     const url = await getDownloadURL(response.ref);
     return url;
   };
+  const chip = [
+    { name: "Ana", src: "/static/images/avatar/1.jpg" },
+    { name: "TrapKing", src: "/static/images/avatar/1.jpg" },
+    { name: "Eldiablo", src: "/static/images/avatar/1.jpg" },
+    { name: "Yagaloski", src: "/static/images/avatar/1.jpg" },
+    { name: "Pibull", src: "/static/images/avatar/1.jpg" },
+    { name: "Junior", src: "/static/images/avatar/1.jpg" },
+  ];
 
   const onSubmit = async (data) => {
     console.log(data);
@@ -172,31 +181,24 @@ export default function ProductsForm({ open, setOpen, data }) {
                   />
                 </FormControl>
               </div>
-              {/* <FormControl>
-                <div className="flex w-full">
-                  <Button
-                    variant="contained"
-                    component="label"
-                    className="w-full text-white"
-                  >
-                    Upload
-                    <input
-                      hidden
-                      accept="image/*"
-                      type="file"
-                      {...register("imageUrl")}
+              <FormControl className="w-full">
+                <Autocomplete
+                  multiple
+                  options={chip}
+                  freeSolo
+                  getOptionLabel={(chip) => chip.name}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      {...register("supliers")}
+                      variant="standard"
+                      label="Proveedores"
                     />
-                  </Button>
-                  <IconButton
-                    color="primary"
-                    aria-label="upload picture"
-                    component="label"
-                  >
-                    <input hidden disabled accept="image/*" type="file" />
-                    <PhotoCamera />
-                  </IconButton>
-                </div>
-              </FormControl> */}
+                  )}
+                />
+
+                {/* <FormHelperText>With label + helper text</FormHelperText> */}
+              </FormControl>
               <FormControl>
                 <ImagePoster
                   images={images}

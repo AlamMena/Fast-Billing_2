@@ -12,6 +12,7 @@ import {
   InputAdornment,
   FormControl,
   InputLabel,
+  Autocomplete,
   Select,
   Chip,
   Avatar,
@@ -31,15 +32,20 @@ export default function BrandForm({ onSave, open, setOpen, data }) {
     defaultValues: data,
   });
 
+  const [suplierValue, setSuplierValue] = useState();
   const [menuValue, setMenuValue] = useState("");
 
+  const handleSuplier = () => {
+    register("suplier", { value: suplierValue });
+  };
+
   const chip = [
-    { alt: "Ana", src: "/static/images/avatar/1.jpg" },
-    { alt: "TrapKing", src: "/static/images/avatar/1.jpg" },
-    { alt: "Eldiablo", src: "/static/images/avatar/1.jpg" },
-    { alt: "Yagaloski", src: "/static/images/avatar/1.jpg" },
-    { alt: "Pibull", src: "/static/images/avatar/1.jpg" },
-    { alt: "Junior", src: "/static/images/avatar/1.jpg" },
+    { name: "Ana", src: "/static/images/avatar/1.jpg" },
+    { name: "TrapKing", src: "/static/images/avatar/1.jpg" },
+    { name: "Eldiablo", src: "/static/images/avatar/1.jpg" },
+    { name: "Yagaloski", src: "/static/images/avatar/1.jpg" },
+    { name: "Pibull", src: "/static/images/avatar/1.jpg" },
+    { name: "Junior", src: "/static/images/avatar/1.jpg" },
   ];
 
   const onSubmit = async (data) => {
@@ -99,7 +105,7 @@ export default function BrandForm({ onSave, open, setOpen, data }) {
               <h2 className="text-xl font-bold">Formulario de Marca </h2>
 
               <FormControl>
-                <InputLabel size="large" htmlFor="outlined-adornment-name">
+                <InputLabel size="normal" htmlFor="outlined-adornment-name">
                   Nombre de la marca
                 </InputLabel>
                 <OutlinedInput
@@ -125,7 +131,7 @@ export default function BrandForm({ onSave, open, setOpen, data }) {
                   id="outlined-adornment-address"
                   label="Descripcion de la marca"
                   multiline
-                  size="large"
+                  size="normal"
                   className="rounded-xl text-md"
                   variant="outlined"
                   startAdornment={
@@ -136,44 +142,25 @@ export default function BrandForm({ onSave, open, setOpen, data }) {
                 />
               </FormControl>
               <FormControl className="w-full">
-                <InputLabel id="select-type-contact">Proveedores</InputLabel>
-                <Select
-                  {...register("provider")}
-                  id="select-type-contact"
-                  value={menuValue}
-                  size="small"
-                  className="rounded-xl text-md"
-                  label="Proovedores"
-                  startAdornment={
-                    <InputAdornment position="start">
-                      <CoPresentIcon />
-                    </InputAdornment>
-                  }
-                  // onChange={handleChange}
-                >
-                  {chip.map((item, index) => {
-                    return (
-                      <MenuItem
-                        value={index}
-                        className="w-full"
-                        key={index}
-                        onClick={() => setMenuValue(index)}
-                      >
-                        <Chip
-                          avatar={
-                            <Avatar
-                              alt="Avatar"
-                              src={item.src}
-                              position="start"
-                            />
-                          }
-                          label={item.alt}
-                          variant="outlined"
-                        />
-                      </MenuItem>
-                    );
-                  })}
-                </Select>
+                <Autocomplete
+                  onChange={(event, newValue) => {
+                    setSuplierValue(newValue);
+                    handleSuplier();
+                  }}
+                  ref={ref}
+                  multiple
+                  options={chip}
+                  freeSolo
+                  getOptionLabel={(chip) => chip.name}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      variant="standard"
+                      label="Proveedores"
+                    />
+                  )}
+                />
+
                 {/* <FormHelperText>With label + helper text</FormHelperText> */}
               </FormControl>
               <FormControl>

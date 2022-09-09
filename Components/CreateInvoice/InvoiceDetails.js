@@ -19,6 +19,7 @@ import {
   calculateTotal,
   calculateSubTotal,
   setPrice,
+  updateItemPrice,
 } from "../../Store/InvoiceSlice";
 
 export default function InvoiceDetail({ products }) {
@@ -30,9 +31,13 @@ export default function InvoiceDetail({ products }) {
   );
   const dispatch = useDispatch();
 
+  const handlePrice = (e, id) => {
+    const obj = { value: e, id: id };
+    dispatch(updateItemPrice(obj));
+  };
+
   useEffect(() => {
     dispatch(calculateSubTotal());
-    // saveInvoice();
   }, [details]);
   useEffect(() => {
     dispatch(calculateTotal());
@@ -42,6 +47,7 @@ export default function InvoiceDetail({ products }) {
   return (
     <>
       {details.map((item, index) => {
+        const objId = item._id;
         return (
           <div key={index} className="py-4">
             {/* Inputs */}
@@ -105,7 +111,7 @@ export default function InvoiceDetail({ products }) {
                     id="outlined-adornment-name"
                     label="Cantidad"
                     type="number"
-                    value={item.quantity}
+                    defaultValue={item.quantity}
                     size="small"
                     className="rounded-xl"
                     variant="outlined"
@@ -122,6 +128,7 @@ export default function InvoiceDetail({ products }) {
                     id="outlined-adornment-name"
                     label="Precio"
                     type="number"
+                    onChange={(e) => handlePrice(e.target.value, item._id)}
                     defaultValue={item.price}
                     size="small"
                     className="rounded-xl"
@@ -155,7 +162,7 @@ export default function InvoiceDetail({ products }) {
                 startIcon={<Delete />}
                 size="small"
                 className=" text-red-600 hover:bg-red-100"
-                onClick={() => dispatch(removeItem(item._id))}
+                onClick={() => dispatch(removeItem(objId))}
               >
                 Eliminar
               </Button>
