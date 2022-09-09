@@ -331,24 +331,38 @@ export default function CreateInvoice() {
           <div className="flex justify-end p-2">
             <span className="">Subtotal:</span>
             <span className=" w-32 text-right overflow-hidden">
-              ${subTotal}
+              $
+              {subTotal.toLocaleString("en-US", {
+                minimumFractionDigits: 2,
+              })}
             </span>
           </div>
           <div className="flex justify-end p-2">
             <span className="">Descuento:</span>
             <span className=" w-32 text-right overflow-hidden text-red-600">
-              -${discountAmount}
+              -$
+              {discountAmount.toLocaleString("en-US", {
+                minimumFractionDigits: 2,
+              })}
             </span>
           </div>
           <div className="flex justify-end p-2">
             <span className="">Taxes:</span>
             <span className=" w-32 text-right overflow-hidden">
-              ${taxesAmount}
+              $
+              {taxesAmount.toLocaleString("en-US", {
+                minimumFractionDigits: 2,
+              })}
             </span>
           </div>
           <div className="flex justify-end p-2 font-bold">
             <span className="">Precio Total:</span>
-            <span className=" w-32 text-right overflow-hidden">${total}</span>
+            <span className=" w-32 text-right overflow-hidden">
+              $
+              {total.toLocaleString("en-US", {
+                minimumFractionDigits: 2,
+              })}
+            </span>
           </div>
         </div>
       </div>
