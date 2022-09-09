@@ -11,7 +11,7 @@ import ConfirmationForm from "../Components/Globals/ConfirmationForm";
 
 export default function Contacts() {
   // list data
-  const [data, setData] = useState({ isLoading: true, data: [] });
+  const [data, setData] = useState({ isLoading: true, contacts: [] });
 
   // upsert states
   const [formOpen, setFormOpen] = useState(false);
@@ -40,10 +40,10 @@ export default function Contacts() {
   const setDataAsync = async () => {
     try {
       const response = await axiosInstance.get("v1/contacts?page=1&limit=200");
-      setData({ isLoading: false, data: response.data });
+      setData({ isLoading: false, contacts: response.data });
     } catch (error) {
       toast.error(`Opps!, something went wrong${error}`);
-      setData({ isLoading: false, data: [] });
+      setData({ isLoading: false, contacts: [] });
     }
   };
 
@@ -86,7 +86,7 @@ export default function Contacts() {
       toast.error(`Opps!, something went wrong${error}`);
 
       // removing data from page
-      setData({ isLoading: false, data: [] });
+      setData({ isLoading: false, contacts: [] });
     }
   };
 
@@ -106,7 +106,7 @@ export default function Contacts() {
       console.log(data);
     } catch (error) {
       toast.error(`Opps!, something went wrong${error}`);
-      setData({ isLoading: false, data: [] });
+      setData({ isLoading: false, contacts: [] });
     }
   };
 

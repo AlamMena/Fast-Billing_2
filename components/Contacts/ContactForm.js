@@ -42,14 +42,13 @@ export default function ContactForm({ onSave, open, setOpen, data, setFile }) {
   });
 
   const [images, setImages] = useState();
-
   const [contactType, setContactType] = useState(1);
   const [identificationType, setIdentificationType] = useState(1);
 
   const onSubmit = async (data) => {
     const dataParsed = {
       address: "none",
-      IsDeleted: false,
+      isDeleted: false,
       ...data,
     };
     await onSave(dataParsed);
