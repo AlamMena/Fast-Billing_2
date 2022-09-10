@@ -24,8 +24,6 @@ import {
 } from "../../Store/InvoiceSlice";
 
 export default function InvoiceDetail({ products }) {
-  const { handleSubmit, register, reset } = useForm({});
-
   const { details, discountAmount, taxesAmount, subTotal } = useSelector(
     (state) => state.invoice
   );
@@ -136,7 +134,6 @@ export default function InvoiceDetail({ products }) {
                     Total
                   </InputLabel>
                   <OutlinedInput
-                    {...register("total")}
                     id="outlined-adornment-name"
                     label="Total"
                     type="number"

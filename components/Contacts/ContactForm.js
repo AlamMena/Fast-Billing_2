@@ -209,7 +209,7 @@ export default function ContactForm({ onSave, open, setOpen, data, setFile }) {
                 color="secondary"
                 onClick={() => setOpen(false)}
                 size="medium"
-                className=" w-28 text-green-600 bg-white shadow-none hover:bg-transparent "
+                className=" w-28 text-green-600 bg-white shadow-none hover:bg-transparent hover:shadow-none "
               >
                 Cancel
               </Button>

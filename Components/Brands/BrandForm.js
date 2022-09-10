@@ -156,6 +156,16 @@ export default function BrandForm({ onSave, open, setOpen, data, setFile }) {
             <div className="flex w-full justify-end space-x-4">
               <Button
                 variant="contained"
+                type="button"
+                color="secondary"
+                onClick={() => setOpen(false)}
+                size="medium"
+                className=" w-28 text-green-600 bg-white hover:bg-white shadow-none hover:shadow-none "
+              >
+                Cancel
+              </Button>
+              <Button
+                variant="contained"
                 type="submit"
                 color="secondary"
                 size="medium"
@@ -163,16 +173,6 @@ export default function BrandForm({ onSave, open, setOpen, data, setFile }) {
               >
                 Salvar
               </Button>
-
-              {/* <Button
-                variant="contained"
-                type="submit"
-                color="secondary"
-                size="medium"
-                className="w-28 bg-red-600 text-white rounded-2xl"
-              >
-                Cancel
-              </Button> */}
             </div>
           </form>
         </Dialog>

@@ -33,7 +33,6 @@ import { useSelector } from "react-redux";
 import SelectProducts from "../Components/CreateInvoice/SelectProducts";
 
 export default function CreateInvoice() {
-  const { handleSubmit, register, reset } = useForm({});
   const [creationDate, setCreationDate] = useState(dayjs(undefined));
   const [dueDate, setDueDate] = useState(dayjs(undefined));
   const [openSelect, setOpenSelect] = useState(false);
@@ -42,7 +41,7 @@ export default function CreateInvoice() {
   const [data, setData] = useState({ isLoading: true, data: [] });
   const [products, setProducts] = useState({ isLoading: true, data: [] });
   const invoice = useSelector((state) => state.invoice);
-  const { discountAmount, subTotal, total, taxesAmount } = invoice;
+  const { discountAmount, subTotal, total, taxesAmount, invoiceNo } = invoice;
 
   const { axiosInstance } = useAxios();
   const dispatch = useDispatch();
@@ -66,6 +65,8 @@ export default function CreateInvoice() {
       setProducts({ isLoading: false, data: [] });
     }
   };
+
+  // handle Discount Price
 
   const handleDiscount = (e) => {
     dispatch(updateDiscount(e));
@@ -182,11 +183,11 @@ export default function CreateInvoice() {
                   Numero de Factura
                 </InputLabel>
                 <OutlinedInput
-                  {...register("invoiceNo")}
+                  defaultValue={invoiceNo}
+                  disabled
                   id="outlined-adornment-name"
                   label="Numero de Factura"
                   size="large"
-                  type="number"
                   className="rounded-xl"
                   variant="outlined"
                   startAdornment={
@@ -203,7 +204,6 @@ export default function CreateInvoice() {
                   Estatus
                 </InputLabel>
                 <Select
-                  {...register("Status")}
                   id="outlined-adornment-name"
                   label="Estatus"
                   size="large"
@@ -314,7 +314,6 @@ export default function CreateInvoice() {
                 Taxes
               </InputLabel>
               <OutlinedInput
-                {...register("discount")}
                 id="outlined-adornment-name"
                 label="Taxes"
                 onChange={(e) => dispatch(updateTaxes(e.target.value))}

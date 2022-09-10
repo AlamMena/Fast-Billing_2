@@ -3,6 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   companyId: 1,
   branchId: 1,
+  invoiceNo: "F00000",
   invoiceTypeId: 1,
   beneficiary: { name: "Alex", phone: "590354035", address: "el calenton" },
   recipient: {},

@@ -122,6 +122,16 @@ export default function CategoryForm({ open, setOpen, data, onSave, setFile }) {
               <div className="flex w-full justify-end space-x-4">
                 <Button
                   variant="contained"
+                  type="button"
+                  color="secondary"
+                  onClick={() => setOpen(false)}
+                  size="medium"
+                  className=" w-28 text-green-600 bg-white hover:bg-white shadow-none hover:shadow-none "
+                >
+                  Cancel
+                </Button>
+                <Button
+                  variant="contained"
                   type="submit"
                   color="secondary"
                   size="medium"
