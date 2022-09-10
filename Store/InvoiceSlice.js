@@ -43,11 +43,20 @@ const invoiceSlice = createSlice({
       const itemPrice = state.details.find(
         (item) => item._id === actions.payload._id
       );
-      console.log(itemPrice);
       if (actions.payload.value <= 1) {
         itemPrice.price = 1;
       } else {
         itemPrice.price = actions.payload.value;
+      }
+    },
+    updateItemQuantity: (state, actions) => {
+      const itemQuantity = state.details.find(
+        (item) => item._id === actions.payload._id
+      );
+      if (actions.payload.quantity <= 1) {
+        itemQuantity.quantity = 1;
+      } else {
+        itemQuantity.quantity = actions.payload.quantity;
       }
     },
     updateDiscount: (state, actions) => {
@@ -107,5 +116,6 @@ export const {
   removeItem,
   calculateTotal,
   calculateSubTotal,
+  updateItemQuantity,
 } = invoiceSlice.actions;
 export default invoiceSlice.reducer;

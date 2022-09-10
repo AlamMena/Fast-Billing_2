@@ -20,6 +20,7 @@ import {
   calculateSubTotal,
   setPrice,
   updateItemPrice,
+  updateItemQuantity,
 } from "../../Store/InvoiceSlice";
 
 export default function InvoiceDetail({ products }) {
@@ -32,6 +33,10 @@ export default function InvoiceDetail({ products }) {
 
   const handlePrice = (obj) => {
     dispatch(updateItemPrice(obj));
+  };
+
+  const handleQuantity = (obj) => {
+    dispatch(updateItemQuantity(obj));
   };
 
   useEffect(() => {
@@ -88,10 +93,15 @@ export default function InvoiceDetail({ products }) {
                     Cantidad
                   </InputLabel>
                   <OutlinedInput
-                    {...register("quantity")}
                     id="outlined-adornment-name"
                     label="Cantidad"
                     type="number"
+                    onChange={(e) =>
+                      handleQuantity({
+                        quantity: e.target.value,
+                        _id: item._id,
+                      })
+                    }
                     defaultValue={item.quantity}
                     size="small"
                     className="rounded-xl"
