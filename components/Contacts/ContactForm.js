@@ -80,7 +80,7 @@ export default function ContactForm({ onSave, open, setOpen, data, setFile }) {
                 size="small"
                 error={errors.name && "value"}
                 className="input-rounded"
-                helperText={errors.name && `El campo es 'nombre' requerido`}
+                helperText={errors.name && `El campo 'nombre' es requerido`}
                 variant="outlined"
                 InputProps={{
                   startAdornment: (

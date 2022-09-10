@@ -27,10 +27,25 @@ import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import Alert from "../Globals/Alert";
 
-export default function BrandForm({ onSave, open, setOpen, data }) {
-  const { handleSubmit, register, reset } = useForm({
+export default function BrandForm({ onSave, open, setOpen, data, setFile }) {
+  const {
+    handleSubmit,
+    register,
+    reset,
+    formState: { errors },
+  } = useForm({
     defaultValues: data,
   });
+
+  const [images, setImages] = useState([]);
+
+  const postImage = async () => {
+    const storage = getStorage(app);
+    const storageRef = ref(storage, "products");
+    const response = await uploadBytes(storageRef, file);
+    const url = await getDownloadURL(response.ref);
+    return url;
+  };
 
   const [suplierValue, setSuplierValue] = useState();
   const [menuValue, setMenuValue] = useState("");
@@ -49,139 +64,112 @@ export default function BrandForm({ onSave, open, setOpen, data }) {
   ];
 
   const onSubmit = async (data) => {
-    console.log(data);
-    // await onSave(data);
-    // Alert.fire({
-    //   title: <strong>Success!</strong>,
-    //   html: <span>Contact successfully saved</span>,
-    //   icon: "success",
-    // });
-    // setTimeout(() => {
-    //   Alert.fire({
-    //     title: <strong>Ops, something went wrong!</strong>,
-    //     icon: "error",
-    //   });
-    // }, 1000);
-
-    //  toastId.current = toast("Please wait...", {
-    //    type: toast.TYPE.LOADING,
-    //  });
-
-    //  setTimeout(() => {
-    //    toast.update(toastId.current, {
-    //      type: toast.TYPE.SUCCESS,
-    //      autoClose: 5000,
-    //      render: "Success",
-    //    });
-    //  }, 2000);
-
+    const dataParsed = {
+      address: "none",
+      IsDeleted: false,
+      ...data,
+    };
+    await onSave(dataParsed);
     setOpen(false);
-  };
-
-  const [images, setImages] = useState([]);
-  const [file, setFile] = useState();
-
-  const postImage = async () => {
-    const storage = getStorage(app);
-    const storageRef = ref(storage, "products");
-    const response = await uploadBytes(storageRef, file);
-    const url = await getDownloadURL(response.ref);
-    return url;
   };
 
   useEffect(() => {
     reset(data);
+    setImages([data && data.imageUrl]);
   }, [data]);
 
   return (
-    <>
-      <div className="w-full h-full">
-        <div className=" rounded-2xl">
-          <Dialog open={open} onClose={() => setOpen(false)}>
-            <form
-              onSubmit={handleSubmit(onSubmit)}
-              className="flex flex-col p-8 space-y-6 px-10"
-            >
-              <h2 className="text-xl font-bold">Formulario de Marca </h2>
+    <div className="w-full h-full">
+      <div className=" rounded-2xl">
+        <Dialog open={open} onClose={() => setOpen(false)}>
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            className="flex flex-col p-8 space-y-6 px-10"
+          >
+            <h2 className="text-xl font-bold">Formulario de Marca </h2>
 
-              <FormControl>
-                <InputLabel size="normal" htmlFor="outlined-adornment-name">
-                  Nombre de la marca
-                </InputLabel>
-                <OutlinedInput
-                  {...register("name")}
-                  id="outlined-adornment-name"
-                  label="Nombre de la marca"
-                  size="small"
-                  className="rounded-xl"
-                  variant="outlined"
-                  startAdornment={
-                    <InputAdornment position="start">
-                      <FactCheckIcon />
-                    </InputAdornment>
-                  }
-                />
-              </FormControl>
-              <FormControl>
-                <InputLabel size="small" htmlFor="outlined-adornment-phone">
-                  Description de la marca
-                </InputLabel>
-                <OutlinedInput
-                  {...register("description")}
-                  id="outlined-adornment-address"
-                  label="Descripcion de la marca"
-                  multiline
-                  size="normal"
-                  className="rounded-xl text-md"
-                  variant="outlined"
-                  startAdornment={
-                    <InputAdornment position="start">
-                      <DescriptionIcon />
-                    </InputAdornment>
-                  }
-                />
-              </FormControl>
-              <FormControl className="w-full">
-                <Autocomplete
-                  onChange={(event, newValue) => {
-                    setSuplierValue(newValue);
-                    handleSuplier();
-                  }}
-                  ref={ref}
-                  multiple
-                  options={chip}
-                  freeSolo
-                  getOptionLabel={(chip) => chip.name}
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      variant="standard"
-                      label="Proveedores"
-                    />
-                  )}
-                />
+            <FormControl>
+              <InputLabel size="normal" htmlFor="outlined-adornment-name">
+                Nombre de la marca
+              </InputLabel>
+              <OutlinedInput
+                {...register("name", {
+                  required: true,
+                })}
+                id="outlined-adornment-name"
+                label="Nombre de la marca"
+                size="small"
+                className="rounded-xl"
+                error={errors.name && "value"}
+                helperText={errors.name && `El campo 'nombre' es requerido`}
+                variant="outlined"
+                startAdornment={
+                  <InputAdornment position="start">
+                    <FactCheckIcon />
+                  </InputAdornment>
+                }
+              />
+            </FormControl>
+            <FormControl>
+              <InputLabel size="small" htmlFor="outlined-adornment-phone">
+                Description de la marca
+              </InputLabel>
+              <OutlinedInput
+                {...register("description")}
+                id="outlined-adornment-address"
+                label="Descripcion de la marca"
+                multiline
+                size="normal"
+                className="rounded-xl text-md"
+                variant="outlined"
+                startAdornment={
+                  <InputAdornment position="start">
+                    <DescriptionIcon />
+                  </InputAdornment>
+                }
+              />
+            </FormControl>
+            <FormControl className="w-full">
+              <Autocomplete
+                onChange={(event, newValue) => {
+                  setSuplierValue(newValue);
+                  handleSuplier();
+                }}
+                ref={ref}
+                multiple
+                options={chip}
+                freeSolo
+                getOptionLabel={(chip) => chip.name}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    variant="standard"
+                    label="Proveedores"
+                  />
+                )}
+              />
 
-                {/* <FormHelperText>With label + helper text</FormHelperText> */}
-              </FormControl>
-              <FormControl>
-                <ImagePoster
-                  images={images}
-                  setImages={setImages}
-                  setFile={setFile}
-                />
-              </FormControl>
-              <div className="flex w-full justify-end space-x-4">
-                <Button
-                  variant="contained"
-                  type="submit"
-                  color="secondary"
-                  size="medium"
-                  className=" w-28 bg-green-500 text-white rounded-2xl"
-                >
-                  Salvar
-                </Button>
+              {/* <FormHelperText>With label + helper text</FormHelperText> */}
+            </FormControl>
+            <FormControl>
+              <ImagePoster
+                images={images}
+                setImages={setImages}
+                setFile={setFile}
+              />
+            </FormControl>
+            <div className="flex w-full justify-end space-x-4">
+              <Button
+                variant="contained"
+                type="submit"
+                color="secondary"
+                size="medium"
+                className=" w-28 bg-green-500 text-white rounded-2xl"
+              >
+                Salvar
+              </Button>
 
-                {/* <Button
+              {/* <Button
                 variant="contained"
                 type="submit"
                 color="secondary"
@@ -190,11 +178,10 @@ export default function BrandForm({ onSave, open, setOpen, data }) {
               >
                 Cancel
               </Button> */}
-              </div>
-            </form>
-          </Dialog>
-        </div>
+            </div>
+          </form>
+        </Dialog>
       </div>
-    </>
+    </div>
   );
 }

@@ -6,19 +6,42 @@ import {
 } from "@mui/icons-material";
 import {
   Autocomplete,
+  AvatarGroup,
   InputAdornment,
   OutlinedInput,
+  Avatar,
   Tab,
   Tabs,
   TextField,
 } from "@mui/material";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { DataGrid, GridToolBar } from "@mui/x-data-grid";
 import Alert from "../Globals/Alert";
 import StatusRow from "../Globals/StatusRow";
 
-export default function BrandList({ setFormOpen, data }) {
-  const [value, setValue] = useState("one");
+export default function BrandList({
+  setFormOpen,
+  setFormData,
+  data,
+  setItemToDelete,
+  setConfirmOpen,
+}) {
+  const [statusTab, setStatusTab] = useState("All");
+  const [dataFiltered, setDataFiltered] = useState(data);
+
+  useEffect(() => {
+    const newData = getDataFilterdByTab(statusTab);
+    setDataFiltered(newData);
+  }, [data]);
+
+  const chip = [
+    { name: "Ana", src: "/static/images/avatar/1.jpg" },
+    { name: "TrapKing", src: "/static/images/avatar/1.jpg" },
+    { name: "Eldiablo", src: "/static/images/avatar/1.jpg" },
+    { name: "Yagaloski", src: "/static/images/avatar/1.jpg" },
+    { name: "Pibull", src: "/static/images/avatar/1.jpg" },
+    { name: "Junior", src: "/static/images/avatar/1.jpg" },
+  ];
 
   const columns = [
     {
@@ -36,13 +59,22 @@ export default function BrandList({ setFormOpen, data }) {
       field: "supliers",
       width: 190,
       headerName: "Proveedores",
+      renderCell: (cell) => {
+        return (
+          <AvatarGroup max={4}>
+            {chip.map((item, index) => {
+              return <Avatar key={index} alt={item.name} />;
+            })}
+          </AvatarGroup>
+        );
+      },
     },
     {
-      field: "isDelete",
+      field: "isDeleted",
       width: 150,
       headerName: "Estatus",
       renderCell: (cells) => {
-        return <StatusRow active={cells.row.isDelete} />;
+        return <StatusRow active={!cells.row.IsDeleted} />;
       },
     },
 
@@ -55,13 +87,8 @@ export default function BrandList({ setFormOpen, data }) {
           <div className="flex space-x-4">
             <a
               onClick={() => {
+                setFormData(cells.row);
                 setFormOpen(true);
-                // setFormData(cells.row);
-                // Alert.fire({
-                //   title: <strong>Good job!</strong>,
-                //   html: <i>You clicked the button!</i>,
-                //   icon: "success",
-                // });
               }}
               className="text-green-400 cursor-pointer"
             >
@@ -70,8 +97,8 @@ export default function BrandList({ setFormOpen, data }) {
             </a>
             <a
               onClick={() => {
-                setConfirmOpen(true);
                 setItemToDelete(cells.row);
+                setConfirmOpen(true);
               }}
               className="text-red-500 cursor-pointer"
             >
@@ -83,8 +110,29 @@ export default function BrandList({ setFormOpen, data }) {
     },
   ];
 
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
+  const handleTabChange = (e, value) => {
+    setStatusTab(value);
+    const newData = getDataFilterdByTab(value);
+    setDataFiltered(newData);
+  };
+
+  const getDataFilterdByTab = (value) => {
+    let newData = { isLoading: true, data: [] };
+
+    if (value === "All") {
+      newData = data;
+    } else if (value === "Active") {
+      newData = {
+        isLoading: false,
+        data: data.data.filter((item) => !item.IsDeleted),
+      };
+    } else if (value === "Disable") {
+      newData = {
+        isLoading: false,
+        data: data.data.filter((item) => item.IsDeleted),
+      };
+    }
+    return newData;
   };
 
   return (
@@ -92,8 +140,8 @@ export default function BrandList({ setFormOpen, data }) {
       <div className="flex flex-col h-full  w-full shadow-lg rounded-xl my-3">
         <div className=" bg-slate-200 rounded-t-lg">
           <Tabs
-            value={value}
-            onChange={handleChange}
+            value={statusTab}
+            onChange={handleTabChange}
             className="text-neutral-500"
             TabIndicatorProps={{
               style: {
@@ -102,9 +150,9 @@ export default function BrandList({ setFormOpen, data }) {
             }}
             aria-label="secondary tabs example"
           >
-            <Tab className=" capitalize" value="one" label="Todos" active />
-            <Tab className=" capitalize" value="two" label="Activos" />
-            <Tab className=" capitalize" value="three" label="Desactivados" />
+            <Tab className=" capitalize" value="All" label="Todos" />
+            <Tab className=" capitalize" value="Active" label="Activos" />
+            <Tab className=" capitalize" value="Disable" label="Desactivados" />
           </Tabs>
         </div>
         <div className="flex items-center space-x-4 px-4 my-4">
@@ -132,11 +180,11 @@ export default function BrandList({ setFormOpen, data }) {
                 icon: "success",
               });
             }}
-            rows={data.data}
+            rows={dataFiltered.data}
             columns={columns}
             className="p-2"
             pageSize={5}
-            loading={data.isLoading}
+            loading={dataFiltered.isLoading}
             rowsPerPageOptions={[5]}
             checkboxSelection
             disableSelectionOnClick
