@@ -39,16 +39,7 @@ export default function BrandForm({ onSave, open, setOpen, data, setFile }) {
 
   const [images, setImages] = useState([]);
 
-  const postImage = async () => {
-    const storage = getStorage(app);
-    const storageRef = ref(storage, "products");
-    const response = await uploadBytes(storageRef, file);
-    const url = await getDownloadURL(response.ref);
-    return url;
-  };
-
   const [suplierValue, setSuplierValue] = useState();
-  const [menuValue, setMenuValue] = useState("");
 
   const handleSuplier = () => {
     register("suplier", { value: suplierValue });
@@ -65,7 +56,6 @@ export default function BrandForm({ onSave, open, setOpen, data, setFile }) {
 
   const onSubmit = async (data) => {
     const dataParsed = {
-      address: "none",
       IsDeleted: false,
       ...data,
     };

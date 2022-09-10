@@ -70,7 +70,7 @@ export default function Brand() {
         // if the item exists
         await axiosInstance.put("v1/brand", parsedData);
       } else {
-        // if the item dosent exists
+        // if the item doesnt exists
         await axiosInstance.post("v1/brand", parsedData);
       }
 
