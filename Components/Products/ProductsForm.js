@@ -169,6 +169,10 @@ export default function ProductsForm({ open, setOpen, data }) {
                     type="number"
                     className="rounded-xl"
                     variant="outlined"
+                    inputProps={{
+                      inputMode: "numeric",
+                      pattern: "/^-?d+(?:.d+)?$/g",
+                    }}
                     startAdornment={
                       <InputAdornment position="start">
                         <LocalOffer />

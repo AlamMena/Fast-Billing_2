@@ -36,18 +36,16 @@ export default function InvoiceDetail({ products }) {
     dispatch(updateItemPrice(obj));
   };
 
-  useEffect(() => {
-    dispatch(calculateSubTotal());
-  }, [details]);
-  useEffect(() => {
-    dispatch(calculateTotal());
-    // saveInvoice();
-  }, [taxesAmount, discountAmount, subTotal]);
+  // useEffect(() => {
+  //   dispatch(calculateSubTotal());
+  // }, [details]);
+  // useEffect(() => {
+  //   dispatch(calculateTotal());
+  // }, [taxesAmount, discountAmount, subTotal]);
 
   return (
     <>
       {details.map((item, index) => {
-        const objId = item._id;
         return (
           <div key={index} className="py-4">
             {/* Inputs */}
@@ -162,7 +160,9 @@ export default function InvoiceDetail({ products }) {
                 startIcon={<Delete />}
                 size="small"
                 className=" text-red-600 hover:bg-red-100"
-                onClick={() => dispatch(removeItem(objId))}
+                onClick={() => {
+                  dispatch(removeItem(item._id));
+                }}
               >
                 Eliminar
               </Button>

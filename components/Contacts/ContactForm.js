@@ -35,20 +35,20 @@ export default function ContactForm({ onSave, open, setOpen, data, setFile }) {
     handleSubmit,
     register,
     reset,
+    setValue,
     formState: { errors },
   } = useForm({
     defaultValues: data,
   });
 
-  const [images, setImages] = useState([]);
-
+  const [images, setImages] = useState();
   const [contactType, setContactType] = useState(1);
   const [identificationType, setIdentificationType] = useState(1);
 
   const onSubmit = async (data) => {
     const dataParsed = {
       address: "none",
-      IsDeleted: false,
+      isDeleted: false,
       ...data,
     };
     await onSave(dataParsed);
@@ -63,12 +63,17 @@ export default function ContactForm({ onSave, open, setOpen, data, setFile }) {
   return (
     <div className="w-full h-full">
       <div className=" rounded-2xl">
-        <Dialog open={open} onClose={() => setOpen(false)}>
+        <Dialog
+          open={open}
+          onClose={() => setOpen(false)}
+          fullWidth
+          maxWidth={"sm"}
+        >
           <form
             onSubmit={handleSubmit(onSubmit)}
             className="flex flex-col p-8 space-y-6 px-10"
           >
-            <h2 className="text-xl font-bold">Contact Form </h2>
+            <h2 className="text-xl font-bold">Formulario de contactos </h2>
 
             <FormControl>
               <TextField
@@ -76,16 +81,18 @@ export default function ContactForm({ onSave, open, setOpen, data, setFile }) {
                   required: true,
                 })}
                 id="outlined-adornment-name"
-                label="Full Name"
+                label="Nombre"
                 size="small"
                 error={errors.name && "value"}
                 className="input-rounded"
-                helperText={errors.name && `El campo 'nombre' es requerido`}
+                helperText={errors.name && `El campo no es valido`}
                 variant="outlined"
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
-                      <BadgeOutlined />
+                      <BadgeOutlined
+                        className={`${errors.name && "text-red-500"} `}
+                      />
                     </InputAdornment>
                   ),
                 }}
@@ -94,7 +101,7 @@ export default function ContactForm({ onSave, open, setOpen, data, setFile }) {
             <div className="flex w-full items-center space-x-4">
               <FormControl className=" w-52">
                 <InputLabel id="select-type-identification">
-                  Identification type
+                  Tipo Identificacion
                 </InputLabel>
                 <Select
                   {...register("noIdentificationType")}
@@ -112,13 +119,11 @@ export default function ContactForm({ onSave, open, setOpen, data, setFile }) {
                       <ArticleOutlined />
                     </InputAdornment>
                   }
-                  // onChange={handleChange}
                 >
                   <MenuItem value={1}>Cedula</MenuItem>
                   <MenuItem value={2}>Pasaporte</MenuItem>
                   <MenuItem value={3}>RNC</MenuItem>
                 </Select>
-                {/* <FormHelperText>With label + helper text</FormHelperText> */}
               </FormControl>
               <FormControl>
                 <TextField
@@ -130,8 +135,7 @@ export default function ContactForm({ onSave, open, setOpen, data, setFile }) {
                   variant="outlined"
                   error={errors.noIdentification}
                   helperText={
-                    errors.noIdentification &&
-                    `El campo 'no.Identificaion es requerido'`
+                    errors.noIdentification && `El campo no es valido`
                   }
                   InputProps={{
                     startAdornment: (
@@ -149,23 +153,27 @@ export default function ContactForm({ onSave, open, setOpen, data, setFile }) {
             </div>
             <FormControl>
               <TextField
-                {...register("phone")}
+                {...register("phone", { required: true })}
                 id="outlined-adornment-phone"
-                label="Phone number"
+                label="Numero de telefono"
                 size="small"
                 className="input-rounded text-md"
                 variant="outlined"
+                error={errors.phone}
+                helperText={errors.phone && `El campo no es valido`}
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
-                      <PhoneOutlined />
+                      <PhoneOutlined
+                        className={`${errors.phone && "text-red-500"} `}
+                      />
                     </InputAdornment>
                   ),
                 }}
               />
             </FormControl>
             <FormControl className="w-full">
-              <InputLabel id="select-type-contact">Contact type</InputLabel>
+              <InputLabel id="select-type-contact">Tipo de contacto</InputLabel>
               <Select
                 {...register("type")}
                 labelId="select-type-contact"
@@ -174,24 +182,23 @@ export default function ContactForm({ onSave, open, setOpen, data, setFile }) {
                 onChange={(params) => setContactType(params.target.value)}
                 size="small"
                 className="rounded-xl text-md"
-                label="Contact type"
+                label="Tipo de contacto"
                 startAdornment={
                   <InputAdornment position="start">
                     <ContactsOutlined />
                   </InputAdornment>
                 }
-                // onChange={handleChange}
               >
                 <MenuItem value={1}>Cliente</MenuItem>
                 <MenuItem value={2}>Proveedor</MenuItem>
               </Select>
-              {/* <FormHelperText>With label + helper text</FormHelperText> */}
             </FormControl>
             <FormControl>
               <ImagePoster
                 images={images}
                 setImages={setImages}
                 setFile={setFile}
+                removeImage={() => setValue("imageUrl", null)}
               />
             </FormControl>
 
@@ -215,15 +222,6 @@ export default function ContactForm({ onSave, open, setOpen, data, setFile }) {
               >
                 Save
               </Button>
-              {/* <Button
-                variant="contained"
-                type="submit"
-                color="secondary"
-                size="medium"
-                className="w-28 bg-red-600 text-white rounded-2xl"
-              >
-                Cancel
-              </Button> */}
             </div>
           </form>
         </Dialog>

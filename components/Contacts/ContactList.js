@@ -5,7 +5,6 @@ import {
   SearchRounded,
 } from "@mui/icons-material";
 import {
-  Autocomplete,
   FormControl,
   InputAdornment,
   InputLabel,
@@ -14,12 +13,9 @@ import {
   Select,
   Tab,
   Tabs,
-  TextField,
 } from "@mui/material";
 import { DataGrid, GridToolBar } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
-
-import Alert from "../Globals/Alert.js";
 import StatusRow from "../Globals/StatusRow.js";
 
 export default function ContactList({
@@ -29,13 +25,88 @@ export default function ContactList({
   setItemToDelete,
   setConfirmOpen,
 }) {
-  const [statusTab, setStatusTab] = useState("All");
-  const [dataFiltered, setDataFiltered] = useState(data);
+  // states
+  const [statusTabValue, setStatusTabValue] = useState("All");
+  const [filteredData, setFilteredData] = useState(data);
   const [typeFilter, setTypeFilter] = useState(0);
 
+  // methods
+  const getFilteredContactsByStatus = (value) => {
+    // response variable
+    let filteredContactsByStatus;
+
+    // filtering contacts from tab value
+    if (value === "All") {
+      filteredContactsByStatus = data.contacts;
+    } else if (value === "Active") {
+      filteredContactsByStatus = data.contacts.filter(
+        (item) => !item.IsDeleted
+      );
+    } else if (value === "Disable") {
+      filteredContactsByStatus = data.contacts.filter((item) => item.IsDeleted);
+    }
+
+    // response
+    return filteredContactsByStatus;
+  };
+
+  const handleTabChange = (event, value) => {
+    // setting new value to the tab
+    setStatusTabValue(value);
+
+    // start loading
+    setFilteredData({ isLoading: true, contacts: [] });
+
+    // filtering contacts by the new tab value
+    const filteredContactsByStatus = getFilteredContactsByStatus(value);
+
+    // setting contacts to the state and stoping the loading
+    setFilteredData({ isLoading: false, contacts: filteredContactsByStatus });
+
+    // setting the type filter as all(0)
+    setTypeFilter(0);
+  };
+
+  const handleTypeChange = (newContactTypeValue) => {
+    // setting the new value
+    setTypeFilter(newContactTypeValue);
+
+    // start loading
+    setFilteredData({ ...filteredData, isLoading: true });
+
+    // filtering the data by the tab value
+    const filteredContactsByStatus =
+      getFilteredContactsByStatus(statusTabValue);
+
+    // filtering by the new contact type filter
+    let filteredContactsByTypeAndStatus;
+
+    if (newContactTypeValue === 0) {
+      filteredContactsByTypeAndStatus = filteredContactsByStatus;
+    } else {
+      filteredContactsByTypeAndStatus = filteredContactsByStatus.filter(
+        (contact) => contact.type == newContactTypeValue.toString()
+      );
+    }
+
+    // setting the data
+    setFilteredData({
+      isLoading: false,
+      contacts: filteredContactsByTypeAndStatus,
+    });
+  };
+
+  // effects
   useEffect(() => {
-    const newData = getDataFilterdByTab(statusTab);
-    setDataFiltered(newData);
+    // start loading
+    setFilteredData({ isLoading: true, contacts: [] });
+
+    // filtering contacts
+    const filteredContactsByStatus =
+      getFilteredContactsByStatus(statusTabValue);
+
+    // setting data
+    setFilteredData({ isLoading: false, contacts: filteredContactsByStatus });
   }, [data]);
 
   const columns = [
@@ -127,55 +198,11 @@ export default function ContactList({
     },
   ];
 
-  const getDataFilterdByTab = (value) => {
-    let newData = { isLoading: true, data: [] };
-
-    if (value === "All") {
-      newData = data;
-    } else if (value === "Active") {
-      newData = {
-        isLoading: false,
-        data: data.data.filter((item) => !item.IsDeleted),
-      };
-    } else if (value === "Disable") {
-      newData = {
-        isLoading: false,
-        data: data.data.filter((item) => item.IsDeleted),
-      };
-    }
-    return newData;
-  };
-  const handleTabChange = (e, value) => {
-    setStatusTab(value);
-    const newData = getDataFilterdByTab(value);
-    setDataFiltered(newData);
-    setTypeFilter(0);
-  };
-
-  const handleTypeChange = (newValue) => {
-    setTypeFilter(newValue);
-
-    const dataResult = getDataFilterdByTab(statusTab);
-    if (newValue === 0) {
-      setDataFiltered({
-        isLoading: false,
-        data: dataResult.data,
-      });
-    } else {
-      setDataFiltered({
-        isLoading: false,
-        data: dataResult.data.filter(
-          (item) => item.type == newValue.toString()
-        ),
-      });
-    }
-  };
-
   return (
     <div className="flex flex-col h-full  w-full shadow-lg rounded-xl my-3">
       <div className=" bg-slate-200 rounded-t-lg">
         <Tabs
-          value={statusTab}
+          value={statusTabValue}
           onChange={handleTabChange}
           className="text-neutral-500"
           TabIndicatorProps={{
@@ -209,27 +236,6 @@ export default function ContactList({
           </Select>
         </FormControl>
 
-        {/* <Autocomplete
-          disablePortal
-          id="combo-box-demo"
-          className="my-4 "
-          value={typeFilter.label}
-          onChange={handleTypeChange}
-          options={[
-            { label: "Todos", id: 0 },
-            { label: "Clientes", id: 1 },
-            { label: "Proveedores", id: 2 },
-          ]}
-          sx={{ width: 300 }}
-          renderInput={(params) => (
-            <TextField
-              className="text-sm input-rounded"
-              size="small"
-              {...params}
-              label="Tipos"
-            />
-          )}
-        /> */}
         <FormControl className="w-full">
           <OutlinedInput
             id="input-with-icon-adornment"
@@ -249,21 +255,12 @@ export default function ContactList({
         <DataGrid
           components={{ Toolbar: GridToolBar }}
           getRowId={(row) => row._id}
-          onSelectionModelChange={(row) => {
-            Alert.fire({
-              title: <strong>Success!</strong>,
-              html: <span>{row.map((item) => item)}</span>,
-              icon: "success",
-            });
-          }}
-          rows={dataFiltered.data}
+          rows={filteredData.contacts}
           columns={columns}
           className="p-2"
           pageSize={5}
-          loading={dataFiltered.isLoading}
+          loading={filteredData.isLoading}
           rowsPerPageOptions={[5]}
-          checkboxSelection
-          disableSelectionOnClick
           experimentalFeatures={{ newEditingApi: true }}
         />
       </div>

@@ -87,7 +87,12 @@ export default function CategoryForm({ open, setOpen, data }) {
     <>
       <div className="w-full h-full">
         <div className=" rounded-2xl">
-          <Dialog open={open} onClose={() => setOpen(false)}>
+          <Dialog
+            open={open}
+            onClose={() => setOpen(false)}
+            fullWidth
+            maxWidth={"sm"}
+          >
             <form
               onSubmit={handleSubmit(onSubmit)}
               className="flex flex-col p-8 space-y-5 px-10"

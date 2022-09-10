@@ -74,6 +74,7 @@ const invoiceSlice = createSlice({
     removeItem: (state, actions) => {
       let itemId = actions.payload;
       state.details = state.details.filter((item, i) => item._id !== itemId);
+      alert(JSON.stringify(state.details));
     },
 
     calculateSubTotal: (state) => {

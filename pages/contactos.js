@@ -11,7 +11,7 @@ import ConfirmationForm from "../Components/Globals/ConfirmationForm";
 
 export default function Contacts() {
   // list data
-  const [data, setData] = useState({ isLoading: true, data: [] });
+  const [data, setData] = useState({ isLoading: true, contacts: [] });
 
   // upsert states
   const [formOpen, setFormOpen] = useState(false);
@@ -33,21 +33,21 @@ export default function Contacts() {
     },
     {
       text: "Contactos",
-      link: "/User/list",
+      link: "/contactos",
     },
   ];
 
   const setDataAsync = async () => {
     try {
       const response = await axiosInstance.get("v1/contacts?page=1&limit=200");
-      setData({ isLoading: false, data: response.data });
+      setData({ isLoading: false, contacts: response.data });
     } catch (error) {
       toast.error(`Opps!, something went wrong${error}`);
-      setData({ isLoading: false, data: [] });
+      setData({ isLoading: false, contacts: [] });
     }
   };
 
-  const upsertAsync = async (data) => {
+  const upsertAsync = async (requestData) => {
     try {
       // loading toast
       toastId.current = toast("Please wait...", {
@@ -55,21 +55,23 @@ export default function Contacts() {
       });
 
       // if there is any file
-      let imageUrl = "";
+
+      let imageUrl = requestData ? requestData.imageUrl : null;
       if (imageFile) {
         imageUrl = await postImage(imageFile);
       }
-      const parsedData = { ...data, imageUrl };
+
+      const parsedData = { ...requestData, imageUrl };
 
       // logic
-      if (data._id !== undefined) {
+      if (requestData._id !== undefined) {
         // if the item exists
         await axiosInstance.put("v1/contact", parsedData);
       } else {
         // if the item dosent exists
         await axiosInstance.post("v1/contact", parsedData);
       }
-
+      setImageFile(null);
       // getting data back
       await setDataAsync();
 
@@ -84,7 +86,7 @@ export default function Contacts() {
       toast.error(`Opps!, something went wrong${error}`);
 
       // removing data from page
-      setData({ isLoading: false, data: [] });
+      setData({ isLoading: false, contacts: [] });
     }
   };
 
@@ -104,7 +106,7 @@ export default function Contacts() {
       console.log(data);
     } catch (error) {
       toast.error(`Opps!, something went wrong${error}`);
-      setData({ isLoading: false, data: [] });
+      setData({ isLoading: false, contacts: [] });
     }
   };
 

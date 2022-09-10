@@ -70,8 +70,13 @@ export default function BrandForm({ onSave, open, setOpen, data, setFile }) {
 
   return (
     <div className="w-full h-full">
-      <div className=" rounded-2xl">
-        <Dialog open={open} onClose={() => setOpen(false)}>
+      <div className=" rounded-2xl ">
+        <Dialog
+          open={open}
+          onClose={() => setOpen(false)}
+          fullWidth
+          maxWidth={"sm"}
+        >
           <form
             onSubmit={handleSubmit(onSubmit)}
             className="flex flex-col p-8 space-y-6 px-10"

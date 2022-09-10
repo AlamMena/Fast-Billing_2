@@ -3,7 +3,12 @@ import app from "../../Firebase/FirebaseAppConfig";
 import { AiOutlineCloseCircle } from "react-icons/ai";
 import styles from "./ImagePosterCss.module.css";
 
-export default function ImagePoster({ images, setImages, setFile }) {
+export default function ImagePoster({
+  images,
+  setImages,
+  setFile,
+  removeImage,
+}) {
   const handleImageInput = (e) => {
     const url = URL.createObjectURL(e.target.files[0]);
     setFile(e.target.files[0]);
@@ -22,7 +27,8 @@ export default function ImagePoster({ images, setImages, setFile }) {
       </div>
       <div className={styles.list_container}>
         <span className={styles.list_title}>Listado de imagenes</span>
-        {images &&
+        {images[0] !== undefined &&
+          images[0] != "" &&
           images.map((url, index) => {
             return (
               <div key={index} className={styles.img_container}>
@@ -31,8 +37,8 @@ export default function ImagePoster({ images, setImages, setFile }) {
                   <AiOutlineCloseCircle
                     onClick={() => {
                       setFile();
-                      setImages(images.filter((item) => item !== url)),
-                        console.log(url);
+                      setImages(images.filter((item) => item !== url));
+                      removeImage();
                     }}
                     className={styles.icon}
                   />
