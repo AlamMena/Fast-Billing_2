@@ -45,9 +45,9 @@ export default function InvoiceDetail({ products }) {
 
   return (
     <>
-      {details.map((item, index) => {
+      {details.map((item) => {
         return (
-          <div key={index} className="py-4">
+          <div key={item._id} className="py-4">
             {/* Inputs */}
             <Grid container spacing={1} className="flex space-x-0">
               <Grid item xs={12} md={3}>
