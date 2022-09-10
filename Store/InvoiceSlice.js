@@ -70,9 +70,10 @@ const invoiceSlice = createSlice({
       state.details = [...state.details, newDetail];
     },
     removeItem: (state, actions) => {
-      let itemId = actions.payload;
-      state.details = state.details.filter((item, i) => item._id !== itemId);
-      alert(JSON.stringify(state.details));
+      state.details = state.details.filter(
+        (item, i) => item._id !== actions.payload
+      );
+      // alert(JSON.stringify(state.details));
     },
 
     calculateSubTotal: (state) => {
