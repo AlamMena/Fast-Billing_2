@@ -39,18 +39,16 @@ const invoiceSlice = createSlice({
       state.recipient.address = payload.address;
       state.recipient.phone = payload.phone;
     },
-    updateItemPrice: (state, { payload }) => {
-      const obj = {
-        value: payload.value,
-        id: payload.id,
-      };
-      const itemPrice = state.details.find((item) => item._id === obj.id);
-      console.log(payload.value);
-      // if (payload.value <= 1) {
-      //   itemPrice.price = 1;
-      // } else {
-      //   itemPrice.price = payload.value;
-      // }
+    updateItemPrice: (state, actions) => {
+      const itemPrice = state.details.find(
+        (item) => item._id === actions.payload._id
+      );
+      console.log(itemPrice);
+      if (actions.payload.value <= 1) {
+        itemPrice.price = 1;
+      } else {
+        itemPrice.price = actions.payload.value;
+      }
     },
     updateDiscount: (state, actions) => {
       let num = Math.abs(actions.payload);

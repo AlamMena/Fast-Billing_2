@@ -24,30 +24,28 @@ import {
 
 export default function InvoiceDetail({ products }) {
   const { handleSubmit, register, reset } = useForm({});
-  const [productItem, setProductItem] = useState("");
 
   const { details, discountAmount, taxesAmount, subTotal } = useSelector(
     (state) => state.invoice
   );
   const dispatch = useDispatch();
 
-  const handlePrice = (e, id) => {
-    const obj = { value: e, id: id };
+  const handlePrice = (obj) => {
     dispatch(updateItemPrice(obj));
   };
 
-  // useEffect(() => {
-  //   dispatch(calculateSubTotal());
-  // }, [details]);
-  // useEffect(() => {
-  //   dispatch(calculateTotal());
-  // }, [taxesAmount, discountAmount, subTotal]);
+  useEffect(() => {
+    dispatch(calculateSubTotal());
+  }, [details]);
+  useEffect(() => {
+    dispatch(calculateTotal());
+  }, [taxesAmount, discountAmount, subTotal]);
 
   return (
     <>
-      {details.map((item, index) => {
+      {details.map((item) => {
         return (
-          <div key={index} className="py-4">
+          <div key={item._id} className="py-4">
             {/* Inputs */}
             <Grid container spacing={1} className="flex space-x-0">
               <Grid item xs={12} md={3}>
@@ -64,22 +62,7 @@ export default function InvoiceDetail({ products }) {
                     defaultValue={item.name}
                     className="rounded-xl"
                     variant="outlined"
-                  >
-                    {/* {products.data.map((item, index) => {
-                      return (
-                        <MenuItem
-                          key={index}
-                          value={index}
-                          className="w-full"
-                          onClick={() => {
-                            setProductItem(index);
-                          }}
-                        >
-                          {item.name}
-                        </MenuItem>
-                      );
-                        })} */}
-                  </OutlinedInput>
+                  ></OutlinedInput>
                 </FormControl>
               </Grid>
               <Grid item xs={12} md={4}>
@@ -126,7 +109,9 @@ export default function InvoiceDetail({ products }) {
                     id="outlined-adornment-name"
                     label="Precio"
                     type="number"
-                    onChange={(e) => handlePrice(e.target.value, item._id)}
+                    onChange={(e) =>
+                      handlePrice({ value: e.target.value, _id: item._id })
+                    }
                     defaultValue={item.price}
                     size="small"
                     className="rounded-xl"
