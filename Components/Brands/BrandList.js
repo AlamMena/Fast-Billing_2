@@ -29,11 +29,6 @@ export default function BrandList({
   const [statusTab, setStatusTab] = useState("All");
   const [dataFiltered, setDataFiltered] = useState(data);
 
-  useEffect(() => {
-    const newData = getDataFilterdByTab(statusTab);
-    setDataFiltered(newData);
-  }, [data]);
-
   const chip = [
     { name: "Ana", src: "/static/images/avatar/1.jpg" },
     { name: "TrapKing", src: "/static/images/avatar/1.jpg" },
@@ -70,7 +65,7 @@ export default function BrandList({
       },
     },
     {
-      field: "isDeleted",
+      field: "IsDeleted",
       width: 150,
       headerName: "Estatus",
       renderCell: (cells) => {
@@ -135,6 +130,11 @@ export default function BrandList({
     return newData;
   };
 
+  useEffect(() => {
+    const newData = getDataFilterdByTab(statusTab);
+    setDataFiltered(newData);
+  }, [data]);
+
   return (
     <>
       <div className="flex flex-col h-full  w-full shadow-lg rounded-xl my-3">
@@ -152,7 +152,7 @@ export default function BrandList({
           >
             <Tab className=" capitalize" value="All" label="Todos" />
             <Tab className=" capitalize" value="Active" label="Activos" />
-            <Tab className=" capitalize" value="Disable" label="Desactivados" />
+            <Tab className=" capitalize" value="Disable" label="Inactivos" />
           </Tabs>
         </div>
         <div className="flex items-center space-x-4 px-4 my-4">

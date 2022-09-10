@@ -17,29 +17,23 @@ import {
 import { useEffect, useRef, useState } from "react";
 import IconButton from "@mui/material/IconButton";
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
-
 import ImagePoster from "../Globals/ImagePoster";
 import PhotoCamera from "@mui/icons-material/PhotoCamera";
-
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import Alert from "../Globals/Alert";
 
-export default function CategoryForm({ open, setOpen, data }) {
-  const { handleSubmit, register, reset } = useForm({
+export default function CategoryForm({ open, setOpen, data, onSave, setFile }) {
+  const {
+    handleSubmit,
+    register,
+    reset,
+    formState: { errors },
+  } = useForm({
     defaultValues: data,
   });
 
   const [images, setImages] = useState([]);
-  const [file, setFile] = useState();
-
-  const postImage = async () => {
-    const storage = getStorage(app);
-    const storageRef = ref(storage, "products");
-    const response = await uploadBytes(storageRef, file);
-    const url = await getDownloadURL(response.ref);
-    return url;
-  };
 
   const chip = [
     { name: "Ana", src: "/static/images/avatar/1.jpg" },
@@ -51,36 +45,17 @@ export default function CategoryForm({ open, setOpen, data }) {
   ];
 
   const onSubmit = async (data) => {
-    await onSave(data);
-    // Alert.fire({
-    //   title: <strong>Success!</strong>,
-    //   html: <span>Contact successfully saved</span>,
-    //   icon: "success",
-    // });
-    // setTimeout(() => {
-    //   Alert.fire({
-    //     title: <strong>Ops, something went wrong!</strong>,
-    //     icon: "error",
-    //   });
-    // }, 1000);
-
-    //  toastId.current = toast("Please wait...", {
-    //    type: toast.TYPE.LOADING,
-    //  });
-
-    //  setTimeout(() => {
-    //    toast.update(toastId.current, {
-    //      type: toast.TYPE.SUCCESS,
-    //      autoClose: 5000,
-    //      render: "Success",
-    //    });
-    //  }, 2000);
-
+    const dataParsed = {
+      IsDeleted: false,
+      ...data,
+    };
+    await onSave(dataParsed);
     setOpen(false);
   };
 
   useEffect(() => {
     reset(data);
+    setImages([data && data.imageUrl]);
   }, [data]);
 
   return (
@@ -97,17 +72,21 @@ export default function CategoryForm({ open, setOpen, data }) {
               onSubmit={handleSubmit(onSubmit)}
               className="flex flex-col p-8 space-y-5 px-10"
             >
-              <h2 className="text-xl font-bold">Formulario de Marca </h2>
+              <h2 className="text-xl font-bold">Formulario de Categoria </h2>
 
               <FormControl>
                 <InputLabel size="small" htmlFor="outlined-adornment-name">
                   Nombre de la categoria
                 </InputLabel>
                 <OutlinedInput
-                  {...register("name")}
+                  {...register("Name", {
+                    required: true,
+                  })}
                   id="outlined-adornment-name"
                   label="Nombre de la categoria"
                   size="small"
+                  error={errors.name && "value"}
+                  helperText={errors.name && `El campo 'nombre' es requerido`}
                   className="rounded-xl"
                   variant="outlined"
                   startAdornment={
@@ -150,15 +129,6 @@ export default function CategoryForm({ open, setOpen, data }) {
                 >
                   Salvar
                 </Button>
-                {/* <Button
-                variant="contained"
-                type="submit"
-                color="secondary"
-                size="medium"
-                className="w-28 bg-red-600 text-white rounded-2xl"
-              >
-                Cancel
-              </Button> */}
               </div>
             </form>
           </Dialog>

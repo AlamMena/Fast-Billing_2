@@ -12,13 +12,20 @@ import {
   Tabs,
   TextField,
 } from "@mui/material";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { DataGrid, GridToolBar } from "@mui/x-data-grid";
 import Alert from "../Globals/Alert";
 import StatusRow from "../Globals/StatusRow.js";
 
-export default function CategoryList({ setFormOpen, data }) {
-  const [value, setValue] = useState("one");
+export default function CategoryList({
+  setFormOpen,
+  data,
+  setItemToDelete,
+  setConfirmOpen,
+  setFormData,
+}) {
+  const [statusTab, setStatusTab] = useState("All");
+  const [dataFiltered, setDataFiltered] = useState(data);
 
   const columns = [
     {
@@ -31,7 +38,7 @@ export default function CategoryList({ setFormOpen, data }) {
       width: "150",
       headerName: "Estatus",
       renderCell: (cells) => {
-        return <StatusRow active={cells.row.isDelete} />;
+        return <StatusRow active={!cells.row.IsDeleted} />;
       },
     },
 
@@ -44,13 +51,8 @@ export default function CategoryList({ setFormOpen, data }) {
           <div className="flex space-x-4">
             <a
               onClick={() => {
+                setFormData(cells.row);
                 setFormOpen(true);
-                // setFormData(cells.row);
-                // Alert.fire({
-                //   title: <strong>Good job!</strong>,
-                //   html: <i>You clicked the button!</i>,
-                //   icon: "success",
-                // });
               }}
               className="text-green-400 cursor-pointer"
             >
@@ -59,8 +61,8 @@ export default function CategoryList({ setFormOpen, data }) {
             </a>
             <a
               onClick={() => {
-                setConfirmOpen(true);
                 setItemToDelete(cells.row);
+                setConfirmOpen(true);
               }}
               className="text-red-500 cursor-pointer"
             >
@@ -72,17 +74,43 @@ export default function CategoryList({ setFormOpen, data }) {
     },
   ];
 
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
+  const handleTabChange = (e, value) => {
+    setStatusTab(value);
+    const newData = getDataFilterdByTab(value);
+    setDataFiltered(newData);
   };
+
+  const getDataFilterdByTab = (value) => {
+    let newData = { isLoading: true, data: [] };
+
+    if (value === "All") {
+      newData = data;
+    } else if (value === "Active") {
+      newData = {
+        isLoading: false,
+        data: data.data.filter((item) => !item.IsDeleted),
+      };
+    } else if (value === "Disable") {
+      newData = {
+        isLoading: false,
+        data: data.data.filter((item) => item.IsDeleted),
+      };
+    }
+    return newData;
+  };
+
+  useEffect(() => {
+    const newData = getDataFilterdByTab(statusTab);
+    setDataFiltered(newData);
+  }, [data]);
 
   return (
     <>
       <div className="flex flex-col h-full  w-full shadow-lg rounded-xl my-3">
         <div className=" bg-slate-200 rounded-t-lg">
           <Tabs
-            value={value}
-            onChange={handleChange}
+            value={statusTab}
+            onChange={handleTabChange}
             className="text-neutral-500"
             TabIndicatorProps={{
               style: {
@@ -91,9 +119,9 @@ export default function CategoryList({ setFormOpen, data }) {
             }}
             aria-label="secondary tabs example"
           >
-            <Tab className=" capitalize" value="one" label="Todos" active />
-            <Tab className=" capitalize" value="two" label="Activos" />
-            <Tab className=" capitalize" value="three" label="Desactivados" />
+            <Tab className=" capitalize" value="All" label="Todos" active />
+            <Tab className=" capitalize" value="Active" label="Activos" />
+            <Tab className=" capitalize" value="Disable" label="Inactivos" />
           </Tabs>
         </div>
         <div className="flex items-center space-x-4 px-4 my-4">
@@ -121,11 +149,11 @@ export default function CategoryList({ setFormOpen, data }) {
                 icon: "success",
               });
             }}
-            rows={data.data}
+            rows={dataFiltered.data}
             columns={columns}
             className="p-2"
             pageSize={5}
-            loading={data.isLoading}
+            loading={dataFiltered.isLoading}
             rowsPerPageOptions={[5]}
             checkboxSelection
             disableSelectionOnClick
