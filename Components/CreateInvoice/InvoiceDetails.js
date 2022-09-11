@@ -9,6 +9,7 @@ import {
   Select,
   MenuItem,
   Button,
+  IconButton,
 } from "@mui/material";
 import { useForm } from "react-hook-form";
 import { Delete } from "@mui/icons-material";
@@ -48,9 +49,10 @@ export default function InvoiceDetail({ products }) {
     <>
       {details.map((item) => {
         return (
-          <div key={item._id} className="py-4">
+          <div key={item._id} className="py-2 odd:bg-neutral-100 rounded-lg">
             {/* Inputs */}
-            <Grid container spacing={1} className="flex space-x-0">
+            <Grid container spacing={1} className="flex p-2">
+              {/* Articulo */}
               <Grid item xs={12} md={3}>
                 {" "}
                 <FormControl className="w-full">
@@ -68,6 +70,7 @@ export default function InvoiceDetail({ products }) {
                   ></OutlinedInput>
                 </FormControl>
               </Grid>
+              {/* Descripcion */}
               <Grid item xs={12} md={4}>
                 <FormControl className="w-full">
                   <InputLabel size="small" htmlFor="outlined-adornment-name">
@@ -84,6 +87,7 @@ export default function InvoiceDetail({ products }) {
                   />
                 </FormControl>
               </Grid>
+              {/* Cantidad */}
               <Grid item xs={12} md={1}>
                 {" "}
                 <FormControl className="w-full">
@@ -100,13 +104,14 @@ export default function InvoiceDetail({ products }) {
                         _id: item._id,
                       })
                     }
-                    defaultValue={item.quantity}
+                    value={item.quantity}
                     size="small"
                     className="rounded-xl"
                     variant="outlined"
                   />
                 </FormControl>
               </Grid>
+              {/* Precio */}
               <Grid item xs={12} md={2}>
                 {" "}
                 <FormControl className="w-full">
@@ -127,8 +132,8 @@ export default function InvoiceDetail({ products }) {
                   />
                 </FormControl>
               </Grid>
-              <Grid item xs={12} md={2}>
-                {" "}
+              {/* Total */}
+              <Grid item xs={12} md={1}>
                 <FormControl className="w-full">
                   <InputLabel size="small" htmlFor="outlined-adornment-name">
                     Total
@@ -138,16 +143,27 @@ export default function InvoiceDetail({ products }) {
                     label="Total"
                     type="number"
                     disabled
-                    defaultValue={item.total}
+                    value={item.total}
                     size="small"
                     className="rounded-xl"
                     variant="outlined"
                   />
                 </FormControl>
               </Grid>
+              <Grid item xs={12} md={1}>
+                <IconButton
+                  size="small"
+                  className=" text-red-600 hover:bg-red-100"
+                  onClick={() => {
+                    dispatch(removeItem(item._id));
+                  }}
+                >
+                  <Delete />
+                </IconButton>
+              </Grid>
             </Grid>
             {/* Delete Icon */}
-            <div className="flex justify-end py-5">
+            {/* <div className="flex justify-end py-5">
               <Button
                 startIcon={<Delete />}
                 size="small"
@@ -158,12 +174,12 @@ export default function InvoiceDetail({ products }) {
               >
                 Eliminar
               </Button>
-            </div>
-            <Divider
+            </div> */}
+            {/* <Divider
               orientation="horizontal"
               variant="middle"
               flexItem
-            ></Divider>
+            ></Divider> */}
           </div>
         );
       })}

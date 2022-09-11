@@ -44,8 +44,8 @@ const invoiceSlice = createSlice({
       const itemPrice = state.details.find(
         (item) => item._id === actions.payload._id
       );
-      if (actions.payload.value <= 1) {
-        itemPrice.price = 1;
+      if (actions.payload.value <= 0) {
+        itemPrice.price = 0;
       } else {
         itemPrice.price = actions.payload.value;
       }
@@ -69,15 +69,21 @@ const invoiceSlice = createSlice({
       state.taxesAmount = num;
     },
     addItem: (state, { payload }) => {
-      const newDetail = {
-        _id: payload._id,
-        name: payload.name,
-        quantity: 1,
-        price: payload.price,
-        description: payload.description,
-        total: payload.price,
-      };
-      state.details = [...state.details, newDetail];
+      let newProduct = state.details.find((item) => item._id === payload._id);
+
+      if (newProduct) {
+        newProduct.quantity++;
+      } else {
+        const newDetail = {
+          _id: payload._id,
+          name: payload.name,
+          quantity: 1,
+          price: payload.price,
+          description: payload.description,
+          total: payload.price,
+        };
+        state.details = [...state.details, newDetail];
+      }
     },
     removeItem: (state, actions) => {
       state.details = state.details.filter(
@@ -93,6 +99,7 @@ const invoiceSlice = createSlice({
       state.details.forEach((item) => {
         quantity += item.quantity;
         subTotal += item.quantity * item.price;
+        item.total = item.quantity * item.price;
       });
 
       state.quantity = quantity;

@@ -279,7 +279,7 @@ export default function CreateInvoice() {
           </Grid>
         </div>
         {/* Details */}
-        <div className="p-5">
+        <div className="p-3">
           <span className=" text-xl text-neutral-400">Detalles:</span>
           <InvoiceDetail products={products} />
         </div>
