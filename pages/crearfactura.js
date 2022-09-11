@@ -34,13 +34,14 @@ import {
   addItem,
   updateStatus,
   updateCreationDate,
+  updateDueDate,
 } from "../Store/InvoiceSlice";
 import { useSelector } from "react-redux";
 import SelectProducts from "../Components/CreateInvoice/SelectProducts";
 
 export default function CreateInvoice() {
-  const [creationDate, setCreationDate] = useState(dayjs(undefined));
-  const [dueDate, setDueDate] = useState(dayjs(undefined));
+  const [creationDate, setCreationDate] = useState(dayjs());
+  const [dueDate, setDueDate] = useState(dayjs().add(1, "day"));
   const [openSelect, setOpenSelect] = useState(false);
   const [openProductPop, setProductPopUp] = useState(false);
   const [type, setType] = useState("");
@@ -93,6 +94,7 @@ export default function CreateInvoice() {
 
   const handleDueDateChange = (value) => {
     setDueDate(value);
+    dispatch(updateDueDate(value.toString()));
   };
 
   // Location Routes
@@ -115,6 +117,8 @@ export default function CreateInvoice() {
   useEffect(() => {
     setDataAsync();
     setProductsAsync();
+    dispatch(updateCreationDate(creationDate.toString()));
+    dispatch(updateDueDate(dueDate.toString()));
   }, []);
 
   return (
@@ -373,19 +377,27 @@ export default function CreateInvoice() {
           <div className="flex justify-end p-2">
             <span className="">Descuento:</span>
             <span className=" w-32 text-right overflow-hidden text-red-600">
-              -$
-              {discountAmount.toLocaleString("en-US", {
-                minimumFractionDigits: 2,
-              })}
+              {(discountAmount <= 0 && <span>-</span>) || (
+                <span>
+                  -$
+                  {discountAmount.toLocaleString("en-US", {
+                    minimumFractionDigits: 2,
+                  })}{" "}
+                </span>
+              )}
             </span>
           </div>
           <div className="flex justify-end p-2">
             <span className="">Taxes:</span>
             <span className=" w-32 text-right overflow-hidden">
-              $
-              {taxesAmount.toLocaleString("en-US", {
-                minimumFractionDigits: 2,
-              })}
+              {(taxesAmount <= 0 && <span>-</span>) || (
+                <span>
+                  $
+                  {taxesAmount.toLocaleString("en-US", {
+                    minimumFractionDigits: 2,
+                  })}{" "}
+                </span>
+              )}
             </span>
           </div>
           <div className="flex justify-end p-2 font-bold">

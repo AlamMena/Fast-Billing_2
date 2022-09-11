@@ -7,15 +7,20 @@ const initialState = {
   branchId: 1,
   invoiceNo: "F00000",
   invoiceTypeId: 1,
-  beneficiary: { name: "Alex", phone: "590354035", address: "el calenton" },
+  beneficiary: {
+    name: "Alex",
+    phone: "590354035",
+    RNC: "F90809231",
+    address: "el calenton",
+  },
   recipient: {},
   status: "Pagado",
   payment: {
     total: 0,
     type: "",
   },
-  invoiceCreationDate: new Date().getDate,
-  invoiceDueDate: new Date().setDate(new Date().getDate() + 1),
+  invoiceCreationDate: "",
+  invoiceDueDate: "",
   subTotal: 0,
   discountAmount: 0,
   taxesAmount: 0,
@@ -58,8 +63,8 @@ const invoiceSlice = createSlice({
       const itemPrice = state.details.find(
         (item) => item._id === actions.payload._id
       );
-      if (actions.payload.value <= 0) {
-        itemPrice.price = 0;
+      if (actions.payload.value <= -1) {
+        itemPrice.price = 1;
       } else {
         itemPrice.price = actions.payload.value;
       }
@@ -68,7 +73,7 @@ const invoiceSlice = createSlice({
       const itemQuantity = state.details.find(
         (item) => item._id === actions.payload._id
       );
-      if (actions.payload.quantity <= 1) {
+      if (actions.payload.quantity <= -1) {
         itemQuantity.quantity = 1;
       } else {
         itemQuantity.quantity = actions.payload.quantity;
@@ -134,6 +139,7 @@ export const {
   updateItemPrice,
   updateCreationDate,
   updateDiscount,
+  updateDueDate,
   updateTaxes,
   updateStatus,
   addItem,
