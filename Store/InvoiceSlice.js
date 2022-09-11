@@ -1,16 +1,26 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { setDate } from "date-fns";
+import { get } from "react-hook-form";
 
 const initialState = {
   companyId: 1,
   branchId: 1,
   invoiceNo: "F00000",
   invoiceTypeId: 1,
-  beneficiary: { name: "Alex", phone: "590354035", address: "el calenton" },
+  beneficiary: {
+    name: "Alex",
+    phone: "590354035",
+    RNC: "F90809231",
+    address: "el calenton",
+  },
   recipient: {},
+  status: "Pagado",
   payment: {
     total: 0,
     type: "",
   },
+  invoiceCreationDate: "",
+  invoiceDueDate: "",
   subTotal: 0,
   discountAmount: 0,
   taxesAmount: 0,
@@ -35,6 +45,15 @@ const invoiceSlice = createSlice({
       state.beneficiary.address = payload.address;
       state.beneficiary.phone = payload.phone;
     },
+    updateStatus: (state, actions) => {
+      state.status = actions.payload;
+    },
+    updateCreationDate: (state, actions) => {
+      state.invoiceCreationDate = actions.payload;
+    },
+    updateDueDate: (state, actions) => {
+      state.invoiceDueDate = actions.payload;
+    },
     updateRecipient: (state, { payload }) => {
       state.recipient.name = payload.name;
       state.recipient.address = payload.address;
@@ -44,8 +63,8 @@ const invoiceSlice = createSlice({
       const itemPrice = state.details.find(
         (item) => item._id === actions.payload._id
       );
-      if (actions.payload.value <= 0) {
-        itemPrice.price = 0;
+      if (actions.payload.value <= -1) {
+        itemPrice.price = 1;
       } else {
         itemPrice.price = actions.payload.value;
       }
@@ -54,7 +73,7 @@ const invoiceSlice = createSlice({
       const itemQuantity = state.details.find(
         (item) => item._id === actions.payload._id
       );
-      if (actions.payload.quantity <= 1) {
+      if (actions.payload.quantity <= -1) {
         itemQuantity.quantity = 1;
       } else {
         itemQuantity.quantity = actions.payload.quantity;
@@ -118,8 +137,11 @@ export const {
   updateBeneficiary,
   updateRecipient,
   updateItemPrice,
+  updateCreationDate,
   updateDiscount,
+  updateDueDate,
   updateTaxes,
+  updateStatus,
   addItem,
   removeItem,
   calculateTotal,

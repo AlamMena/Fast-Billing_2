@@ -125,7 +125,7 @@ export default function InvoiceDetail({ products }) {
                     onChange={(e) =>
                       handlePrice({ value: e.target.value, _id: item._id })
                     }
-                    defaultValue={item.price}
+                    value={item.price}
                     size="small"
                     className="rounded-xl"
                     variant="outlined"

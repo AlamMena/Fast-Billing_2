@@ -23,18 +23,23 @@ export default function SelectPopUp({ open, setOpenSelect, type, contactos }) {
   const contacts = contactos.map((item, index) => {
     return (
       <div
-        className="p-3 flex flex-col space-y-1 cursor-pointer hover:bg-green-100 w-full "
+        className="p-3 flex items-center space-x-4 space-y-1 cursor-pointer hover:bg-green-100 w-full "
         key={index}
         onClick={() => {
           handleContact(item), setOpenSelect(false);
         }}
       >
-        {/* Name */}
-        <span className="font-bold">{item.name}</span>
-        {/* Address */}
-        <span className="text-sm">Direccion: {item.address}</span>
-        {/* Phone */}
-        <span className="text-sm">Tel: {item.phone}</span>
+        <div className="h-14 w-14">
+          <img src={item.imageUrl} className="rounded-full" />
+        </div>
+        <div className="flex flex-col">
+          {/* Name */}
+          <span className="font-bold">{item.name}</span>
+          {/* Address */}
+          <span className="text-sm">Direccion: {item.address}</span>
+          {/* Phone */}
+          <span className="text-sm">Tel: {item.phone}</span>
+        </div>
       </div>
     );
   });
