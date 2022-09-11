@@ -96,12 +96,17 @@ export default function SelectProducts({ data, open, setProductPop }) {
                     <span className="px-3 font-bold">{item.name}</span>
                   </TableCell>
                   <TableCell>{item.description}</TableCell>
-                  <TableCell align="right">{item.price}</TableCell>
+                  <TableCell align="right">${item.price}</TableCell>
                 </TableRow>
               ))}
             </TableBody>
           </Table>
         </TableContainer>{" "}
+        {products.length < 1 && (
+          <span className="w-full flex  justify-center pt-4 text-neutral-400">
+            No hay productos!{" "}
+          </span>
+        )}
       </DialogContent>
       <DialogActions>
         <Button
