@@ -63,6 +63,10 @@ a {
   @apply rounded-xl;
 }
 
+.button-image.MuiButton-root {
+  @apply opacity-0 hover:opacity-80 hover:bg-black hover:rounded-full;
+}
+
 .appBar-button-animation {
   @apply transition-all duration-200 cursor-pointer hover:scale-90;
 }

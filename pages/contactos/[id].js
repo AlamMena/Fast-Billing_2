@@ -3,7 +3,9 @@ import {
   ArticleOutlined,
   BadgeOutlined,
   BadgeRounded,
+  CameraAltRounded,
   ContactsOutlined,
+  EmailOutlined,
   EmailRounded,
   PhoneOutlined,
   RampRightOutlined,
@@ -29,6 +31,9 @@ import { toast } from "react-toastify";
 
 import { useForm } from "react-hook-form";
 import PageHeader from "../../Components/Globals/PageHeader";
+import useAxios from "../../Axios/Axios";
+import { postImage } from "../../components/Globals/ImagePoster";
+import { useRouter } from "next/router";
 
 export default function ContactForm() {
   const {
@@ -39,10 +44,20 @@ export default function ContactForm() {
     formState: { errors },
   } = useForm();
 
-  const [images, setImages] = useState();
   const [contactType, setContactType] = useState(1);
   const [identificationType, setIdentificationType] = useState(1);
+  const [fileContainer, setFileContainer] = useState();
+  const [currentImage, setCurrentImage] = useState();
+
   const toastId = useRef(null);
+
+  const { axiosInstance } = useAxios();
+  const router = useRouter();
+
+  const handleImageInput = (e) => {
+    setCurrentImage(URL.createObjectURL(e.target.files[0]));
+    setFileContainer(e.target.files[0]);
+  };
 
   const upsertAsync = async (requestData) => {
     try {
@@ -52,10 +67,9 @@ export default function ContactForm() {
       });
 
       // if there is any file
-
       let imageUrl = requestData ? requestData.imageUrl : null;
-      if (imageFile) {
-        imageUrl = await postImage(imageFile);
+      if (fileContainer) {
+        imageUrl = await postImage(fileContainer);
       }
 
       const parsedData = { ...requestData, imageUrl };
@@ -68,20 +82,18 @@ export default function ContactForm() {
         // if the item dosent exists
         await axiosInstance.post("v1/contact", parsedData);
       }
-      setImageFile(null);
+      setFileContainer(null);
 
       // success toast
       toast.update(toastId.current, {
         type: toast.TYPE.SUCCESS,
-        autoClose: 5000,
+        autoClose: 2000,
         render: "Success",
       });
+      router.push("/contactos");
     } catch (error) {
       // error toast
       toast.error(`Opps!, something went wrong${error}`);
-
-      // removing data from page
-      setData({ isLoading: false, contacts: [] });
     }
   };
   const onSubmit = async (data) => {
@@ -90,8 +102,7 @@ export default function ContactForm() {
       isDeleted: false,
       ...data,
     };
-    await onSave(dataParsed);
-    setOpen(false);
+    await upsertAsync(dataParsed);
   };
 
   const locationRoutes = [
@@ -112,18 +123,33 @@ export default function ContactForm() {
     <div className="w-full h-full grid grid-cols-12 gap-x-2">
       <div className="col-span-12 flex w-full justify-between items-center pr-8">
         <div>
-          <PageHeader
-            header="Crear contactos"
-            locationRoutes={locationRoutes}
-          />
+          <PageHeader header="Crear contacto" locationRoutes={locationRoutes} />
         </div>
       </div>
-      <div className="flex w-full col-span-4">
-        <div className="rounded-2xl shadow-md px-8 py-12 flex flex-col items-center">
-          <figure className=" w-40 h-40 outline-dashed outline-2 outline-neutral-200  p-2 rounded-full">
+      <div className="flex w-full justify-center col-span-12 lg:col-span-4">
+        <div className="rounded-2xl lg:shadow-md  px-8 py-12 flex flex-col items-center">
+          <figure className=" relative w-40 h-40 outline-dashed outline-2 outline-neutral-200  p-2 rounded-full">
+            <Button
+              component="label"
+              className=" button-image absolute inset-0 m-2"
+            >
+              <div className="w-full flex flex-col justify-center space-y-2 items-center">
+                <CameraAltRounded />
+                <span className="text-xs capitalize">Actualizar imagen</span>
+              </div>
+
+              <input
+                onChange={handleImageInput}
+                hidden
+                accept="image/*"
+                multiple
+                type="file"
+              />
+            </Button>
             <img
-              src="/dashboard_welcome.png"
-              className=" w-36 h-36 rounded-full hover:bg-neutral-700 "
+              src={currentImage ? currentImage : "/dashboard_welcome.png"}
+              alt=""
+              className=" w-36 h-36 rounded-full transition-all  "
             />
           </figure>
           <span className="text-xs px-8 m-4 text-center max-w-sm  text-neutral-500">
@@ -132,16 +158,15 @@ export default function ContactForm() {
         </div>
       </div>
 
-      <div className=" rounded-2xl shadow-md col-span-8 mx-6">
+      <div className=" rounded-2xl shadow-md col-span-12 lg:col-span-8 md:mx-6">
         <form
           onSubmit={handleSubmit(onSubmit)}
           className="flex flex-col p-8 space-y-6 px-6"
         >
-          <h2>Formulario de contactos</h2>
           <div className="flex w-full space-x-4">
             <FormControl className="w-full">
               <TextField
-                {...register("fullName", {
+                {...register("name", {
                   required: true,
                 })}
                 id="outlined-adornment-name"
@@ -171,15 +196,15 @@ export default function ContactForm() {
                 id="outlined-adornment-name"
                 label="Correo"
                 size="medium"
-                error={errors.name && "value"}
+                error={errors.email && "value"}
                 className="input-rounded"
-                helperText={errors.name && `El campo no es valido`}
+                helperText={errors.email && `El campo no es valido`}
                 variant="outlined"
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
-                      <EmailRounded
-                        className={`${errors.name && "text-red-500"} `}
+                      <EmailOutlined
+                        className={`${errors.email && "text-red-500"} `}
                       />
                     </InputAdornment>
                   ),
@@ -205,41 +230,95 @@ export default function ContactForm() {
                 size="medium"
                 className="rounded-xl text-md"
                 label="Identification type"
-                startAdornment={
-                  <InputAdornment position="start">
-                    <ArticleOutlined />
-                  </InputAdornment>
-                }
               >
-                <MenuItem value={1}>Cedula</MenuItem>
-                <MenuItem value={2}>Pasaporte</MenuItem>
-                <MenuItem value={3}>RNC</MenuItem>
+                <MenuItem value={1}>
+                  {" "}
+                  <div className="flex items-center">
+                    <img
+                      src="https://cdn-icons-png.flaticon.com/128/1726/1726620.png"
+                      className="w-8 h-8"
+                    ></img>
+                    <span className="mx-2">Cedula</span>
+                  </div>
+                </MenuItem>
+                <MenuItem value={2}>
+                  <div className="flex items-center">
+                    <img
+                      src="https://cdn-icons-png.flaticon.com/128/620/620765.png"
+                      className="w-8 h-8"
+                    ></img>
+                    <span className="mx-2">Pasaporte</span>
+                  </div>
+                </MenuItem>
+                <MenuItem value={3}>
+                  {" "}
+                  <div className="flex items-center">
+                    <img
+                      src="https://cdn-icons-png.flaticon.com/128/3188/3188580.png"
+                      className="w-8 h-8"
+                    ></img>
+                    <span className="mx-2">RNC</span>
+                  </div>
+                </MenuItem>
               </Select>
             </FormControl>
             <FormControl className="w-full">
-              <TextField
-                {...register("noIdentification", { required: true })}
-                id="outlined-adornment-identification"
-                label=" No. Identification"
+              <InputLabel id="select-type-contact">Tipo de contacto</InputLabel>
+              <Select
+                {...register("type")}
+                labelId="select-type-contact"
+                id="select-type-contact"
+                value={contactType}
+                onChange={(params) => setContactType(params.target.value)}
                 size="medium"
-                className="input-rounded text-md"
-                variant="outlined"
-                error={errors.noIdentification}
-                helperText={errors.noIdentification && `El campo no es valido`}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <ArticleOutlined
-                        className={`${
-                          errors.noIdentification && "text-red-500"
-                        } `}
-                      />
-                    </InputAdornment>
-                  ),
-                }}
-              />
+                className="rounded-xl text-md"
+                label="Tipo de contacto"
+              >
+                <MenuItem value={1}>
+                  <div className="flex items-center">
+                    <img
+                      src="https://cdn-icons-png.flaticon.com/128/3321/3321752.png"
+                      className="w-8 h-8"
+                    ></img>
+                    <span className="mx-2">Cliente</span>
+                  </div>
+                </MenuItem>
+                <MenuItem value={2}>
+                  <div className="flex items-center">
+                    <img
+                      src="https://cdn-icons-png.flaticon.com/128/2942/2942322.png"
+                      className="w-8 h-8"
+                    ></img>
+                    <span className="mx-2">Proveedor</span>
+                  </div>
+                </MenuItem>
+              </Select>
             </FormControl>
           </div>
+          <FormControl className="w-full">
+            <TextField
+              {...register("noIdentification", { required: true })}
+              id="outlined-adornment-identification"
+              label=" No. Identification"
+              size="medium"
+              type="number"
+              className="input-rounded text-md"
+              variant="outlined"
+              error={errors.noIdentification}
+              helperText={errors.noIdentification && `El campo no es valido`}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <ArticleOutlined
+                      className={`${
+                        errors.noIdentification && "text-red-500"
+                      } `}
+                    />
+                  </InputAdornment>
+                ),
+              }}
+            />
+          </FormControl>
           <div className="flex space-x-4">
             <FormControl className="w-full">
               <TextField
@@ -284,36 +363,6 @@ export default function ContactForm() {
               />
             </FormControl>
           </div>
-
-          <FormControl className="w-full">
-            <InputLabel id="select-type-contact">Tipo de contacto</InputLabel>
-            <Select
-              {...register("type")}
-              labelId="select-type-contact"
-              id="select-type-contact"
-              value={contactType}
-              onChange={(params) => setContactType(params.target.value)}
-              size="medium"
-              className="rounded-xl text-md"
-              label="Tipo de contacto"
-              startAdornment={
-                <InputAdornment position="start">
-                  <ContactsOutlined />
-                </InputAdornment>
-              }
-            >
-              <MenuItem value={1}>Cliente</MenuItem>
-              <MenuItem value={2}>Proveedor</MenuItem>
-            </Select>
-          </FormControl>
-          <FormControl>
-            {/* <ImagePoster
-                images={images}
-                setImages={setImages}
-                setFile={setFile}
-                removeImage={() => setValue("imageUrl", null)}
-              /> */}
-          </FormControl>
 
           <div className="flex w-full justify-end space-x-4 ">
             <Button
