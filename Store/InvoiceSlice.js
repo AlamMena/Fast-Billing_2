@@ -1,4 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { setDate } from "date-fns";
+import { get } from "react-hook-form";
 
 const initialState = {
   companyId: 1,
@@ -7,10 +9,13 @@ const initialState = {
   invoiceTypeId: 1,
   beneficiary: { name: "Alex", phone: "590354035", address: "el calenton" },
   recipient: {},
+  status: "Pagado",
   payment: {
     total: 0,
     type: "",
   },
+  invoiceCreationDate: new Date().getDate,
+  invoiceDueDate: new Date().setDate(new Date().getDate() + 1),
   subTotal: 0,
   discountAmount: 0,
   taxesAmount: 0,
@@ -34,6 +39,15 @@ const invoiceSlice = createSlice({
       state.beneficiary.name = payload.name;
       state.beneficiary.address = payload.address;
       state.beneficiary.phone = payload.phone;
+    },
+    updateStatus: (state, actions) => {
+      state.status = actions.payload;
+    },
+    updateCreationDate: (state, actions) => {
+      state.invoiceCreationDate = actions.payload;
+    },
+    updateDueDate: (state, actions) => {
+      state.invoiceDueDate = actions.payload;
     },
     updateRecipient: (state, { payload }) => {
       state.recipient.name = payload.name;
@@ -118,8 +132,10 @@ export const {
   updateBeneficiary,
   updateRecipient,
   updateItemPrice,
+  updateCreationDate,
   updateDiscount,
   updateTaxes,
+  updateStatus,
   addItem,
   removeItem,
   calculateTotal,

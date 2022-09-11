@@ -28,7 +28,13 @@ import {
 } from "../Components/CreateInvoice/InvoiceContact";
 import SelectPopUp from "../Components/CreateInvoice/SelectPopUp";
 import { useDispatch } from "react-redux";
-import { updateDiscount, updateTaxes, addItem } from "../Store/InvoiceSlice";
+import {
+  updateDiscount,
+  updateTaxes,
+  addItem,
+  updateStatus,
+  updateCreationDate,
+} from "../Store/InvoiceSlice";
 import { useSelector } from "react-redux";
 import SelectProducts from "../Components/CreateInvoice/SelectProducts";
 
@@ -39,6 +45,7 @@ export default function CreateInvoice() {
   const [openProductPop, setProductPopUp] = useState(false);
   const [type, setType] = useState("");
   const [data, setData] = useState({ isLoading: true, data: [] });
+  const [status, setStatus] = useState("Pagado");
   const [products, setProducts] = useState({ isLoading: true, data: [] });
   const invoice = useSelector((state) => state.invoice);
   const { discountAmount, subTotal, total, taxesAmount, invoiceNo } = invoice;
@@ -72,10 +79,16 @@ export default function CreateInvoice() {
     dispatch(updateDiscount(e));
   };
 
+  const handleStatus = (value) => {
+    setStatus(value);
+    dispatch(updateStatus(value));
+  };
+
   // Handle Creation and Due date of Invoice
 
   const handleCreationDateChange = (value) => {
     setCreationDate(value);
+    dispatch(updateCreationDate(value.toString()));
   };
 
   const handleDueDateChange = (value) => {
@@ -103,6 +116,7 @@ export default function CreateInvoice() {
     setDataAsync();
     setProductsAsync();
   }, []);
+
   return (
     <div className="w-full md:px-0 px-4 md:pr-8 flex flex-col pb-5">
       <div className="flex w-full justify-between items-center pr-8 ">
@@ -206,9 +220,9 @@ export default function CreateInvoice() {
                 <Select
                   id="outlined-adornment-name"
                   label="Estatus"
-                  size="large"
+                  size="normal"
                   type="number"
-                  value={10}
+                  value={status}
                   className="rounded-xl"
                   variant="outlined"
                   startAdornment={
@@ -217,10 +231,30 @@ export default function CreateInvoice() {
                     </InputAdornment>
                   }
                 >
-                  <MenuItem value={10}>Pagado</MenuItem>
-                  <MenuItem value={20}>No Pagado</MenuItem>
-                  <MenuItem value={30}>Overdue</MenuItem>
-                  <MenuItem value={40}>Draft</MenuItem>
+                  <MenuItem
+                    value={"Pagado"}
+                    onClick={() => handleStatus("Pagado")}
+                  >
+                    Pagado
+                  </MenuItem>
+                  <MenuItem
+                    value={"No Pagado"}
+                    onClick={() => handleStatus("No Pagado")}
+                  >
+                    No Pagado
+                  </MenuItem>
+                  <MenuItem
+                    value={"Overdue"}
+                    onClick={() => handleStatus("Overdue")}
+                  >
+                    Overdue
+                  </MenuItem>
+                  <MenuItem
+                    value={"Draft"}
+                    onClick={() => handleStatus("Draft")}
+                  >
+                    Draft
+                  </MenuItem>
                 </Select>
               </FormControl>
             </Grid>
@@ -384,6 +418,7 @@ export default function CreateInvoice() {
           color="secondary"
           size="large"
           className=" w-44 bg-green-600 text-white font-extrabold h-12 rounded-2xl"
+          onClick={() => console.log(invoice)}
         >
           Crear y enviar
         </Button>
