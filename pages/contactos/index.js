@@ -142,14 +142,14 @@ export default function Contacts() {
         setItemToDelete={setItemToDelete}
         setConfirmOpen={setConfirmOpen}
       />
-      <ContactForm
+      {/* <ContactForm
         open={formOpen}
         setOpen={setFormOpen}
         data={formData}
         onSave={upsertAsync}
         setFile={setImageFile}
         file={imageFile}
-      />
+      /> */}
       <ConfirmationForm
         open={confirmOpen}
         setOpen={setConfirmOpen}

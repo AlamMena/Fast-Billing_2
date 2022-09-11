@@ -10,18 +10,10 @@ export default function PrivateRouter({ children }) {
   const [user, setUser] = useState(null);
 
   // Router
-
   const { pathname } = useRouter();
 
   useEffect(() => {
     auth.onAuthStateChanged(function (user) {
-      // setTimeout(() => {
-      //   setIsLoading(true);
-      //   setTimeout(() => {
-      //     setIsLoading(false);
-      //     setUser(user);
-      //   }, 1000);
-      // }, 1000);
       setIsLoading(false);
       setUser(user);
       axios.create({

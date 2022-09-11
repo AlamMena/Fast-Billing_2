@@ -35,32 +35,25 @@ import useAxios from "../../Axios/Axios";
 import { postImage } from "../../components/Globals/ImagePoster";
 import { useRouter } from "next/router";
 
-export default function ContactForm({ contact }) {
+export default function ContactForm() {
   const {
     handleSubmit,
     register,
     reset,
     setValue,
     formState: { errors },
-  } = useForm({
-    defaultValues: contact,
-  });
+  } = useForm();
 
-  const [contactType, setContactType] = useState(contact ? contact.type : 1);
-  const [identificationType, setIdentificationType] = useState(
-    contact ? contact.identificationType ?? 1 : 1
-  );
+  const [contactType, setContactType] = useState(1);
+  const [identificationType, setIdentificationType] = useState(1);
   const [fileContainer, setFileContainer] = useState();
-  const [currentImage, setCurrentImage] = useState(contact.imageUrl);
+  const [currentImage, setCurrentImage] = useState();
 
   const toastId = useRef(null);
 
   const { axiosInstance } = useAxios();
   const router = useRouter();
 
-  useEffect(() => {
-    reset(contact);
-  }, [contact]);
   const handleImageInput = (e) => {
     setCurrentImage(URL.createObjectURL(e.target.files[0]));
     setFileContainer(e.target.files[0]);
@@ -68,13 +61,15 @@ export default function ContactForm({ contact }) {
 
   const upsertAsync = async (requestData) => {
     try {
+      // loading toast
+      toastId.current = toast("Please wait...", {
+        type: toast.TYPE.LOADING,
+      });
+
       // if there is any file
       let imageUrl = requestData ? requestData.imageUrl : null;
       if (fileContainer) {
-        imageUrl = await postImage(
-          fileContainer,
-          `contacts/${requestData.name}`
-        );
+        imageUrl = await postImage(fileContainer);
       }
 
       const parsedData = { ...requestData, imageUrl };
@@ -82,22 +77,20 @@ export default function ContactForm({ contact }) {
       // logic
       if (requestData._id !== undefined) {
         // if the item exists
-        await toast.promise(axiosInstance.put("v1/contact", parsedData), {
-          pending: "guardando contacto",
-          success: "Genial!, tu contacto ha sido actualizado.",
-          error: "Oops, algo ha ocurrido",
-        });
+        await axiosInstance.put("v1/contact", parsedData);
       } else {
         // if the item dosent exists
-        await toast.promise(axiosInstance.post("v1/contact", parsedData), {
-          pending: "guardando contacto",
-          success: "Genial!, tu contacto ha sido creado.",
-          error: "Oops, algo ha ocurrido",
-        });
+        await axiosInstance.post("v1/contact", parsedData);
       }
-
       setFileContainer(null);
-      await router.push("/contactos");
+
+      // success toast
+      toast.update(toastId.current, {
+        type: toast.TYPE.SUCCESS,
+        autoClose: 2000,
+        render: "Success",
+      });
+      router.push("/contactos");
     } catch (error) {
       // error toast
       toast.error(`Opps!, something went wrong${error}`);

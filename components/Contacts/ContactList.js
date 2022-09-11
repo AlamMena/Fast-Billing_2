@@ -15,6 +15,7 @@ import {
   Tabs,
 } from "@mui/material";
 import { DataGrid, GridToolBar } from "@mui/x-data-grid";
+import { useRouter } from "next/router.js";
 import { useEffect, useState } from "react";
 import StatusRow from "../Globals/StatusRow.js";
 
@@ -30,6 +31,9 @@ export default function ContactList({
   const [filteredData, setFilteredData] = useState(data);
   const [typeFilter, setTypeFilter] = useState(0);
 
+  // router
+
+  const router = useRouter();
   // methods
   const getFilteredContactsByStatus = (value) => {
     // response variable
@@ -175,8 +179,8 @@ export default function ContactList({
           <div className="flex space-x-4">
             <a
               onClick={() => {
-                setFormData(cells.row);
-                setFormOpen(true);
+                router.push(`/contactos/${cells.row._id}`);
+                alert(cells.row.imageUrl);
               }}
               className="text-green-400 cursor-pointer"
             >

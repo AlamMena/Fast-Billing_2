@@ -51,10 +51,10 @@ export default function ImagePoster({
   );
 }
 
-const postImage = async (file) => {
+const postImage = async (file, location) => {
   try {
     const storage = getStorage(app);
-    const storageRef = ref(storage, "contacts");
+    const storageRef = ref(storage, location);
     const response = await uploadBytes(storageRef, file);
     const url = await getDownloadURL(response.ref);
     return url;
