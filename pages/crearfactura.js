@@ -146,16 +146,6 @@ export default function CreateInvoice() {
           <Grid item className="w-full" xs={12} md={6}>
             <div className=" flex items-center justify-between">
               <span className="text-neutral-500 text-lg">De:</span>
-              <Button
-                startIcon={<Edit />}
-                className="h-10 font-bold"
-                size="small"
-                onClick={() => {
-                  setOpenSelect(true), setType("beneficiente");
-                }}
-              >
-                Cambiar
-              </Button>
             </div>
             <InvoiceBeneficiary />
           </Grid>
@@ -179,14 +169,14 @@ export default function CreateInvoice() {
             <div className=" flex items-center justify-between">
               <span className="text-neutral-500 text-lg">Para:</span>
               <Button
-                startIcon={<Add />}
+                startIcon={<Edit />}
                 className="h-10 font-bold"
                 size="small"
                 onClick={() => {
                   setOpenSelect(true), setType("recipiente");
                 }}
               >
-                Anadir
+                Cambiar
               </Button>
             </div>
             <InvoiceRecipient />
@@ -382,7 +372,7 @@ export default function CreateInvoice() {
                   -$
                   {discountAmount.toLocaleString("en-US", {
                     minimumFractionDigits: 2,
-                  })}{" "}
+                  })}
                 </span>
               )}
             </span>

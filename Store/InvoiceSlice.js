@@ -8,6 +8,7 @@ const initialState = {
   invoiceNo: "F00000",
   invoiceTypeId: 1,
   beneficiary: {
+    imageUrl: "https://cdn-icons-png.flaticon.com/128/3321/3321752.png",
     name: "Alex",
     phone: "590354035",
     RNC: "F90809231",
@@ -58,6 +59,7 @@ const invoiceSlice = createSlice({
       state.recipient.name = payload.name;
       state.recipient.address = payload.address;
       state.recipient.phone = payload.phone;
+      state.recipient.imageUrl = payload.imageUrl;
     },
     updateItemPrice: (state, actions) => {
       const itemPrice = state.details.find(
