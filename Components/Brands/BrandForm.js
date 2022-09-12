@@ -47,9 +47,6 @@ export default function BrandForm({ onSave, open, setOpen, data, setFile }) {
 
   const chip = [
     { name: "Ana", src: "/static/images/avatar/1.jpg" },
-    { name: "TrapKing", src: "/static/images/avatar/1.jpg" },
-    { name: "Eldiablo", src: "/static/images/avatar/1.jpg" },
-    { name: "Yagaloski", src: "/static/images/avatar/1.jpg" },
     { name: "Pibull", src: "/static/images/avatar/1.jpg" },
     { name: "Junior", src: "/static/images/avatar/1.jpg" },
   ];

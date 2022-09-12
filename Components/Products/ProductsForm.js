@@ -1,8 +1,3 @@
-import { AttachMoney, LocalOffer } from "@mui/icons-material";
-import FactCheckIcon from "@mui/icons-material/FactCheck";
-import DescriptionIcon from "@mui/icons-material/Description";
-import IconButton from "@mui/material/IconButton";
-import CoPresentIcon from "@mui/icons-material/CoPresent";
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 
 import {
@@ -21,6 +16,9 @@ import {
   Avatar,
   MenuItem,
   FormHelperText,
+  TextareaAutosize,
+  FormControlLabel,
+  Switch,
 } from "@mui/material";
 import PhotoCamera from "@mui/icons-material/PhotoCamera";
 import ImagePoster from "../Globals/ImagePoster";
@@ -28,13 +26,20 @@ import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import Alert from "../Globals/Alert";
+import {
+  AttachMoneyRounded,
+  MoneyRounded,
+  PercentOutlined,
+  RemoveCircleOutline,
+} from "@mui/icons-material";
 
-export default function ProductsForm({ open, setOpen, data }) {
-  const { handleSubmit, register, reset } = useForm({
-    defaultValues: data,
+export default function ProductsForm({ product }) {
+  const { handleSubmit, register, reset, getValues, setValue } = useForm({
+    defaultValues: product,
   });
 
-  const [isLoading, setIsLoading] = useState(false);
+  const [categories, setCategories] = useState();
+  const [category, setCategory] = useState();
   const [images, setImages] = useState([]);
   const [file, setFile] = useState();
 
@@ -45,192 +50,244 @@ export default function ProductsForm({ open, setOpen, data }) {
     const url = await getDownloadURL(response.ref);
     return url;
   };
-  const chip = [
-    { name: "Ana", src: "/static/images/avatar/1.jpg" },
-    { name: "TrapKing", src: "/static/images/avatar/1.jpg" },
-    { name: "Eldiablo", src: "/static/images/avatar/1.jpg" },
-    { name: "Yagaloski", src: "/static/images/avatar/1.jpg" },
-    { name: "Pibull", src: "/static/images/avatar/1.jpg" },
-    { name: "Junior", src: "/static/images/avatar/1.jpg" },
-  ];
 
-  const onSubmit = async (data) => {
-    console.log(data);
-    // await onSave(data);
-    // Alert.fire({
-    //   title: <strong>Success!</strong>,
-    //   html: <span>Contact successfully saved</span>,
-    //   icon: "success",
-    // });
-    // setTimeout(() => {
-    //   Alert.fire({
-    //     title: <strong>Ops, something went wrong!</strong>,
-    //     icon: "error",
-    //   });
-    // }, 1000);
-
-    //  toastId.current = toast("Please wait...", {
-    //    type: toast.TYPE.LOADING,
-    //  });
-
-    //  setTimeout(() => {
-    //    toast.update(toastId.current, {
-    //      type: toast.TYPE.SUCCESS,
-    //      autoClose: 5000,
-    //      render: "Success",
-    //    });
-    //  }, 2000);
-
-    setOpen(false);
+  const handlePriceChange = (e) => {
+    const currentProduct = getValues();
+    const { price, cost } = currentProduct;
+    let marginBenefit;
+    if (e.target.id === "input-price") {
+      marginBenefit = (e.target.value - cost) / e.target.value;
+      reset({ ...currentProduct, price: e.target.value, marginBenefit });
+    }
+    if (e.target.id === "input-cost") {
+      marginBenefit = (price - e.target.value) / price;
+      reset({ ...currentProduct, cost: e.target.value, marginBenefit });
+    }
   };
+  const handleImageChange = (e) => {
+    const url = URL.createObjectURL(e.target.files[0]);
+    setImages([...images, url]);
+  };
+  const onSubmit = async (data) => {};
 
   useEffect(() => {
-    reset(data);
-  }, [data]);
+    reset(product);
+  }, [product]);
+
+  useEffect(() => {
+    setCategories([
+      { name: "Food", src: "/static/images/avatar/1.jpg" },
+      { name: "Games", src: "/static/images/avatar/1.jpg" },
+      { name: "Electronics", src: "/static/images/avatar/1.jpg" },
+    ]);
+  }, []);
 
   return (
-    <>
-      {" "}
-      <div className="w-full h-full">
-        <div className=" rounded-2xl">
-          <Dialog open={open} onClose={() => setOpen(false)}>
-            <form
-              onSubmit={handleSubmit(onSubmit)}
-              className="flex flex-col p-8 space-y-6 px-10"
+    <div className="flex">
+      <div className="grid grid-cols-12 gap-x-8 mx-4 mb-16">
+        <div className="shadow-md col-span-12 lg:col-span-8 p-8 space-y-6 rounded-xl h-min">
+          <div className="flex flex-col mx-2 space-y-1">
+            <span className="font-bold tracking-wider">
+              Informacion general
+            </span>
+            <span className="text-sm text-neutral-500">
+              Ingresa los datos basicos de tu producto.
+            </span>
+          </div>
+          <TextField
+            className="input-rounded"
+            label="Nombre"
+            fullWidth
+          ></TextField>
+          <TextField
+            className="input-rounded w-full outline-2 outline-slate-500"
+            minRows={4}
+            multiline
+            label="Descripcion"
+            fullWidth
+          />
+          {/* image list */}
+          <div className="w-full relative h-full outline-dashed outline-1 outline-neutral-300 rounded-xl bg-neutral-50 flex justify-center flex-wrap items-center space-x-4 p-8">
+            <Button className="absolute inset-0 z-50" component="label">
+              <input
+                onChange={handleImageChange}
+                hidden
+                accept="image/*"
+                multiple
+                type="file"
+              ></input>
+            </Button>
+            <div className="z-0">
+              <video className=" w-48 h-48 rounded-3xl" loop autoPlay>
+                <source
+                  src="https://cdn.dribbble.com/users/7831180/screenshots/15661340/media/84484ce85971eb2efad0f36deeae6020.mp4"
+                  type="video/mp4"
+                />
+                Your browser does not support the video tag.
+              </video>
+            </div>
+            <div className="flex flex-col mx-2">
+              <span className="font-bold tracking-wider">
+                Drop or Select file
+              </span>
+              <span className="text-sm text-neutral-500">
+                Drop files here or click browse thorough your machine
+              </span>
+            </div>
+          </div>
+          <div className="flex">
+            {images.map((item) => (
+              <div className="relative my-4 mx-2">
+                <RemoveCircleOutline
+                  className="absolute right-0 text-neutral-300 text-md hover:text-neutral-500 
+                transition-all duration-200 cursor-pointer"
+                />
+                <img src={item} className=" w-20 h-20 rounded-2xl" />
+              </div>
+            ))}
+          </div>
+          <div className="flex justify-end space-x-4">
+            <Button
+              className=" z-auto rounded-xl py-2 capitalize "
+              size="small"
             >
-              <h2 className="text-xl font-bold">Formulario de Productos </h2>
+              remove all
+            </Button>
+            <Button
+              className=" shadow-lg text-white z-auto rounded-xl py-2 bg-green-600 hover:bg-green-800 capitalize"
+              variant="contained"
+              size="small"
+            >
+              Upload files
+            </Button>
+          </div>
+        </div>
 
-              <FormControl>
-                <InputLabel size="normal" htmlFor="outlined-adornment-name">
-                  Nombre del producto
-                </InputLabel>
-                <OutlinedInput
-                  {...register("name")}
-                  id="outlined-adornment-name"
-                  label="Nombre del producto"
-                  size="small"
-                  className="rounded-xl"
-                  variant="outlined"
-                  startAdornment={
-                    <InputAdornment position="start">
-                      <FactCheckIcon />
-                    </InputAdornment>
-                  }
-                />
-              </FormControl>
-              <FormControl>
-                <InputLabel size="small" htmlFor="outlined-adornment-phone">
-                  Description del producto
-                </InputLabel>
-                <OutlinedInput
-                  {...register("description")}
-                  id="outlined-adornment-address"
-                  label="Descripcion del producto"
-                  multiline
-                  size="normal"
-                  className="rounded-xl text-md"
-                  variant="outlined"
-                  startAdornment={
-                    <InputAdornment position="start">
-                      <DescriptionIcon />
-                    </InputAdornment>
-                  }
-                />
-              </FormControl>
-              <div className="flex w-full space-x-4 items-center">
-                <FormControl>
-                  <InputLabel size="normal" htmlFor="outlined-adornment-name">
-                    Precio
-                  </InputLabel>
-                  <OutlinedInput
-                    {...register("price")}
-                    id="outlined-adornment-name"
-                    label="Precio"
-                    size="small"
-                    type="number"
-                    className="rounded-xl"
-                    variant="outlined"
-                    startAdornment={
-                      <InputAdornment position="start">
-                        <AttachMoney />
-                      </InputAdornment>
-                    }
-                  />
-                </FormControl>
-                <FormControl>
-                  <InputLabel size="normal" htmlFor="outlined-adornment-name">
-                    Costo{" "}
-                  </InputLabel>
-                  <OutlinedInput
-                    {...register("cost")}
-                    id="outlined-adornment-name"
-                    label="Costo"
-                    size="small"
-                    type="number"
-                    className="rounded-xl"
-                    variant="outlined"
-                    inputProps={{
-                      inputMode: "numeric",
-                      pattern: "/^-?d+(?:.d+)?$/g",
-                    }}
-                    startAdornment={
-                      <InputAdornment position="start">
-                        <LocalOffer />
-                      </InputAdornment>
-                    }
-                  />
-                </FormControl>
-              </div>
-              <FormControl className="w-full">
-                <Autocomplete
-                  multiple
-                  options={chip}
-                  freeSolo
-                  getOptionLabel={(chip) => chip.name}
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      {...register("supliers")}
-                      variant="standard"
-                      label="Proveedores"
-                    />
-                  )}
-                />
-
-                {/* <FormHelperText>With label + helper text</FormHelperText> */}
-              </FormControl>
-              <FormControl>
-                <ImagePoster
-                  images={images}
-                  setImages={setImages}
-                  setFile={setFile}
-                />
-              </FormControl>
-              <div className="flex w-full justify-end space-x-4">
-                <Button
-                  variant="contained"
-                  type="submit"
-                  color="secondary"
-                  size="medium"
-                  className=" w-28 bg-green-500 text-white rounded-2xl"
-                >
-                  Salvar
-                </Button>
-
-                {/* <Button
-                variant="contained"
-                type="submit"
-                color="secondary"
+        <div className="col-span-12 lg:col-span-4 space-y-4">
+          <div className=" p-8 space-y-6 shadow-md rounded-xl h-min">
+            <div className="flex flex-col mx-2 space-y-1">
+              <span className="font-bold tracking-wider">
+                Informacion detallada
+              </span>
+              <span className="text-sm text-neutral-500">
+                Ingresa datos especificos de tus productos.
+              </span>
+            </div>
+            <FormControlLabel
+              className="text-xs"
+              control={<Switch defaultChecked />}
+              label="disponible"
+            />
+            <TextField className="input-rounded" label="codigo" fullWidth />
+            <FormControl className="w-full">
+              <InputLabel id="select-brand">Marcas</InputLabel>
+              <Select
+                labelId="select-brand"
+                id="select-brand"
+                value={1}
+                // onChange={(params) => setIdentificationType(params.target.value)}
                 size="medium"
-                className="w-28 bg-red-600 text-white rounded-2xl"
+                className="rounded-xl text-md"
+                label="Marcas"
               >
-                Cancel
-              </Button> */}
-              </div>
-            </form>
-          </Dialog>
+                <MenuItem value={1}>
+                  <div className="flex items-center">
+                    <img
+                      src="https://cdn-icons-png.flaticon.com/128/7080/7080979.png"
+                      className="w-8 h-8"
+                    ></img>
+                    <span className="mx-2">Tesla</span>
+                  </div>
+                </MenuItem>
+              </Select>
+            </FormControl>
+            <Autocomplete
+              multiple
+              options={categories}
+              freeSolo
+              getOptionLabel={(chip) => chip.name}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  className="input-rounded"
+                  label="Categorias"
+                />
+              )}
+            />
+          </div>
+
+          <div className=" p-8 space-y-6 shadow-md rounded-xl h-min">
+            <div className="flex flex-col mx-2 space-y-1">
+              <span className="font-bold tracking-wider">
+                Informacion monetaria
+              </span>
+              <span className="text-sm text-neutral-500">
+                Ingresa los datos monetarios y los beneficios que desea para su
+                producto.
+              </span>
+            </div>
+            <TextField
+              {...register("cost")}
+              className="input-rounded"
+              type="number"
+              id="input-cost"
+              onChange={handlePriceChange}
+              label="Costo"
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <AttachMoneyRounded />
+                  </InputAdornment>
+                ),
+              }}
+              placeholder="0.00"
+              fullWidth
+            />
+            <TextField
+              {...register("price")}
+              className="input-rounded"
+              type="number"
+              id="input-price"
+              label="Precio"
+              onChange={handlePriceChange}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <AttachMoneyRounded />
+                  </InputAdornment>
+                ),
+              }}
+              placeholder="0.00"
+              fullWidth
+            />
+            <TextField
+              {...register("marginBenefit")}
+              className="input-rounded"
+              type="number"
+              disabled
+              label="Margen de beneficio"
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <PercentOutlined />
+                  </InputAdornment>
+                ),
+              }}
+              placeholder="0.00"
+              fullWidth
+            />
+          </div>
+          <div className="flex justify-center">
+            <Button
+              className=" w-full max-w-xl shadow-lg text-white z-auto rounded-xl py-2 bg-green-600 hover:bg-green-700"
+              size="medium"
+              variant="contained"
+            >
+              Guardar
+            </Button>
+          </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }

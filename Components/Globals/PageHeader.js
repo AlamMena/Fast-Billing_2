@@ -17,7 +17,7 @@ export default function PageHeader({ header, locationRoutes }) {
                 underline="hover"
                 color="inherit"
                 className="text-sm"
-                href="/"
+                href={item.link}
               >
                 {item.text}
               </Link>
