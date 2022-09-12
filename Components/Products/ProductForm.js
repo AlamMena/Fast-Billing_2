@@ -35,6 +35,8 @@ import {
   RemoveCircleOutline,
 } from "@mui/icons-material";
 import { TransitionGroup } from "react-transition-group";
+import useAxios from "../../Axios/Axios";
+import { useRouter } from "next/router";
 
 export default function ProductsForm({ product }) {
   const {
@@ -47,10 +49,15 @@ export default function ProductsForm({ product }) {
     defaultValues: product,
   });
 
+  const [isLoading, setIsLoading] = useState(false);
   const [categories, setCategories] = useState();
   const [category, setCategory] = useState();
   const [images, setImages] = useState([]);
   const [file, setFile] = useState();
+
+  const { axiosInstance } = useAxios();
+
+  const router = useRouter();
 
   const postImage = async () => {
     const storage = getStorage(app);
@@ -63,14 +70,22 @@ export default function ProductsForm({ product }) {
   const handlePriceChange = (e) => {
     const currentProduct = getValues();
     const { price, cost } = currentProduct;
-    let marginBenefit;
+    let benefit;
     if (e.target.id === "input-price") {
-      marginBenefit = ((e.target.value - cost) / e.target.value) * 100;
-      reset({ ...currentProduct, price: e.target.value, marginBenefit });
+      benefit = ((e.target.value - cost) / e.target.value) * 100;
+      reset({
+        ...currentProduct,
+        price: e.target.value,
+        benefit,
+      });
     }
     if (e.target.id === "input-cost") {
-      marginBenefit = ((price - e.target.value) / price) * 100;
-      reset({ ...currentProduct, cost: e.target.value, marginBenefit });
+      benefit = ((price - e.target.value) / price) * 100;
+      reset({
+        ...currentProduct,
+        cost: e.target.value,
+        benefit,
+      });
     }
   };
   const handleImageChange = (e) => {
@@ -80,8 +95,39 @@ export default function ProductsForm({ product }) {
     }
   };
 
-  const onSubmit = (data) => {
-    alert(JSON.stringify(data));
+  const onSubmit = async (data) => {
+    setIsLoading(true);
+
+    try {
+      if (data._id) {
+        await toast.promise(
+          axiosInstance.put("/v1/product", { ...data, images }),
+          {
+            pending: "creando tu producto...",
+            success: "Genial!, tu producto ha sido creado",
+            error: "Oops!, algo ha ocurrido",
+          }
+        );
+      } else {
+        await toast.promise(
+          axiosInstance.post("/v1/product", {
+            ...data,
+            images,
+            IsDeleted: false,
+          }),
+          {
+            pending: "creando tu producto...",
+            success: "Genial!, tu producto ha sido creado",
+            error: "Oops!, algo ha ocurrido",
+          }
+        );
+      }
+      router.push("/productos");
+    } catch (error) {
+      alert(JSON.stringify(error));
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -112,14 +158,18 @@ export default function ProductsForm({ product }) {
             {...register("name", { required: true })}
             className="input-rounded"
             label="Nombre *"
+            value={product.name || ""}
+            placeholder="my product name"
             fullWidth
             error={errors.name}
             helperText={errors.name && "El nombre es requerido"}
-          ></TextField>
+          />
           <TextField
             {...register("description")}
             className="input-rounded w-full outline-2 outline-slate-500"
             minRows={4}
+            value={product.description || ""}
+            placeholder="describiendo mi producto"
             multiline
             label="Descripcion"
             error={errors.description}
@@ -210,6 +260,7 @@ export default function ProductsForm({ product }) {
               className="input-rounded"
               label="Codigo"
               placeholder="P001-C001"
+              value={product.code || ""}
               fullWidth
             />
             <FormControl className="w-full">
@@ -304,7 +355,7 @@ export default function ProductsForm({ product }) {
               fullWidth
             />
             <TextField
-              {...register("marginBenefit")}
+              {...register("benefit")}
               className="input-rounded"
               type="number"
               disabled
@@ -325,6 +376,7 @@ export default function ProductsForm({ product }) {
               className=" w-full max-w-xl shadow-lg text-white z-auto rounded-xl py-2 bg-green-600 hover:bg-green-700"
               size="medium"
               type="submit"
+              disabled={isLoading}
               variant="contained"
             >
               Guardar

@@ -1,5 +1,5 @@
 import PageHeader from "../../Components/Globals/PageHeader";
-import ProductsForm from "../../Components/Products/ProductsForm";
+import ProductsForm from "../../Components/Products/ProductForm";
 
 export default function Crear() {
   return (

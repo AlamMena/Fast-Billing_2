@@ -16,10 +16,12 @@ import { useState } from "react";
 import { DataGrid, GridToolBar } from "@mui/x-data-grid";
 import Alert from "../Globals/Alert";
 import StatusRow from "../Globals/StatusRow.js";
+import { useRouter } from "next/router";
 
 export default function ProductsList({ setFormOpen, data }) {
   const [value, setValue] = useState("one");
 
+  const router = useRouter();
   const columns = [
     {
       field: "name",
@@ -58,7 +60,7 @@ export default function ProductsList({ setFormOpen, data }) {
           <div className="flex space-x-4">
             <a
               onClick={() => {
-                setFormOpen(true);
+                router.push(`/productos/${cells.row._id}`);
                 // setFormData(cells.row);
                 // Alert.fire({
                 //   title: <strong>Good job!</strong>,
@@ -71,13 +73,7 @@ export default function ProductsList({ setFormOpen, data }) {
               <EditOutlined className="text-green-400 mx-2" />
               Edit
             </a>
-            <a
-              onClick={() => {
-                setConfirmOpen(true);
-                setItemToDelete(cells.row);
-              }}
-              className="text-red-500 cursor-pointer"
-            >
+            <a onClick={() => {}} className="text-red-500 cursor-pointer">
               <DeleteOutline className="text-red-500 mx-2" /> Delete
             </a>
           </div>

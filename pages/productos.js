@@ -5,10 +5,7 @@ import { Button } from "@mui/material";
 import { useEffect, useState } from "react";
 import PageHeader from "../Components/Globals/PageHeader";
 import { toast } from "react-toastify";
-import CategoryList from "../Components/Categories/CategoryList";
-import CategoryForm from "../Components/Categories/CategoryForm";
 import ProductsList from "../Components/Products/ProductsList";
-import ProductsForm from "../Components/Products/ProductsForm";
 
 export default function Products() {
   const [formOpen, setFormOpen] = useState(false);
@@ -66,7 +63,6 @@ export default function Products() {
           </div>
         </div>
         <ProductsList setFormOpen={setFormOpen} data={products} />
-        <ProductsForm open={formOpen} setOpen={setFormOpen} />
       </div>
     </>
   );
