@@ -7,9 +7,9 @@ export default function Crear() {
       <PageHeader
         header="Crear un nuevo producto"
         locationRoutes={[
-          { text: "home", link: "/" },
-          { text: "contactos", link: "/" },
-          { text: "crear", link: "/" },
+          { text: "Inicio", link: "/" },
+          { text: "Productos", link: "/productos" },
+          { text: "Crear", link: "/products/crear" },
         ]}
       />
       <ProductsForm />

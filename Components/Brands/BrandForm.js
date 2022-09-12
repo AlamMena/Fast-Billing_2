@@ -24,7 +24,6 @@ import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 import ImagePoster from "../Globals/ImagePoster";
 import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
-import { toast } from "react-toastify";
 import Alert from "../Globals/Alert";
 
 export default function BrandForm({ onSave, open, setOpen, data, setFile }) {

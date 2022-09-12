@@ -19,6 +19,8 @@ import {
   TextareaAutosize,
   FormControlLabel,
   Switch,
+  Collapse,
+  Fade,
 } from "@mui/material";
 import PhotoCamera from "@mui/icons-material/PhotoCamera";
 import ImagePoster from "../Globals/ImagePoster";
@@ -32,9 +34,16 @@ import {
   PercentOutlined,
   RemoveCircleOutline,
 } from "@mui/icons-material";
+import { TransitionGroup } from "react-transition-group";
 
 export default function ProductsForm({ product }) {
-  const { handleSubmit, register, reset, getValues, setValue } = useForm({
+  const {
+    handleSubmit,
+    register,
+    reset,
+    getValues,
+    formState: { errors },
+  } = useForm({
     defaultValues: product,
   });
 
@@ -56,19 +65,24 @@ export default function ProductsForm({ product }) {
     const { price, cost } = currentProduct;
     let marginBenefit;
     if (e.target.id === "input-price") {
-      marginBenefit = (e.target.value - cost) / e.target.value;
+      marginBenefit = ((e.target.value - cost) / e.target.value) * 100;
       reset({ ...currentProduct, price: e.target.value, marginBenefit });
     }
     if (e.target.id === "input-cost") {
-      marginBenefit = (price - e.target.value) / price;
+      marginBenefit = ((price - e.target.value) / price) * 100;
       reset({ ...currentProduct, cost: e.target.value, marginBenefit });
     }
   };
   const handleImageChange = (e) => {
-    const url = URL.createObjectURL(e.target.files[0]);
-    setImages([...images, url]);
+    if (e.target.files[0]) {
+      const url = URL.createObjectURL(e.target.files[0]);
+      setImages([...images, url]);
+    }
   };
-  const onSubmit = async (data) => {};
+
+  const onSubmit = (data) => {
+    alert(JSON.stringify(data));
+  };
 
   useEffect(() => {
     reset(product);
@@ -83,7 +97,7 @@ export default function ProductsForm({ product }) {
   }, []);
 
   return (
-    <div className="flex">
+    <form className="flex" onSubmit={handleSubmit(onSubmit)}>
       <div className="grid grid-cols-12 gap-x-8 mx-4 mb-16">
         <div className="shadow-md col-span-12 lg:col-span-8 p-8 space-y-6 rounded-xl h-min">
           <div className="flex flex-col mx-2 space-y-1">
@@ -95,15 +109,21 @@ export default function ProductsForm({ product }) {
             </span>
           </div>
           <TextField
+            {...register("name", { required: true })}
             className="input-rounded"
-            label="Nombre"
+            label="Nombre *"
             fullWidth
+            error={errors.name}
+            helperText={errors.name && "El nombre es requerido"}
           ></TextField>
           <TextField
+            {...register("description")}
             className="input-rounded w-full outline-2 outline-slate-500"
             minRows={4}
             multiline
             label="Descripcion"
+            error={errors.description}
+            helperText={errors.description && "La descripcion es requerida"}
             fullWidth
           />
           {/* image list */}
@@ -136,18 +156,25 @@ export default function ProductsForm({ product }) {
             </div>
           </div>
           <div className="flex">
-            {images.map((item) => (
-              <div className="relative my-4 mx-2">
-                <RemoveCircleOutline
-                  className="absolute right-0 text-neutral-300 text-md hover:text-neutral-500 
-                transition-all duration-200 cursor-pointer"
-                />
-                <img src={item} className=" w-20 h-20 rounded-2xl" />
-              </div>
-            ))}
+            <TransitionGroup className="flex">
+              {images.map((item) => (
+                <Fade>
+                  <div className="transition-all opacity-40 relative my-4 mx-2">
+                    <RemoveCircleOutline
+                      onClick={(e) => {
+                        setImages(images.filter((url) => url !== item));
+                      }}
+                      className="absolute right-0 text-neutral-300 text-md hover:text-neutral-500 transition-all duration-200 cursor-pointer"
+                    />
+                    <img src={item} className=" w-20 h-20 rounded-2xl" />
+                  </div>
+                </Fade>
+              ))}
+            </TransitionGroup>
           </div>
           <div className="flex justify-end space-x-4">
             <Button
+              onClick={() => setImages([])}
               className=" z-auto rounded-xl py-2 capitalize "
               size="small"
             >
@@ -178,7 +205,13 @@ export default function ProductsForm({ product }) {
               control={<Switch defaultChecked />}
               label="disponible"
             />
-            <TextField className="input-rounded" label="codigo" fullWidth />
+            <TextField
+              {...register("code")}
+              className="input-rounded"
+              label="Codigo"
+              placeholder="P001-C001"
+              fullWidth
+            />
             <FormControl className="w-full">
               <InputLabel id="select-brand">Marcas</InputLabel>
               <Select
@@ -209,6 +242,7 @@ export default function ProductsForm({ product }) {
               renderInput={(params) => (
                 <TextField
                   {...params}
+                  helperText="Busca las categorias que mas se asemjan a tus productos."
                   className="input-rounded"
                   label="Categorias"
                 />
@@ -226,17 +260,22 @@ export default function ProductsForm({ product }) {
                 producto.
               </span>
             </div>
+
             <TextField
-              {...register("cost")}
+              {...register("cost", { required: true })}
               className="input-rounded"
               type="number"
               id="input-cost"
+              error={errors.cost}
+              helperText={errors.cost && "El costo no es valido"}
               onChange={handlePriceChange}
-              label="Costo"
+              label="Costo *"
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
-                    <AttachMoneyRounded />
+                    <AttachMoneyRounded
+                      className={`${errors.cost && "text-red-500"} `}
+                    />
                   </InputAdornment>
                 ),
               }}
@@ -244,16 +283,20 @@ export default function ProductsForm({ product }) {
               fullWidth
             />
             <TextField
-              {...register("price")}
+              {...register("price", { required: true })}
               className="input-rounded"
               type="number"
               id="input-price"
-              label="Precio"
+              label="Precio *"
+              error={errors.price}
+              helperText={errors.price && "El precio no es valido"}
               onChange={handlePriceChange}
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
-                    <AttachMoneyRounded />
+                    <AttachMoneyRounded
+                      className={`${errors.price && "text-red-500"} `}
+                    />
                   </InputAdornment>
                 ),
               }}
@@ -281,6 +324,7 @@ export default function ProductsForm({ product }) {
             <Button
               className=" w-full max-w-xl shadow-lg text-white z-auto rounded-xl py-2 bg-green-600 hover:bg-green-700"
               size="medium"
+              type="submit"
               variant="contained"
             >
               Guardar
@@ -288,6 +332,6 @@ export default function ProductsForm({ product }) {
           </div>
         </div>
       </div>
-    </div>
+    </form>
   );
 }
