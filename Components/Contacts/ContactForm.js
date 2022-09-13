@@ -51,7 +51,7 @@ export default function ContactForm({ contact }) {
     contact ? contact.identificationType ?? 1 : 1
   );
   const [fileContainer, setFileContainer] = useState();
-  const [currentImage, setCurrentImage] = useState(contact.imageUrl);
+  const [currentImage, setCurrentImage] = useState(contact && contact.imageUrl);
 
   const toastId = useRef(null);
 
@@ -130,7 +130,10 @@ export default function ContactForm({ contact }) {
     <div className="w-full h-full grid grid-cols-12 gap-x-2">
       <div className="col-span-12 flex w-full justify-between items-center pr-8">
         <div>
-          <PageHeader header="Crear contacto" locationRoutes={locationRoutes} />
+          <PageHeader
+            header={contact ? "Modificar contacto" : "Crear contacto"}
+            locationRoutes={locationRoutes}
+          />
         </div>
       </div>
       <div className="flex w-full justify-center col-span-12 lg:col-span-4">
@@ -154,7 +157,13 @@ export default function ContactForm({ contact }) {
               />
             </Button>
             <img
-              src={currentImage ? currentImage : "/dashboard_welcome.png"}
+              src={
+                currentImage
+                  ? currentImage
+                  : contact?.imageUrl
+                  ? contact.imageUrl
+                  : "/dashboard_welcome.png"
+              }
               alt=""
               className=" w-36 h-36 rounded-full transition-all  "
             />

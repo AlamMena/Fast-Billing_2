@@ -1,10 +1,27 @@
 import {
+  AddBoxRounded,
+  AddRounded,
+  AppsOutlined,
+  AssessmentOutlined,
+  CategoryOutlined,
+  ContactPageOutlined,
+  ContactsOutlined,
+  DashboardOutlined,
+  GifBox,
+  HomeOutlined,
   HomeRounded,
+  Inventory2Outlined,
+  Inventory2Rounded,
+  LabelOutlined,
+  ListAltRounded,
   MenuBookRounded,
   MenuRounded,
+  PaidOutlined,
+  ReceiptOutlined,
   RoomRounded,
   RouteRounded,
   SearchRounded,
+  SellOutlined,
 } from "@mui/icons-material";
 import { Menu, MenuItem, Popover, Slide, Typography } from "@mui/material";
 import { useState } from "react";
@@ -12,6 +29,66 @@ import { BiUser, BsGrid } from "react-icons/bi";
 import ProfilePopOver from "./ProfilePopOver";
 import NotificationPopOver from "./NotificationPopOver";
 import { useRouter } from "next/router";
+
+const routes = [
+  {
+    header: "General",
+    items: [
+      {
+        text: "Inicio",
+        path: "./",
+        Icon: <DashboardOutlined />,
+      },
+      {
+        text: "Contactos",
+        path: "/contactos",
+        Icon: <ContactPageOutlined />,
+      },
+    ],
+  },
+
+  {
+    header: "Inventario",
+    Icon: <AddBoxRounded />,
+    items: [
+      {
+        text: "Productos",
+        path: "/productos",
+        Icon: <Inventory2Outlined />,
+      },
+      {
+        text: "R. Mercancia",
+        path: "/",
+        Icon: <ReceiptOutlined />,
+      },
+      {
+        text: "Reportes",
+        path: "/",
+        Icon: <AssessmentOutlined />,
+      },
+    ],
+  },
+  {
+    header: "Facturacion",
+    items: [
+      {
+        text: "Ventas",
+        path: "/facturas",
+        Icon: <SellOutlined />,
+      },
+      {
+        text: "Transacciones",
+        path: "./",
+        Icon: <PaidOutlined />,
+      },
+      {
+        text: "Reportes",
+        path: "./",
+        Icon: <AssessmentOutlined />,
+      },
+    ],
+  },
+];
 
 export default function Index() {
   const [open, setOpen] = useState(false);
@@ -71,94 +148,33 @@ export default function Index() {
             <span className="text-xs text-neutral-500">admin</span>
           </div>
         </div>
-        <h2 className=" mt-4 px-4">General</h2>
-        <div className="flex flex-col text-xs my-2 space-y-4">
-          <div className="flex w-full space-x-2 items-center bg-green-50 py-2 px-4 rounded-xl cursor-pointer text-green-600">
-            <HomeRounded />
-            <span className=" text-sm">Home</span>
-          </div>
 
-          {[
-            { text: "Products", Icon: <RoomRounded />, path: "./productos" },
-            { text: "Contactos", Icon: <RouteRounded />, path: "./contactos" },
-            {
-              text: "Categorias",
-              Icon: <RouteRounded />,
-              path: "./categorias",
-            },
-            { text: "Marcas", Icon: <RouteRounded />, path: "./marcas" },
-            {
-              text: "Crear Factura",
-              Icon: <RouteRounded />,
-              path: "./crearfactura",
-            },
-
-            { text: "Configuration", Icon: <MenuBookRounded /> },
-          ].map((item, index) => {
-            return (
-              <div
-                key={index}
-                onClick={() => {
-                  router.push(item.path);
-                }}
-                className="flex items-center w-full space-x-2 text-slate-500 hover:bg-green-50 hover:text-green-600 py-2 px-4 rounded-xl cursor-pointer"
-              >
-                {item.Icon}
-                <span className=" text-sm">{item.text}</span>
+        {routes.map((route) => {
+          return (
+            <div>
+              <h2 className=" mt-4 px-4 font-semibold ">{route.header}</h2>
+              <div className="flex flex-col text-xs my-2 space-y-2">
+                {route.items.map((item, index) => {
+                  let isActive = item.path === router.pathname;
+                  return (
+                    <div
+                      key={index}
+                      onClick={() => {
+                        router.push(item.path);
+                      }}
+                      className={`flex items-center w-full space-x-2  hover:bg-green-50 hover:text-green-600 py-2 px-4 rounded-xl cursor-pointer
+                      ${
+                        isActive
+                          ? "bg-green-50 text-green-600"
+                          : "text-slate-500"
+                      }`}
+                    >
+                      {item.Icon}
+                      <span className=" text-sm">{item.text}</span>
+                    </div>
+                  );
+                })}
               </div>
-            );
-          })}
-        </div>
-        <h2 className=" mt-4 px-4 my-4 ">Products </h2>
-
-        {[
-          { text: "Products", Icon: <RoomRounded /> },
-          { text: "Contacts", Icon: <RouteRounded /> },
-          { text: "Configuration", Icon: <MenuBookRounded /> },
-        ].map((item, index) => {
-          return (
-            <div
-              key={index}
-              className="flex items-center w-full space-x-2 text-slate-500 hover:bg-green-50 hover:text-green-600 py-2 px-4 rounded-xl cursor-pointer"
-            >
-              {item.Icon}
-              <span className=" text-sm">{item.text}</span>
-            </div>
-          );
-        })}
-
-        <h2 className=" mt-4 px-4 my-4 ">Invoice </h2>
-
-        {[
-          { text: "Contacts List", Icon: <RoomRounded /> },
-          { text: "Contacts", Icon: <RouteRounded /> },
-          { text: "Configuration", Icon: <MenuBookRounded /> },
-        ].map((item, index) => {
-          return (
-            <div
-              key={index}
-              className="flex items-center w-full space-x-2 text-slate-500 hover:bg-green-50 hover:text-green-600 py-2 px-4 rounded-xl cursor-pointer"
-            >
-              {item.Icon}
-              <span className=" text-sm">{item.text}</span>
-            </div>
-          );
-        })}
-
-        <h2 className=" mt-4 px-4 my-2 ">Contacts </h2>
-
-        {[
-          { text: "Products", Icon: <RoomRounded /> },
-          { text: "Contacts", Icon: <RouteRounded /> },
-          { text: "Configuration", Icon: <MenuBookRounded /> },
-        ].map((item, index) => {
-          return (
-            <div
-              key={index}
-              className="flex items-center w-full space-x-2 text-slate-500 hover:bg-green-50 hover:text-green-600 py-2 px-4 rounded-xl cursor-pointer"
-            >
-              {item.Icon}
-              <span className=" text-sm">{item.text}</span>
             </div>
           );
         })}

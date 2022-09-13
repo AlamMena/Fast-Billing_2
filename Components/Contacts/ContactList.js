@@ -20,98 +20,88 @@ import { useEffect, useState } from "react";
 import StatusRow from "../Globals/StatusRow.js";
 
 export default function ContactList({
-  setFormOpen,
-  setFormData,
-  data,
+  pageState,
+  setPageState,
   setItemToDelete,
   setConfirmOpen,
 }) {
   // states
-  const [statusTabValue, setStatusTabValue] = useState("All");
-  const [filteredData, setFilteredData] = useState(data);
+  const [statusTabValue, setStatusTabValue] = useState("Active");
+  // const [filteredData, setFilteredData] = useState(data);
   const [typeFilter, setTypeFilter] = useState(0);
 
   // router
 
   const router = useRouter();
   // methods
-  const getFilteredContactsByStatus = (value) => {
-    // response variable
-    let filteredContactsByStatus;
+  // const getFilteredContactsByStatus = (value) => {
+  //   // response variable
+  //   let filteredContactsByStatus;
 
-    // filtering contacts from tab value
-    if (value === "All") {
-      filteredContactsByStatus = data.contacts;
-    } else if (value === "Active") {
-      filteredContactsByStatus = data.contacts.filter(
-        (item) => !item.IsDeleted
-      );
-    } else if (value === "Disable") {
-      filteredContactsByStatus = data.contacts.filter((item) => item.IsDeleted);
-    }
+  //   // filtering contacts from tab value
+  //   if (value === "All") {
+  //     filteredContactsByStatus = data.contacts;
+  //   } else if (value === "Active") {
+  //     filteredContactsByStatus = data.contacts.filter(
+  //       (item) => !item.IsDeleted
+  //     );
+  //   } else if (value === "Disable") {
+  //     filteredContactsByStatus = data.contacts.filter((item) => item.IsDeleted);
+  //   }
 
-    // response
-    return filteredContactsByStatus;
-  };
+  //   // response
+  //   return filteredContactsByStatus;
+  // };
 
   const handleTabChange = (event, value) => {
-    // setting new value to the tab
-    setStatusTabValue(value);
-
-    // start loading
-    setFilteredData({ isLoading: true, contacts: [] });
-
-    // filtering contacts by the new tab value
-    const filteredContactsByStatus = getFilteredContactsByStatus(value);
-
-    // setting contacts to the state and stoping the loading
-    setFilteredData({ isLoading: false, contacts: filteredContactsByStatus });
-
-    // setting the type filter as all(0)
-    setTypeFilter(0);
+    // // setting new value to the tab
+    // setStatusTabValue(value);
+    // // start loading
+    // setFilteredData({ isLoading: true, contacts: [] });
+    // // filtering contacts by the new tab value
+    // const filteredContactsByStatus = getFilteredContactsByStatus(value);
+    // // setting contacts to the state and stoping the loading
+    // setFilteredData({ isLoading: false, contacts: filteredContactsByStatus });
+    // // setting the type filter as all(0)
+    // setTypeFilter(0);
   };
 
   const handleTypeChange = (newContactTypeValue) => {
     // setting the new value
-    setTypeFilter(newContactTypeValue);
-
-    // start loading
-    setFilteredData({ ...filteredData, isLoading: true });
-
-    // filtering the data by the tab value
-    const filteredContactsByStatus =
-      getFilteredContactsByStatus(statusTabValue);
-
-    // filtering by the new contact type filter
-    let filteredContactsByTypeAndStatus;
-
-    if (newContactTypeValue === 0) {
-      filteredContactsByTypeAndStatus = filteredContactsByStatus;
-    } else {
-      filteredContactsByTypeAndStatus = filteredContactsByStatus.filter(
-        (contact) => contact.type == newContactTypeValue.toString()
-      );
-    }
-
-    // setting the data
-    setFilteredData({
-      isLoading: false,
-      contacts: filteredContactsByTypeAndStatus,
-    });
+    //   setTypeFilter(newContactTypeValue);
+    //   // start loading
+    //   setFilteredData({ ...filteredData, isLoading: true });
+    //   // filtering the data by the tab value
+    //   const filteredContactsByStatus =
+    //     getFilteredContactsByStatus(statusTabValue);
+    //   // filtering by the new contact type filter
+    //   let filteredContactsByTypeAndStatus;
+    //   if (newContactTypeValue === 0) {
+    //     filteredContactsByTypeAndStatus = filteredContactsByStatus;
+    //   } else {
+    //     filteredContactsByTypeAndStatus = filteredContactsByStatus.filter(
+    //       (contact) => contact.type == newContactTypeValue.toString()
+    //     );
+    //   }
+    //   // setting the data
+    //   setFilteredData({
+    //     isLoading: false,
+    //     contacts: filteredContactsByTypeAndStatus,
+    //   });
   };
 
   // effects
-  useEffect(() => {
-    // start loading
-    setFilteredData({ isLoading: true, contacts: [] });
+  // useEffect(() => {
+  //   // start loading
+  //   setFilteredData({ isLoading: true, contacts: [] });
 
-    // filtering contacts
-    const filteredContactsByStatus =
-      getFilteredContactsByStatus(statusTabValue);
+  //   // filtering contacts
+  //   const filteredContactsByStatus =
+  //     getFilteredContactsByStatus(statusTabValue);
 
-    // setting data
-    setFilteredData({ isLoading: false, contacts: filteredContactsByStatus });
-  }, [data]);
+  //   // setting data
+  //   setFilteredData({ isLoading: false, contacts: filteredContactsByStatus });
+  // }, [data]);
 
   const columns = [
     {
@@ -255,17 +245,29 @@ export default function ContactList({
         </FormControl>
       </div>
 
-      <div className="h-96 w-full my-2">
+      <div className=" w-full my-2">
         <DataGrid
-          components={{ Toolbar: GridToolBar }}
           getRowId={(row) => row._id}
-          rows={filteredData.contacts}
+          rows={pageState.data}
+          rowCount={pageState.totalData}
           columns={columns}
+          autoHeight
           className="p-2"
-          pageSize={5}
-          loading={filteredData.isLoading}
-          rowsPerPageOptions={[5]}
+          pageSize={pageState.pageSize}
+          page={pageState.page - 1}
+          pagination
+          paginationMode="server"
+          loading={pageState.isLoading}
+          onPageChange={(newPage) => {
+            setPageState({ ...pageState, page: newPage + 1 });
+            alert(newPage);
+          }}
+          onPageSizeChange={(newPageSize) => {
+            setPageState({ ...pageState, pageSize: newPageSize });
+          }}
+          rowsPerPageOptions={[5, 20, 50, 100]}
           experimentalFeatures={{ newEditingApi: true }}
+          disableColumnFilter
         />
       </div>
     </div>
