@@ -23,7 +23,7 @@ export default function Contacts() {
 
   // confirmation form states
   const [confirmOpen, setConfirmOpen] = useState(false);
-  const [filter, setFilter] = useState("Alam");
+  const [filter, setFilter] = useState("Al");
   const [itemToDelete, setItemToDelete] = useState();
 
   const toastId = useRef(null);
@@ -48,13 +48,16 @@ export default function Contacts() {
       let apiResponse;
 
       if (filter !== "") {
-        apiResponse = { data } = await axiosInstance.get(
+        const response = await axiosInstance.get(
           `v1/contact/filtered?page=${pageState.page}&limit=${pageState.pageSize}&value=${filter}`
         );
+        apiResponse = response.data;
       } else {
-        apiResponse = { data } = await axiosInstance.get(
+        const response = await axiosInstance.get(
           `v1/contactspage=${pageState.page}&limit=${pageState.pageSize}`
         );
+
+        apiResponse = response.data;
       }
       setPageState({
         ...pageState,
@@ -114,6 +117,7 @@ export default function Contacts() {
       </div>
       <ContactList
         pageState={pageState}
+        setFilter= {}
         setPageState={setPageState}
         setItemToDelete={setItemToDelete}
         setConfirmOpen={setConfirmOpen}
