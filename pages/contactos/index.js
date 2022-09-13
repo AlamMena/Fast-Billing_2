@@ -117,7 +117,7 @@ export default function Contacts() {
       </div>
       <ContactList
         pageState={pageState}
-        setFilter= {}
+        setFilter= {setFilter}
         setPageState={setPageState}
         setItemToDelete={setItemToDelete}
         setConfirmOpen={setConfirmOpen}

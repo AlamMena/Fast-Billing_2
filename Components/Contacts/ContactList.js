@@ -22,6 +22,7 @@ import StatusRow from "../Globals/StatusRow.js";
 export default function ContactList({
   pageState,
   setPageState,
+  setFilter,
   setItemToDelete,
   setConfirmOpen,
 }) {
@@ -234,6 +235,7 @@ export default function ContactList({
           <OutlinedInput
             id="input-with-icon-adornment"
             className="input-rounded rounded-xl"
+            onChange={() => setFilter("Alam")}
             placeholder="Buscar contactos..."
             fullWidth
             startAdornment={
