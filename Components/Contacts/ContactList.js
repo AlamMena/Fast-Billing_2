@@ -17,6 +17,7 @@ import {
 import { DataGrid, GridToolBar } from "@mui/x-data-grid";
 import { useRouter } from "next/router.js";
 import { useEffect, useState } from "react";
+import { debounce } from "../../utils/methods.js";
 import StatusRow from "../Globals/StatusRow.js";
 
 export default function ContactList({
@@ -25,6 +26,10 @@ export default function ContactList({
   setFilter,
   setItemToDelete,
   setConfirmOpen,
+  setContactStatus,
+  contactStatus,
+  setContactType,
+  contactType,
 }) {
   // states
   const [statusTabValue, setStatusTabValue] = useState("Active");
@@ -35,6 +40,11 @@ export default function ContactList({
 
   const router = useRouter();
   // methods
+
+  const handleFilter = debounce((value) => setFilter(value));
+  const handleType = debounce((value) => setContactType(value));
+  const handleStatus = debounce((value) => setContactStatus(value));
+
   // const getFilteredContactsByStatus = (value) => {
   //   // response variable
   //   let filteredContactsByStatus;
@@ -171,7 +181,6 @@ export default function ContactList({
             <a
               onClick={() => {
                 router.push(`/contactos/${cells.row._id}`);
-                alert(cells.row.imageUrl);
               }}
               className="text-green-400 cursor-pointer"
             >
@@ -197,8 +206,10 @@ export default function ContactList({
     <div className="flex flex-col h-full  w-full shadow-lg rounded-xl my-3">
       <div className=" bg-slate-200 rounded-t-lg">
         <Tabs
-          value={statusTabValue}
-          onChange={handleTabChange}
+          value={contactStatus}
+          onChange={(e, newValue) => {
+            handleStatus(newValue);
+          }}
           className="text-neutral-500"
           TabIndicatorProps={{
             style: {
@@ -207,9 +218,9 @@ export default function ContactList({
           }}
           aria-label="secondary tabs example"
         >
-          <Tab className=" capitalize" value="All" label="Todos" />
-          <Tab className=" capitalize" value="Active" label="Activos" />
-          <Tab className=" capitalize" value="Disable" label="Inactivos" />
+          <Tab className=" capitalize" value="all" label="Todos" />
+          <Tab className=" capitalize" value={false} label="Activos" />
+          <Tab className=" capitalize" value={true} label="Inactivos" />
         </Tabs>
       </div>
       <div className="flex items-center space-x-4 px-4 mt-4">
@@ -218,14 +229,16 @@ export default function ContactList({
           <Select
             labelId="select-type-label"
             id="id"
-            value={typeFilter}
-            onChange={(e) => handleTypeChange(e.target.value)}
+            value={contactType}
+            onChange={(e) => {
+              handleType(e.target.value);
+            }}
             size="large"
             className="rounded-xl text-md"
             label="Tipos"
             // onChange={handleChange}
           >
-            <MenuItem value={0}>Todos</MenuItem>
+            <MenuItem value="all">Todos</MenuItem>
             <MenuItem value={1}>Clientes</MenuItem>
             <MenuItem value={2}>Proveedores</MenuItem>
           </Select>
@@ -235,7 +248,9 @@ export default function ContactList({
           <OutlinedInput
             id="input-with-icon-adornment"
             className="input-rounded rounded-xl"
-            onChange={() => setFilter("Alam")}
+            onChange={(e) => {
+              handleFilter(e.target.value);
+            }}
             placeholder="Buscar contactos..."
             fullWidth
             startAdornment={

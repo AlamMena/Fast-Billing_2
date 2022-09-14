@@ -46,7 +46,9 @@ export default function ContactForm({ contact }) {
     defaultValues: contact,
   });
 
-  const [contactType, setContactType] = useState(contact ? contact.type : 1);
+  const [contactType, setContactType] = useState(
+    contact ? parseInt(contact.type) : 1
+  );
   const [identificationType, setIdentificationType] = useState(
     contact ? contact.identificationType ?? 1 : 1
   );
@@ -60,6 +62,7 @@ export default function ContactForm({ contact }) {
 
   useEffect(() => {
     reset(contact);
+    alert(contact ? contact.type : 1);
   }, [contact]);
   const handleImageInput = (e) => {
     setCurrentImage(URL.createObjectURL(e.target.files[0]));
