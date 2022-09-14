@@ -32,7 +32,7 @@ import { toast } from "react-toastify";
 import { useForm } from "react-hook-form";
 import PageHeader from "../../Components/Globals/PageHeader";
 import useAxios from "../../Axios/Axios";
-import { postImage } from "../../components/Globals/ImagePoster";
+import { postImage } from "../../Components/Globals/ImagePoster";
 import { useRouter } from "next/router";
 
 export default function ContactForm() {

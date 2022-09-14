@@ -80,7 +80,7 @@ export default function Index() {
 
           {[
             { text: "Products", Icon: <RoomRounded />, path: "./productos" },
-            { text: "Contactos", Icon: <RouteRounded />, path: "./contactos" },
+            { text: "Contactos", Icon: <RouteRounded />, path: "../contactos" },
             {
               text: "Categorias",
               Icon: <RouteRounded />,

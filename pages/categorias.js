@@ -46,10 +46,10 @@ export default function Categories() {
       const response = await axiosInstance.get(
         "/v1/categories?limit=200&page=1"
       );
-      setCategories({ isLoading: false, data: response.data });
-      console.log(response.data);
+      setCategories({ isLoading: false, data: response.data.data });
+      console.log(response.data.data);
     } catch (error) {
-      //    toast.error(`Opps!, something went wrong${error}`);
+      toast.error(`Opps!, something went wrong${error}`);
     }
   };
 

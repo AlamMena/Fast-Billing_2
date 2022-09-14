@@ -121,6 +121,14 @@ export default function CreateInvoice() {
     dispatch(updateDueDate(dueDate.toString()));
   }, []);
 
+  const upserAsyncInvoice = async () => {
+    try {
+      await axiosInstance.post("/v1/invoice", invoice);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <div className="w-full md:px-0 px-4 md:pr-8 flex flex-col pb-5">
       <div className="flex w-full justify-between items-center pr-8 ">
@@ -408,7 +416,7 @@ export default function CreateInvoice() {
           sx={{ textTransform: "none" }}
           type="submit"
           size="large"
-          className=" w-44 bg-neutral-200 hover:bg-neutral-300 font-extrabold h-12 text-sm rounded-2xl"
+          className=" w-44 bg-neutral-200 hover:bg-neutral-300 font-extrabold h-12 text-xs rounded-2xl"
         >
           Salvar como Draft
         </Button>
@@ -420,7 +428,7 @@ export default function CreateInvoice() {
           color="secondary"
           size="large"
           className=" w-44 bg-green-600 text-white font-extrabold h-12 rounded-2xl"
-          onClick={() => console.log(invoice)}
+          onClick={() => upserAsyncInvoice()}
         >
           Crear y enviar
         </Button>

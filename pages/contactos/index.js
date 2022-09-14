@@ -8,6 +8,7 @@ import PageHeader from "../../Components/Globals/PageHeader";
 import { toast } from "react-toastify";
 import { postImage } from "../../Components/Globals/ImagePoster";
 import ConfirmationForm from "../../Components/Globals/ConfirmationForm";
+import Router from "next/router";
 
 export default function Contacts() {
   // list data
@@ -129,7 +130,10 @@ export default function Contacts() {
             }}
             startIcon={<Add className="text-white" />}
           >
-            <span className="text-sm whitespace-nowrap text-neutral-50 capitalize font-bold">
+            <span
+              className="text-sm whitespace-nowrap text-neutral-50 capitalize font-bold"
+              onClick={() => Router.push("./contactos/crear")}
+            >
               Nuevo contacto
             </span>
           </Button>
