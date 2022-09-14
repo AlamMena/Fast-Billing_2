@@ -28,15 +28,11 @@ export default function Categories() {
 
   const locationRoutes = [
     {
-      text: "Dashboard",
+      text: "Inicio",
       link: "/",
     },
     {
       text: "Categorias",
-      link: "/",
-    },
-    {
-      text: "Lista",
       link: "/",
     },
   ];
