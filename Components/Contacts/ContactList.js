@@ -126,15 +126,14 @@ export default function ContactList({
 
   // methods
 
-  const onTabStatusChange = (e, newValue) => {
-    debounce(() => setContactStatus(newValue));
-  };
-  const onSelectTypeStatusChange = (e) => {
-    debounce(() => setContactType(e.target.value));
-  };
-  const onInputFilterChange = (e) => {
-    debounce(() => setFilter(e.target.value));
-  };
+  const onTabStatusChange = debounce((e, newValue) =>
+    setContactStatus(newValue)
+  );
+
+  const onSelectTypeStatusChange = debounce((e) =>
+    setContactType(e.target.value)
+  );
+  const onInputFilterChange = debounce((e) => setFilter(e.target.value));
 
   const onDataGridPageChange = (newPage) => {
     setPageState({ ...pageState, page: newPage + 1 });
@@ -144,60 +143,80 @@ export default function ContactList({
     setPageState({ ...pageState, pageSize: newPageSize });
   };
 
+  // small components
+  const StatusTab = () => {
+    return (
+      <Tabs
+        value={contactStatus}
+        onChange={onTabStatusChange}
+        TabIndicatorProps={tabStyle}
+        className="text-neutral-500"
+      >
+        {/* tab options */}
+        <Tab className="capitalize" value="all" label="Todos" />
+        <Tab className="capitalize" value={false} label="Activos" />
+        <Tab className="capitalize" value={true} label="Inactivos" />
+      </Tabs>
+    );
+  };
+
+  const SelectContactType = () => {
+    return (
+      <>
+        {/* select label */}
+        <InputLabel id="select-type-label">Tipos</InputLabel>
+        <Select
+          id="id"
+          className="rounded-xl text-md"
+          labelId="select-type-label"
+          label="Tipos"
+          size="large"
+          value={contactType}
+          onChange={onSelectTypeStatusChange}
+        >
+          {/* select contact type options */}
+          <MenuItem value="all">Todos</MenuItem>
+          <MenuItem value={1}>Clientes</MenuItem>
+          <MenuItem value={2}>Proveedores</MenuItem>
+        </Select>
+      </>
+    );
+  };
+
+  const SearchInput = () => {
+    return (
+      <OutlinedInput
+        id="input-with-icon-adornment"
+        className="input-rounded rounded-xl"
+        onChange={onInputFilterChange}
+        placeholder="Buscar contactos..."
+        fullWidth
+        startAdornment={
+          <InputAdornment position="start">
+            <SearchRounded className="text-slate-400" />
+          </InputAdornment>
+        }
+      />
+    );
+  };
+
   return (
     <div className="flex flex-col h-full w-full shadow-lg rounded-xl my-3">
-      {/* ------------------   tab header -------------------- */}
+      {/* ------------------   Tab Status -------------------- */}
       <div className=" bg-slate-200 rounded-t-lg">
-        {/* tab definition */}
-        <Tabs
-          value={contactStatus}
-          onChange={onTabStatusChange}
-          TabIndicatorProps={tabStyle}
-          className="text-neutral-500"
-        >
-          {/* tab options */}
-          <Tab className="capitalize" value="all" label="Todos" />
-          <Tab className="capitalize" value={false} label="Activos" />
-          <Tab className="capitalize" value={true} label="Inactivos" />
-        </Tabs>
+        <StatusTab />
       </div>
 
       {/* ----------------------- Grid header ----------------- */}
       <div className="flex items-center space-x-4 px-4 mt-4">
         {/* select contact type */}
         <FormControl className="w-44">
-          {/* select label */}
-          <InputLabel id="select-type-label">Tipos</InputLabel>
-          <Select
-            id="id"
-            className="rounded-xl text-md"
-            labelId="select-type-label"
-            label="Tipos"
-            size="large"
-            value={contactType}
-            onChange={onSelectTypeStatusChange}
-          >
-            {/* select contact type options */}
-            <MenuItem value="all">Todos</MenuItem>
-            <MenuItem value={1}>Clientes</MenuItem>
-            <MenuItem value={2}>Proveedores</MenuItem>
-          </Select>
+          <SelectContactType />
         </FormControl>
 
         {/* search input */}
         <FormControl className="w-full">
-          <OutlinedInput
-            id="input-with-icon-adornment"
-            className="input-rounded rounded-xl"
-            onChange={onInputFilterChange}
-            placeholder="Buscar contactos..."
-            fullWidth
-            startAdornment={
-              <InputAdornment position="start">
-                <SearchRounded className="text-slate-400" />
-              </InputAdornment>
-            }
-          />
+          <SearchInput />
         </FormControl>
       </div>
 
@@ -210,15 +229,18 @@ export default function ContactList({
           pageSize={pageState.pageSize}
           page={pageState.page - 1}
           loading={pageState.isLoading}
+          onPageChange={onDataGridPageChange}
+          onPageSizeChange={onDataGridPageSizeChange}
           columns={columns}
           rowsPerPageOptions={[5, 20, 50, 100]}
           experimentalFeatures={{ newEditingApi: true }}
           paginationMode="server"
           className="p-2"
+          localeText={{
+            noRowsLabel: "No hay datos",
+          }}
           autoHeight
           pagination
-          onPageChange={onDataGridPageChange}
-          onPageSizeChange={onDataGridPageSizeChange}
           disableColumnFilter
           disableColumnSelector
         />
