@@ -42,7 +42,6 @@ export default function Contacts() {
   ];
 
   const setDataAsync = async () => {
-    console.log(pageState);
     try {
       setPageState({ ...pageState, isLoading: true });
 

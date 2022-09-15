@@ -132,6 +132,9 @@ const invoiceSlice = createSlice({
 
       state.total = total;
     },
+    resetState: (state) => {
+      return initialState;
+    },
   },
 });
 
@@ -148,6 +151,7 @@ export const {
   removeItem,
   calculateTotal,
   calculateSubTotal,
+  resetState,
   updateItemQuantity,
 } = invoiceSlice.actions;
 export default invoiceSlice.reducer;
