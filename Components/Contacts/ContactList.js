@@ -130,9 +130,7 @@ export default function ContactList({
     setContactStatus(newValue)
   );
 
-  const onSelectTypeStatusChange = debounce((e) =>
-    setContactType(e.target.value)
-  );
+  const onSelectTypeChange = debounce((e) => setContactType(e.target.value));
   const onInputFilterChange = debounce((e) => setFilter(e.target.value));
 
   const onDataGridPageChange = (newPage) => {
@@ -155,7 +153,7 @@ export default function ContactList({
           label="Tipos"
           size="large"
           value={contactType}
-          onChange={onSelectTypeStatusChange}
+          onChange={onSelectTypeChange}
         >
           {/* select contact type options */}
           <MenuItem value="all">Todos</MenuItem>
@@ -208,7 +206,7 @@ export default function ContactList({
       </div>
 
       {/*------------------ DataGrid ---------------- */}
-      <div className=" w-full my-2">
+      <div className=" w-full h-full my-2">
         <DataGrid
           getRowId={(row) => row._id}
           rows={pageState.data}

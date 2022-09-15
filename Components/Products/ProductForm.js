@@ -158,20 +158,24 @@ export default function ProductsForm({ product }) {
             {...register("name", { required: true })}
             className="input-rounded"
             label="Nombre *"
-            value={product.name || ""}
             placeholder="my product name"
             fullWidth
             error={errors.name}
+            InputLabelProps={{
+              shrink: true,
+            }}
             helperText={errors.name && "El nombre es requerido"}
           />
           <TextField
             {...register("description")}
             className="input-rounded w-full outline-2 outline-slate-500"
             minRows={4}
-            value={product.description || ""}
             placeholder="describiendo mi producto"
             multiline
             label="Descripcion"
+            InputLabelProps={{
+              shrink: true,
+            }}
             error={errors.description}
             helperText={errors.description && "La descripcion es requerida"}
             fullWidth
@@ -260,7 +264,6 @@ export default function ProductsForm({ product }) {
               className="input-rounded"
               label="Codigo"
               placeholder="P001-C001"
-              value={product.code || ""}
               fullWidth
             />
             <FormControl className="w-full">
@@ -320,6 +323,9 @@ export default function ProductsForm({ product }) {
               error={errors.cost}
               helperText={errors.cost && "El costo no es valido"}
               onChange={handlePriceChange}
+              InputLabelProps={{
+                shrink: true,
+              }}
               label="Costo *"
               InputProps={{
                 startAdornment: (
@@ -341,6 +347,9 @@ export default function ProductsForm({ product }) {
               label="Precio *"
               error={errors.price}
               helperText={errors.price && "El precio no es valido"}
+              InputLabelProps={{
+                shrink: true,
+              }}
               onChange={handlePriceChange}
               InputProps={{
                 startAdornment: (
