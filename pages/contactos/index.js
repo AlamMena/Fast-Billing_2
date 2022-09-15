@@ -8,12 +8,8 @@ import PageHeader from "../../Components/Globals/PageHeader";
 import { toast } from "react-toastify";
 import { postImage } from "../../Components/Globals/ImagePoster";
 import ConfirmationForm from "../../Components/Globals/ConfirmationForm";
-<<<<<<< HEAD
-import Router from "next/router";
-=======
 import { useRouter } from "next/router";
 import { tr } from "date-fns/locale";
->>>>>>> 308cf3bcf23d584f070db7f6a4dfd8a4fac7fddb
 
 export default function Contacts() {
   // list data
@@ -124,7 +120,7 @@ export default function Contacts() {
       </div>
       <ContactList
         pageState={pageState}
-        setFilter= {setFilter}
+        setFilter={setFilter}
         setPageState={setPageState}
         setItemToDelete={setItemToDelete}
         setConfirmOpen={setConfirmOpen}

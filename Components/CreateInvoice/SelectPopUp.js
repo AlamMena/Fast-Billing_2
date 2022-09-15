@@ -11,7 +11,7 @@ import { updateBeneficiary, updateRecipient } from "../../Store/InvoiceSlice";
 import { useState } from "react";
 
 export default function SelectPopUp({ open, setOpenSelect, type, contactos }) {
-  const [contactsInfo, setContactsInfo] = useState([contactos]);
+  const [contactsInfo, setContactsInfo] = useState(contactos);
   const dispatch = useDispatch();
 
   const handleContact = (item) => {
@@ -22,7 +22,7 @@ export default function SelectPopUp({ open, setOpenSelect, type, contactos }) {
     }
   };
 
-  const contacts = contactsInfo.map((item, index) => {
+  const contacts = contactos.map((item, index) => {
     return (
       <div
         className="p-3 flex items-center space-x-4 space-y-1 cursor-pointer hover:bg-green-100 w-full "

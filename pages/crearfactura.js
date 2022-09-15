@@ -34,6 +34,7 @@ import {
   addItem,
   updateStatus,
   updateCreationDate,
+  resetState,
   updateDueDate,
 } from "../Store/InvoiceSlice";
 import { useSelector } from "react-redux";
@@ -57,7 +58,7 @@ export default function CreateInvoice() {
   const setDataAsync = async () => {
     try {
       const response = await axiosInstance.get("v1/contacts?page=1&limit=200");
-      setData({ isLoading: false, data: response.data });
+      setData({ isLoading: false, data: response.data.data });
     } catch (error) {
       toast.error(`Opps!, something went wrong${error}`);
       setData({ isLoading: false, data: [] });
@@ -123,7 +124,16 @@ export default function CreateInvoice() {
 
   const upserAsyncInvoice = async () => {
     try {
-      await axiosInstance.post("/v1/invoice", invoice);
+      // logic
+      if (invoice._id !== undefined) {
+        // if the item exists
+        await axiosInstance.put("v1/invoice", invoice);
+        console.log("exito");
+      } else {
+        // if the item doesnt exists
+        await axiosInstance.post("v1/invoice", invoice);
+        console.log("existe");
+      }
     } catch (error) {
       console.log(error);
     }
@@ -416,6 +426,7 @@ export default function CreateInvoice() {
           sx={{ textTransform: "none" }}
           type="submit"
           size="large"
+          onClick={() => dispatch(resetState())}
           className=" w-44 bg-neutral-200 hover:bg-neutral-300 font-extrabold h-12 text-xs rounded-2xl"
         >
           Salvar como Draft

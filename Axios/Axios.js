@@ -6,7 +6,7 @@ export default function useAxios() {
   const user = useContext(AuthContext);
 
   const axiosInstance = axios.create({
-    baseURL: "http://localhost:8080/api",
+    baseURL: "https://",
     headers: {
       Authorization: `Bearer ${user?.accessToken}`,
     },
