@@ -8,10 +8,10 @@ import {
 import { InvoiceRecipient } from "./InvoiceContact";
 import { useDispatch } from "react-redux";
 import { updateBeneficiary, updateRecipient } from "../../Store/InvoiceSlice";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function SelectPopUp({ open, setOpenSelect, type, contactos }) {
-  const [contactsInfo, setContactsInfo] = useState([contactos]);
+  const [contactsInfo, setContactsInfo] = useState([]);
   const dispatch = useDispatch();
 
   const handleContact = (item) => {
@@ -21,6 +21,9 @@ export default function SelectPopUp({ open, setOpenSelect, type, contactos }) {
       dispatch(updateRecipient(item));
     }
   };
+  useEffect(() => {
+    console.log(contactos);
+  }, []);
 
   const contacts = contactsInfo.map((item, index) => {
     return (

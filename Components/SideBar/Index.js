@@ -149,35 +149,6 @@ export default function Index() {
           </div>
         </div>
 
-<<<<<<< HEAD
-          {[
-            { text: "Products", Icon: <RoomRounded />, path: "./productos" },
-            { text: "Contactos", Icon: <RouteRounded />, path: "../contactos" },
-            {
-              text: "Categorias",
-              Icon: <RouteRounded />,
-              path: "./categorias",
-            },
-            { text: "Marcas", Icon: <RouteRounded />, path: "./marcas" },
-            {
-              text: "Crear Factura",
-              Icon: <RouteRounded />,
-              path: "./crearfactura",
-            },
-
-            { text: "Configuration", Icon: <MenuBookRounded /> },
-          ].map((item, index) => {
-            return (
-              <div
-                key={index}
-                onClick={() => {
-                  router.push(item.path);
-                }}
-                className="flex items-center w-full space-x-2 text-slate-500 hover:bg-green-50 hover:text-green-600 py-2 px-4 rounded-xl cursor-pointer"
-              >
-                {item.Icon}
-                <span className=" text-sm">{item.text}</span>
-=======
         {routes.map((route) => {
           return (
             <div>
@@ -203,7 +174,6 @@ export default function Index() {
                     </div>
                   );
                 })}
->>>>>>> 308cf3bcf23d584f070db7f6a4dfd8a4fac7fddb
               </div>
             </div>
           );

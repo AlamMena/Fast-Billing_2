@@ -57,7 +57,7 @@ export default function CreateInvoice() {
   const setDataAsync = async () => {
     try {
       const response = await axiosInstance.get("v1/contacts?page=1&limit=200");
-      setData({ isLoading: false, data: response.data });
+      setData({ isLoading: false, data: response.data.data });
     } catch (error) {
       toast.error(`Opps!, something went wrong${error}`);
       setData({ isLoading: false, data: [] });
@@ -124,6 +124,7 @@ export default function CreateInvoice() {
   const upserAsyncInvoice = async () => {
     try {
       await axiosInstance.post("/v1/invoice", invoice);
+      alert(invoice);
     } catch (error) {
       console.log(error);
     }
@@ -140,7 +141,7 @@ export default function CreateInvoice() {
         open={openSelect}
         setOpenSelect={setOpenSelect}
         type={type}
-        contactos={data.data}
+        contactos={data}
       />
       <SelectProducts
         data={products.data}
