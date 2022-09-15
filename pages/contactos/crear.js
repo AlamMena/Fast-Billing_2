@@ -3,5 +3,5 @@ import useAxios from "../../Axios/Axios";
 import ContactForm from "../../components/Contacts/ContactForm";
 
 export default function CreateContact() {
-  return <ContactForm />;
+  return <ContactForm></ContactForm>;
 }

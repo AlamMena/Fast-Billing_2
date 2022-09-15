@@ -67,21 +67,19 @@ export default function Contacts() {
 
   const deleteAsync = async () => {
     try {
-      toastId.current = toast("Please wait...", {
-        type: toast.TYPE.LOADING,
-      });
-      await axiosInstance.delete(`v1/contact?id=${itemToDelete._id}`);
-      toast.update(toastId.current, {
-        type: toast.TYPE.SUCCESS,
-        autoClose: 5000,
-        render: "Success",
-      });
+      await toast.promise(
+        axiosInstance.delete(`v1/contact?id=${itemToDelete._id}`),
+        {
+          pending: "Eliminando contacto",
+          success: "Genial!, tu contacto ha sido eliminado.",
+          error: "Oops, algo ha ocurrido",
+        }
+      );
+
       setConfirmOpen(false);
       await setDataAsync();
-      console.log(data);
     } catch (error) {
-      toast.error(`Opps!, Algo ocurriÓ`);
-      setData({ isLoading: false, contacts: [] });
+      toast.error(`Opps!, Algo ha ocurrido`);
     }
   };
 
@@ -92,7 +90,7 @@ export default function Contacts() {
     <div className="w-full md:px-0 px-4 md:pr-8 flex flex-col">
       <div className="flex w-full justify-between items-center pr-8">
         <div>
-          <PageHeader header="Contacts" locationRoutes={locationRoutes} />
+          <PageHeader header="Contactos" locationRoutes={locationRoutes} />
         </div>
         <div className="flex">
           <Button
@@ -119,6 +117,13 @@ export default function Contacts() {
         setPageState={setPageState}
         setItemToDelete={setItemToDelete}
         setConfirmOpen={setConfirmOpen}
+      />
+      <ConfirmationForm
+        open={confirmOpen}
+        setOpen={setConfirmOpen}
+        onConfirm={() => {
+          deleteAsync(itemToDelete);
+        }}
       />
     </div>
   );

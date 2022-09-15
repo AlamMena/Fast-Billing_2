@@ -91,7 +91,7 @@ export default function ContactList({
     {
       field: "Acciones",
       sortable: false,
-      width: 200,
+      width: 250,
       renderCell: (cells) => {
         return (
           <div className="flex space-x-4">
@@ -102,7 +102,7 @@ export default function ContactList({
               className="text-green-400 cursor-pointer"
             >
               <EditOutlined className="text-green-400 mx-2" />
-              Edit
+              Editar
             </a>
             <a
               onClick={() => {
@@ -111,7 +111,7 @@ export default function ContactList({
               }}
               className="text-red-500 cursor-pointer"
             >
-              <DeleteOutline className="text-red-500 mx-2" /> Delete
+              <DeleteOutline className="text-red-500 mx-2" /> Eliminar
             </a>
           </div>
         );
@@ -143,23 +143,6 @@ export default function ContactList({
     setPageState({ ...pageState, pageSize: newPageSize });
   };
 
-  // small components
-  const StatusTab = () => {
-    return (
-      <Tabs
-        value={contactStatus}
-        onChange={onTabStatusChange}
-        TabIndicatorProps={tabStyle}
-        className="text-neutral-500"
-      >
-        {/* tab options */}
-        <Tab className="capitalize" value="all" label="Todos" />
-        <Tab className="capitalize" value={false} label="Activos" />
-        <Tab className="capitalize" value={true} label="Inactivos" />
-      </Tabs>
-    );
-  };
-
   const SelectContactType = () => {
     return (
       <>
@@ -183,28 +166,21 @@ export default function ContactList({
     );
   };
 
-  const SearchInput = () => {
-    return (
-      <OutlinedInput
-        id="input-with-icon-adornment"
-        className="input-rounded rounded-xl"
-        onChange={onInputFilterChange}
-        placeholder="Buscar contactos..."
-        fullWidth
-        startAdornment={
-          <InputAdornment position="start">
-            <SearchRounded className="text-slate-400" />
-          </InputAdornment>
-        }
-      />
-    );
-  };
-
   return (
     <div className="flex flex-col h-full w-full shadow-lg rounded-xl my-3">
       {/* ------------------   Tab Status -------------------- */}
       <div className=" bg-slate-200 rounded-t-lg">
-        <StatusTab />
+        <Tabs
+          value={contactStatus}
+          onChange={onTabStatusChange}
+          TabIndicatorProps={tabStyle}
+          className="text-neutral-500"
+        >
+          {/* tab options */}
+          <Tab className="capitalize" value="all" label="Todos" />
+          <Tab className="capitalize" value={"false"} label="Activos" />
+          <Tab className="capitalize" value={"true"} label="Inactivos" />
+        </Tabs>
       </div>
 
       {/* ----------------------- Grid header ----------------- */}
@@ -216,7 +192,18 @@ export default function ContactList({
 
         {/* search input */}
         <FormControl className="w-full">
-          <SearchInput />
+          <OutlinedInput
+            id="input-with-icon-adornment"
+            className="input-rounded rounded-xl"
+            onChange={onInputFilterChange}
+            placeholder="Buscar contactos..."
+            fullWidth
+            startAdornment={
+              <InputAdornment position="start">
+                <SearchRounded className="text-slate-400" />
+              </InputAdornment>
+            }
+          />
         </FormControl>
       </div>
 

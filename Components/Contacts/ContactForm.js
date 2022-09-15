@@ -62,7 +62,6 @@ export default function ContactForm({ contact }) {
 
   useEffect(() => {
     reset(contact);
-    alert(contact ? contact.type : 1);
   }, [contact]);
   const handleImageInput = (e) => {
     setCurrentImage(URL.createObjectURL(e.target.files[0]));
