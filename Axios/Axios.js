@@ -6,7 +6,7 @@ export default function useAxios() {
   const user = useContext(AuthContext);
 
   const axiosInstance = axios.create({
-    baseURL: "https://",
+    baseURL: "https://fast-billing-api.herokuapp.com/api/",
     headers: {
       Authorization: `Bearer ${user?.accessToken}`,
     },

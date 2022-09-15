@@ -1,5 +1,4 @@
 import {
-  ArticleRounded,
   DeleteOutline,
   EditOutlined,
   SearchRounded,
@@ -14,9 +13,9 @@ import {
   Tab,
   Tabs,
 } from "@mui/material";
-import { DataGrid, GridToolBar } from "@mui/x-data-grid";
+import { DataGrid } from "@mui/x-data-grid";
 import { useRouter } from "next/router.js";
-import { useEffect, useState } from "react";
+import { debounce } from "../../utils/methods.js";
 import StatusRow from "../Globals/StatusRow.js";
 
 export default function ContactList({
@@ -25,84 +24,12 @@ export default function ContactList({
   setFilter,
   setItemToDelete,
   setConfirmOpen,
+  setContactStatus,
+  contactStatus,
+  setContactType,
+  contactType,
 }) {
-  // states
-  const [statusTabValue, setStatusTabValue] = useState("Active");
-  // const [filteredData, setFilteredData] = useState(data);
-  const [typeFilter, setTypeFilter] = useState(0);
-
-  // router
-
   const router = useRouter();
-  // methods
-  // const getFilteredContactsByStatus = (value) => {
-  //   // response variable
-  //   let filteredContactsByStatus;
-
-  //   // filtering contacts from tab value
-  //   if (value === "All") {
-  //     filteredContactsByStatus = data.contacts;
-  //   } else if (value === "Active") {
-  //     filteredContactsByStatus = data.contacts.filter(
-  //       (item) => !item.IsDeleted
-  //     );
-  //   } else if (value === "Disable") {
-  //     filteredContactsByStatus = data.contacts.filter((item) => item.IsDeleted);
-  //   }
-
-  //   // response
-  //   return filteredContactsByStatus;
-  // };
-
-  const handleTabChange = (event, value) => {
-    // // setting new value to the tab
-    // setStatusTabValue(value);
-    // // start loading
-    // setFilteredData({ isLoading: true, contacts: [] });
-    // // filtering contacts by the new tab value
-    // const filteredContactsByStatus = getFilteredContactsByStatus(value);
-    // // setting contacts to the state and stoping the loading
-    // setFilteredData({ isLoading: false, contacts: filteredContactsByStatus });
-    // // setting the type filter as all(0)
-    // setTypeFilter(0);
-  };
-
-  const handleTypeChange = (newContactTypeValue) => {
-    // setting the new value
-    //   setTypeFilter(newContactTypeValue);
-    //   // start loading
-    //   setFilteredData({ ...filteredData, isLoading: true });
-    //   // filtering the data by the tab value
-    //   const filteredContactsByStatus =
-    //     getFilteredContactsByStatus(statusTabValue);
-    //   // filtering by the new contact type filter
-    //   let filteredContactsByTypeAndStatus;
-    //   if (newContactTypeValue === 0) {
-    //     filteredContactsByTypeAndStatus = filteredContactsByStatus;
-    //   } else {
-    //     filteredContactsByTypeAndStatus = filteredContactsByStatus.filter(
-    //       (contact) => contact.type == newContactTypeValue.toString()
-    //     );
-    //   }
-    //   // setting the data
-    //   setFilteredData({
-    //     isLoading: false,
-    //     contacts: filteredContactsByTypeAndStatus,
-    //   });
-  };
-
-  // effects
-  // useEffect(() => {
-  //   // start loading
-  //   setFilteredData({ isLoading: true, contacts: [] });
-
-  //   // filtering contacts
-  //   const filteredContactsByStatus =
-  //     getFilteredContactsByStatus(statusTabValue);
-
-  //   // setting data
-  //   setFilteredData({ isLoading: false, contacts: filteredContactsByStatus });
-  // }, [data]);
 
   const columns = [
     {
@@ -164,19 +91,18 @@ export default function ContactList({
     {
       field: "Acciones",
       sortable: false,
-      width: 200,
+      width: 250,
       renderCell: (cells) => {
         return (
           <div className="flex space-x-4">
             <a
               onClick={() => {
                 router.push(`/contactos/${cells.row._id}`);
-                alert(cells.row.imageUrl);
               }}
               className="text-green-400 cursor-pointer"
             >
               <EditOutlined className="text-green-400 mx-2" />
-              Edit
+              Editar
             </a>
             <a
               onClick={() => {
@@ -185,7 +111,7 @@ export default function ContactList({
               }}
               className="text-red-500 cursor-pointer"
             >
-              <DeleteOutline className="text-red-500 mx-2" /> Delete
+              <DeleteOutline className="text-red-500 mx-2" /> Eliminar
             </a>
           </div>
         );
@@ -193,49 +119,83 @@ export default function ContactList({
     },
   ];
 
+  // status tab object style
+  const tabStyle = {
+    style: { backgroundColor: "rgb(22 163 74 / var(--tw-text-opacity))" },
+  };
+
+  // methods
+
+  const onTabStatusChange = debounce((e, newValue) =>
+    setContactStatus(newValue)
+  );
+
+  const onSelectTypeStatusChange = debounce((e) =>
+    setContactType(e.target.value)
+  );
+  const onInputFilterChange = debounce((e) => setFilter(e.target.value));
+
+  const onDataGridPageChange = (newPage) => {
+    setPageState({ ...pageState, page: newPage + 1 });
+  };
+
+  const onDataGridPageSizeChange = (newPageSize) => {
+    setPageState({ ...pageState, pageSize: newPageSize });
+  };
+
+  const SelectContactType = () => {
+    return (
+      <>
+        {/* select label */}
+        <InputLabel id="select-type-label">Tipos</InputLabel>
+        <Select
+          id="id"
+          className="rounded-xl text-md"
+          labelId="select-type-label"
+          label="Tipos"
+          size="large"
+          value={contactType}
+          onChange={onSelectTypeStatusChange}
+        >
+          {/* select contact type options */}
+          <MenuItem value="all">Todos</MenuItem>
+          <MenuItem value={1}>Clientes</MenuItem>
+          <MenuItem value={2}>Proveedores</MenuItem>
+        </Select>
+      </>
+    );
+  };
+
   return (
-    <div className="flex flex-col h-full  w-full shadow-lg rounded-xl my-3">
+    <div className="flex flex-col h-full w-full shadow-lg rounded-xl my-3">
+      {/* ------------------   Tab Status -------------------- */}
       <div className=" bg-slate-200 rounded-t-lg">
         <Tabs
-          value={statusTabValue}
-          onChange={handleTabChange}
+          value={contactStatus}
+          onChange={onTabStatusChange}
+          TabIndicatorProps={tabStyle}
           className="text-neutral-500"
-          TabIndicatorProps={{
-            style: {
-              backgroundColor: "rgb(22 163 74 / var(--tw-text-opacity))",
-            },
-          }}
-          aria-label="secondary tabs example"
         >
-          <Tab className=" capitalize" value="All" label="Todos" />
-          <Tab className=" capitalize" value="Active" label="Activos" />
-          <Tab className=" capitalize" value="Disable" label="Inactivos" />
+          {/* tab options */}
+          <Tab className="capitalize" value="all" label="Todos" />
+          <Tab className="capitalize" value={"false"} label="Activos" />
+          <Tab className="capitalize" value={"true"} label="Inactivos" />
         </Tabs>
       </div>
+
+      {/* ----------------------- Grid header ----------------- */}
       <div className="flex items-center space-x-4 px-4 mt-4">
+        {/* select contact type */}
         <FormControl className="w-44">
-          <InputLabel id="select-type-label">Tipos</InputLabel>
-          <Select
-            labelId="select-type-label"
-            id="id"
-            value={typeFilter}
-            onChange={(e) => handleTypeChange(e.target.value)}
-            size="large"
-            className="rounded-xl text-md"
-            label="Tipos"
-            // onChange={handleChange}
-          >
-            <MenuItem value={0}>Todos</MenuItem>
-            <MenuItem value={1}>Clientes</MenuItem>
-            <MenuItem value={2}>Proveedores</MenuItem>
-          </Select>
+          <SelectContactType />
         </FormControl>
 
+        {/* search input */}
         <FormControl className="w-full">
           <OutlinedInput
             id="input-with-icon-adornment"
             className="input-rounded rounded-xl"
-            onChange={() => setFilter("Alam")}
+            onChange={onInputFilterChange}
             placeholder="Buscar contactos..."
             fullWidth
             startAdornment={
@@ -247,29 +207,29 @@ export default function ContactList({
         </FormControl>
       </div>
 
+      {/*------------------ DataGrid ---------------- */}
       <div className=" w-full my-2">
         <DataGrid
           getRowId={(row) => row._id}
           rows={pageState.data}
           rowCount={pageState.totalData}
-          columns={columns}
-          autoHeight
-          className="p-2"
           pageSize={pageState.pageSize}
           page={pageState.page - 1}
-          pagination
-          paginationMode="server"
           loading={pageState.isLoading}
-          onPageChange={(newPage) => {
-            setPageState({ ...pageState, page: newPage + 1 });
-            alert(newPage);
-          }}
-          onPageSizeChange={(newPageSize) => {
-            setPageState({ ...pageState, pageSize: newPageSize });
-          }}
+          onPageChange={onDataGridPageChange}
+          onPageSizeChange={onDataGridPageSizeChange}
+          columns={columns}
           rowsPerPageOptions={[5, 20, 50, 100]}
           experimentalFeatures={{ newEditingApi: true }}
+          paginationMode="server"
+          className="p-2"
+          localeText={{
+            noRowsLabel: "No hay datos",
+          }}
+          autoHeight
+          pagination
           disableColumnFilter
+          disableColumnSelector
         />
       </div>
     </div>

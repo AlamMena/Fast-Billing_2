@@ -46,7 +46,9 @@ export default function ContactForm({ contact }) {
     defaultValues: contact,
   });
 
-  const [contactType, setContactType] = useState(contact ? contact.type : 1);
+  const [contactType, setContactType] = useState(
+    contact ? parseInt(contact.type) : 1
+  );
   const [identificationType, setIdentificationType] = useState(
     contact ? contact.identificationType ?? 1 : 1
   );

@@ -39,6 +39,7 @@ import {
 } from "../Store/InvoiceSlice";
 import { useSelector } from "react-redux";
 import SelectProducts from "../Components/CreateInvoice/SelectProducts";
+import { parse } from "date-fns/esm";
 
 export default function CreateInvoice() {
   const [creationDate, setCreationDate] = useState(dayjs());
@@ -122,17 +123,17 @@ export default function CreateInvoice() {
     dispatch(updateDueDate(dueDate.toString()));
   }, []);
 
-  const upserAsyncInvoice = async () => {
+  const upserAsyncInvoice = async (parsedData) => {
     try {
       // logic
-      if (invoice._id !== undefined) {
+      if (parsedData._id !== undefined) {
         // if the item exists
-        await axiosInstance.put("v1/invoice", invoice);
-        console.log("exito");
+        await axiosInstance.put("v1/invoice", parsedData);
+        console.log("existe", parsedData);
       } else {
         // if the item doesnt exists
-        await axiosInstance.post("v1/invoice", invoice);
-        console.log("existe");
+        await axiosInstance.post("v1/invoice", parsedData);
+        console.log("exito");
       }
     } catch (error) {
       console.log(error);
@@ -439,7 +440,7 @@ export default function CreateInvoice() {
           color="secondary"
           size="large"
           className=" w-44 bg-green-600 text-white font-extrabold h-12 rounded-2xl"
-          onClick={() => upserAsyncInvoice()}
+          onClick={() => upserAsyncInvoice(invoice)}
         >
           Crear y enviar
         </Button>

@@ -23,7 +23,9 @@ export default function Contacts() {
 
   // confirmation form states
   const [confirmOpen, setConfirmOpen] = useState(false);
-  const [filter, setFilter] = useState("Al");
+  const [contactStatus, setContactStatus] = useState("all");
+  const [contactType, setContactType] = useState("all");
+  const [filter, setFilter] = useState("");
   const [itemToDelete, setItemToDelete] = useState();
 
   const toastId = useRef(null);
@@ -45,20 +47,12 @@ export default function Contacts() {
     try {
       setPageState({ ...pageState, isLoading: true });
 
-      let apiResponse;
+      const queryFilters = `page=${pageState.page}&limit=${pageState.pageSize}&value=${filter}&type=${contactType}&isDeleted=${contactStatus}`;
 
-      if (filter !== "") {
-        const response = await axiosInstance.get(
-          `v1/contact/filtered?page=${pageState.page}&limit=${pageState.pageSize}&value=${filter}`
-        );
-        apiResponse = response.data;
-      } else {
-        const response = await axiosInstance.get(
-          `v1/contactspage=${pageState.page}&limit=${pageState.pageSize}`
-        );
+      const { data: apiResponse } = await axiosInstance.get(
+        `v1/contact/filtered?${queryFilters}`
+      );
 
-        apiResponse = response.data;
-      }
       setPageState({
         ...pageState,
         isLoading: false,
@@ -66,39 +60,37 @@ export default function Contacts() {
         totalData: apiResponse.dataQuantity,
       });
     } catch (error) {
-      toast.error(`Opps!, something went wrong${error}`);
+      toast.error(`Opps!, algo ha ocurrido ${error}`);
       setPageState({ ...pageState, isLoading: false });
     }
   };
 
   const deleteAsync = async () => {
     try {
-      toastId.current = toast("Please wait...", {
-        type: toast.TYPE.LOADING,
-      });
-      await axiosInstance.delete(`v1/contact?id=${itemToDelete._id}`);
-      toast.update(toastId.current, {
-        type: toast.TYPE.SUCCESS,
-        autoClose: 5000,
-        render: "Success",
-      });
+      await toast.promise(
+        axiosInstance.delete(`v1/contact?id=${itemToDelete._id}`),
+        {
+          pending: "Eliminando contacto",
+          success: "Genial!, tu contacto ha sido eliminado.",
+          error: "Oops, algo ha ocurrido",
+        }
+      );
+
       setConfirmOpen(false);
       await setDataAsync();
-      console.log(data);
     } catch (error) {
-      toast.error(`Opps!, Algo ocurriÓ`);
-      setData({ isLoading: false, contacts: [] });
+      toast.error(`Opps!, Algo ha ocurrido`);
     }
   };
 
   useEffect(() => {
     setDataAsync();
-  }, [pageState.page, pageState.pageSize]);
+  }, [pageState.page, pageState.pageSize, filter, contactStatus, contactType]);
   return (
     <div className="w-full md:px-0 px-4 md:pr-8 flex flex-col">
       <div className="flex w-full justify-between items-center pr-8">
         <div>
-          <PageHeader header="Contacts" locationRoutes={locationRoutes} />
+          <PageHeader header="Contactos" locationRoutes={locationRoutes} />
         </div>
         <div className="flex">
           <Button
@@ -120,10 +112,21 @@ export default function Contacts() {
       </div>
       <ContactList
         pageState={pageState}
+        setContactStatus={setContactStatus}
+        setContactType={setContactType}
+        contactStatus={contactStatus}
+        contactType={contactType}
         setFilter={setFilter}
         setPageState={setPageState}
         setItemToDelete={setItemToDelete}
         setConfirmOpen={setConfirmOpen}
+      />
+      <ConfirmationForm
+        open={confirmOpen}
+        setOpen={setConfirmOpen}
+        onConfirm={() => {
+          deleteAsync(itemToDelete);
+        }}
       />
     </div>
   );

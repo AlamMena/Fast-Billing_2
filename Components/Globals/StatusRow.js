@@ -5,7 +5,7 @@ export default function StatusRow({ active, color, textColor, text }) {
     <div>
       {active ? (
         <div className="w-24 text-center bg-green-400 text-green-800 py-1 px-1  rounded-xl">
-          <span>active</span>
+          <span>Activo</span>
         </div>
       ) : color ? (
         <div
@@ -15,7 +15,7 @@ export default function StatusRow({ active, color, textColor, text }) {
         </div>
       ) : (
         <div className=" w-24 text-center bg-red-400 text-red-800 py-1 px-1  rounded-xl">
-          <span>disabled</span>
+          <span>Inactivo</span>
         </div>
       )}
     </div>
