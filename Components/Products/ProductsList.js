@@ -8,29 +8,38 @@ import {
   AvatarGroup,
   FormControl,
   InputAdornment,
-  InputLabel,
-  MenuItem,
   OutlinedInput,
-  Select,
-  Tab,
-  Tabs,
 } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { useRouter } from "next/router.js";
 import { debounce } from "../../utils/methods.js";
-import StatusRow from "../Globals/StatusRow.js";
 import currency from "currency.js";
+import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import useAxios from "../../Axios/Axios.js";
 
 export default function ProductList({
-  pageState,
-  setPageState,
-  setFilter,
+  statusFilter,
   setItemToDelete,
   setConfirmOpen,
-  setProductStatusFilter,
-  productStatusFilter,
+  actions,
+  onRowClick,
+  maxRow,
+  autoHeight,
 }) {
+  const [pageState, setPageState] = useState({
+    isLoading: true,
+    data: [],
+    pageSize: maxRow ? maxRow : 10,
+    page: 1,
+    filter: {
+      value: "",
+      status: "all",
+    },
+    totalData: 0,
+  });
   const router = useRouter();
+  const { axiosInstance } = useAxios();
   const chip = [
     {
       name: "Ana",
@@ -149,6 +158,7 @@ export default function ProductList({
     {
       field: "Acciones",
       sortable: false,
+      hide: !actions,
       width: 250,
       renderCell: (cells) => {
         return (
@@ -177,71 +187,56 @@ export default function ProductList({
     },
   ];
 
-  // status tab object style
-  const tabStyle = {
-    style: { backgroundColor: "rgb(22 163 74 / var(--tw-text-opacity))" },
-  };
-
   // methods
 
-  const onTabStatusChange = debounce((e, newValue) =>
-    setProductStatusFilter(newValue)
+  const setProductsAsync = async () => {
+    try {
+      // set loading
+      setPageState({ ...pageState, isLoading: true });
+      // querys filters definition
+      const queryFilters = `page=${pageState.page}&limit=${pageState.pageSize}&value=${pageState.filter.value}&isDeleted=${statusFilter}`;
+      const { data: apiResponse } = await axiosInstance.get(
+        `v1/products/filtered?${queryFilters}`
+      );
+      setPageState({
+        ...pageState,
+        data: apiResponse.data,
+        totalData: apiResponse.dataQuantity,
+        isLoading: false,
+      });
+    } catch (error) {
+      toast.error(`Opps!, algo salio mal ${error}`);
+    }
+  };
+  const onInputFilterChange = debounce((e) =>
+    setPageState({
+      ...pageState,
+      filter: { value: e.target.value, status: "all" },
+    })
   );
 
-  const onInputFilterChange = debounce((e) => setFilter(e.target.value));
-
   const onDataGridPageChange = (newPage) => {
-    setPageState({ ...pageState, page: newPage + 1 });
+    setPageState({
+      ...pageState,
+      page: newPage + 1,
+      pageSize: pageState.pageSize,
+    });
   };
 
   const onDataGridPageSizeChange = (newPageSize) => {
-    setPageState({ ...pageState, pageSize: newPageSize });
+    setPageState({
+      ...pageState,
+      page: pageState.page,
+      pageSize: newPageSize,
+    });
   };
 
-  const SelectProductCategory = () => {
-    return (
-      <>
-        {/* select label */}
-        <InputLabel id="select-type-label">Categorias</InputLabel>
-        <Select
-          id="id"
-          className="rounded-xl text-md"
-          labelId="select-type-label"
-          label="Tipos"
-          size="large"
-          value={productCategoryFilter}
-          onChange={onSelectCategoryFilter}
-        >
-          {/* select contact type options */}
-          <MenuItem value="all">Todos</MenuItem>
-          <MenuItem value={1}>Clientes</MenuItem>
-          <MenuItem value={2}>Proveedores</MenuItem>
-        </Select>
-      </>
-    );
-  };
-
+  useEffect(() => {
+    setProductsAsync();
+  }, [pageState.page, pageState.pageSize, pageState.filter, statusFilter]);
   return (
-    <div className="flex flex-col h-full w-full shadow-lg rounded-xl my-3">
-      {/* ------------------   Tab Status -------------------- */}
-      <div className=" bg-slate-200 rounded-t-lg">
-        <Tabs
-          value={productStatusFilter}
-          onChange={onTabStatusChange}
-          TabIndicatorProps={tabStyle}
-          className="text-neutral-500"
-        >
-          {/* tab options */}
-          <Tab className="capitalize" value="all" label="Todos" />
-          <Tab className="capitalize" value={"false"} label="Activos" />
-          <Tab className="capitalize" value={"true"} label="Inactivos" />
-        </Tabs>
-      </div>
-
-      {/* ----------------------- Grid header ----------------- */}
+    <div className="flex flex-col h-full w-full shadow-lg rounded-xl ">
       <div className="flex items-center space-x-4 px-4 mt-4">
-        {/* select contact type */}
-
         {/* search input */}
         <FormControl className="w-full">
           <OutlinedInput
@@ -265,24 +260,26 @@ export default function ProductList({
           getRowId={(row) => row._id}
           rows={pageState.data}
           rowCount={pageState.totalData}
-          pageSize={pageState.pageSize}
+          pageSize={maxRow ? maxRow : pageState.pageSize}
           page={pageState.page - 1}
           loading={pageState.isLoading}
           onPageChange={onDataGridPageChange}
           onPageSizeChange={onDataGridPageSizeChange}
           columns={columns}
-          rowsPerPageOptions={[5, 20, 50, 100]}
+          onRowClick={onRowClick}
+          rowsPerPageOptions={[5]}
           experimentalFeatures={{ newEditingApi: true }}
           paginationMode="server"
-          className="p-2"
+          className="p-2 h-80"
+          rowHeight={60}
+          pagination
+          autoPageSize
+          disableColumnFilter
+          selectionModel={false}
+          disableColumnSelector
           localeText={{
             noRowsLabel: "No hay datos",
           }}
-          autoHeight
-          rowHeight={60}
-          pagination
-          disableColumnFilter
-          disableColumnSelector
         />
       </div>
     </div>

@@ -1,6 +1,6 @@
 import { Add } from "@mui/icons-material";
 import useAxios from "../../Axios/Axios";
-import { Button } from "@mui/material";
+import { Button, debounce, Tab, Tabs } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
 import ContactForm from "../../Components/Contacts/ContactForm";
 import ContactList from "../../Components/Contacts/ContactList";
@@ -11,6 +11,7 @@ import ConfirmationForm from "../../Components/Globals/ConfirmationForm";
 import { useRouter } from "next/router";
 import { tr } from "date-fns/locale";
 import ProductList from "../../Components/Products/ProductsList";
+import { useDispatch, useSelector } from "react-redux";
 
 export default function Products() {
   // list data
@@ -24,7 +25,7 @@ export default function Products() {
 
   // confirmation form states
   const [confirmOpen, setConfirmOpen] = useState(false);
-  const [productStatusFilter, setProductsStatusFilter] = useState("all");
+  const [productsStatusFilter, setProductsStatusFilter] = useState("all");
   const [filter, setFilter] = useState("");
   const [itemToDelete, setItemToDelete] = useState();
 
@@ -43,11 +44,15 @@ export default function Products() {
     },
   ];
 
+  const onTabStatusChange = debounce((e, newValue) =>
+    setProductsStatusFilter(newValue)
+  );
+
   const setDataAsync = async () => {
     try {
       setPageState({ ...pageState, isLoading: true });
 
-      const queryFilters = `page=${pageState.page}&limit=${pageState.pageSize}&value=${filter}&isDeleted=${productStatusFilter}`;
+      const queryFilters = `page=${pageState.page}&limit=${pageState.pageSize}&value=${filter}&isDeleted=${productsStatusFilter}`;
 
       const { data: apiResponse } = await axiosInstance.get(
         `v1/products/filtered?${queryFilters}`
@@ -83,9 +88,11 @@ export default function Products() {
     }
   };
 
-  useEffect(() => {
-    setDataAsync();
-  }, [pageState.page, pageState.pageSize, filter, productStatusFilter]);
+  // status tab object style
+  const tabStyle = {
+    style: { backgroundColor: "rgb(22 163 74 / var(--tw-text-opacity))" },
+  };
+
   return (
     <div className="w-full md:px-0 px-4 md:pr-8 flex flex-col">
       <div className="flex w-full justify-between items-center pr-8">
@@ -107,14 +114,25 @@ export default function Products() {
           </Button>
         </div>
       </div>
+      <div className=" bg-slate-200 rounded-t-lg">
+        <Tabs
+          value={productsStatusFilter}
+          onChange={onTabStatusChange}
+          TabIndicatorProps={tabStyle}
+          className="text-neutral-500"
+        >
+          {/* tab options */}
+          <Tab className="capitalize" value="all" label="Todos" />
+          <Tab className="capitalize" value={"false"} label="Activos" />
+          <Tab className="capitalize" value={"true"} label="Inactivos" />
+        </Tabs>
+      </div>
+
       <ProductList
-        pageState={pageState}
-        setProductStatusFilter={setProductsStatusFilter}
-        productStatusFilter={productStatusFilter}
-        setFilter={setFilter}
-        setPageState={setPageState}
+        statusFilter={productsStatusFilter}
         setItemToDelete={setItemToDelete}
         setConfirmOpen={setConfirmOpen}
+        actions
       />
       <ConfirmationForm
         open={confirmOpen}
