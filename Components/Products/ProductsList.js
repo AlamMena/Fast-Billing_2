@@ -270,10 +270,11 @@ export default function ProductList({
           rowsPerPageOptions={[5]}
           experimentalFeatures={{ newEditingApi: true }}
           paginationMode="server"
-          className="p-2 h-80"
+          className={`p-2 ${maxRow && `h-${80}`}`}
           rowHeight={60}
           pagination
-          autoPageSize
+          autoPageSize={maxRow}
+          autoHeight={!maxRow}
           disableColumnFilter
           selectionModel={false}
           disableColumnSelector
