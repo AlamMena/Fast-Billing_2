@@ -40,6 +40,7 @@ import {
 import { useSelector } from "react-redux";
 import SelectProducts from "../Components/CreateInvoice/SelectProducts";
 import ConfirmationForm from "../Components/Globals/ConfirmationForm";
+import Router from "next/router";
 
 export default function CreateInvoice() {
   const [creationDate, setCreationDate] = useState(dayjs());
@@ -56,6 +57,7 @@ export default function CreateInvoice() {
 
   const { axiosInstance } = useAxios();
   const dispatch = useDispatch();
+  const router = Router;
 
   const setDataAsync = async () => {
     try {
@@ -109,7 +111,7 @@ export default function CreateInvoice() {
     },
     {
       text: "Facturas",
-      link: "/User",
+      link: "/facturas",
     },
     {
       text: "Nueva Factura",
@@ -134,6 +136,7 @@ export default function CreateInvoice() {
           success: "Genial!, tu factura ha sido creada.",
           error: "Oops, algo ha ocurrido",
         });
+        alert("se envio");
       } else {
         // if the item doesnt exists
         await toast.promise(axiosInstance.post("v1/invoice", invoice), {
@@ -141,8 +144,10 @@ export default function CreateInvoice() {
           success: "Genial!, tu factura ha sido creada.",
           error: "Oops, algo ha ocurrido",
         });
+        alert("no existe");
       }
       dispatch(resetState());
+
       setConfirmOpen(false);
     } catch (error) {
       console.log(error);
