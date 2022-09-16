@@ -295,7 +295,7 @@ export default function ContactForm({ contact }) {
                 <MenuItem value={1}>
                   <div className="flex items-center">
                     <img
-                      src="https://cdn-icons-png.flaticon.com/128/3321/3321752.png"
+                      src="/contacts_clients_profile.png"
                       className="w-8 h-8"
                     ></img>
                     <span className="mx-2">Cliente</span>
@@ -304,7 +304,7 @@ export default function ContactForm({ contact }) {
                 <MenuItem value={2}>
                   <div className="flex items-center">
                     <img
-                      src="https://cdn-icons-png.flaticon.com/128/2942/2942322.png"
+                      src="/contacts_suppliers_profile.png"
                       className="w-8 h-8"
                     ></img>
                     <span className="mx-2">Proveedor</span>

@@ -32,9 +32,18 @@ export default function ProductList({
 }) {
   const router = useRouter();
   const chip = [
-    { name: "Ana", src: "/static/images/avatar/1.jpg" },
-    { name: "TrapKing", src: "/static/images/avatar/1.jpg" },
-    { name: "Eldiablo", src: "/static/images/avatar/1.jpg" },
+    {
+      name: "Ana",
+      imageUrl: "https://cdn-icons-png.flaticon.com/512/3048/3048122.png",
+    },
+    {
+      name: "TrapKing",
+      imageUrl: "https://cdn-icons-png.flaticon.com/128/3048/3048189.png",
+    },
+    {
+      name: "Eldiablo",
+      imageUrl: "https://cdn-icons-png.flaticon.com/512/3048/3048122.png",
+    },
   ];
   const columns = [
     {
@@ -129,7 +138,7 @@ export default function ProductList({
                   className="w-8 h-8 "
                   key={index}
                   alt={item.name}
-                  src="https://cdn-icons-png.flaticon.com/128/3135/3135768.png"
+                  src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
                 />
               );
             })}
