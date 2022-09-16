@@ -148,7 +148,6 @@ export default function Index() {
             <span className="text-xs text-neutral-500">admin</span>
           </div>
         </div>
-
         {routes.map((route) => {
           return (
             <div>

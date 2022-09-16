@@ -1,10 +1,15 @@
 import { Button, Dialog } from "@mui/material";
 
-export default function ConfirmationForm({ onConfirm, open, setOpen }) {
+export default function ConfirmationForm({
+  onConfirm,
+  open,
+  setOpen,
+  message,
+}) {
   return (
     <Dialog open={open} onClose={() => setOpen(false)}>
       <div className="w-96 p-8">
-        <h2>Estas seguro que deseas eliminar este item?</h2>
+        <h2>Estas seguro que deseas {message} ?</h2>
         <div className="flex space-x-4 justify-end w-full mt-2">
           <Button className="text-red-500" onClick={() => setOpen(false)}>
             Cancel

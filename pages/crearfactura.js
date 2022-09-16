@@ -34,10 +34,12 @@ import {
   addItem,
   updateStatus,
   updateCreationDate,
+  resetState,
   updateDueDate,
 } from "../Store/InvoiceSlice";
 import { useSelector } from "react-redux";
 import SelectProducts from "../Components/CreateInvoice/SelectProducts";
+import ConfirmationForm from "../Components/Globals/ConfirmationForm";
 
 export default function CreateInvoice() {
   const [creationDate, setCreationDate] = useState(dayjs());
@@ -45,6 +47,7 @@ export default function CreateInvoice() {
   const [openSelect, setOpenSelect] = useState(false);
   const [openProductPop, setProductPopUp] = useState(false);
   const [type, setType] = useState("");
+  const [confirmOpen, setConfirmOpen] = useState(false);
   const [data, setData] = useState({ isLoading: true, data: [] });
   const [status, setStatus] = useState("Pagado");
   const [products, setProducts] = useState({ isLoading: true, data: [] });
@@ -57,7 +60,7 @@ export default function CreateInvoice() {
   const setDataAsync = async () => {
     try {
       const response = await axiosInstance.get("v1/contacts?page=1&limit=200");
-      setData({ isLoading: false, data: response.data });
+      setData({ isLoading: false, data: response.data.data });
     } catch (error) {
       toast.error(`Opps!, something went wrong${error}`);
       setData({ isLoading: false, data: [] });
@@ -121,6 +124,31 @@ export default function CreateInvoice() {
     dispatch(updateDueDate(dueDate.toString()));
   }, []);
 
+  const upserAsyncInvoice = async () => {
+    try {
+      // logic
+      if (invoice._id !== undefined) {
+        // if the item exists
+        await toast.promise(axiosInstance.put("v1/invoice", invoice), {
+          pending: "Creando factura",
+          success: "Genial!, tu factura ha sido creada.",
+          error: "Oops, algo ha ocurrido",
+        });
+      } else {
+        // if the item doesnt exists
+        await toast.promise(axiosInstance.post("v1/invoice", invoice), {
+          pending: "Creando factura",
+          success: "Genial!, tu factura ha sido creada.",
+          error: "Oops, algo ha ocurrido",
+        });
+      }
+      dispatch(resetState());
+      setConfirmOpen(false);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <div className="w-full md:px-0 px-4 md:pr-8 flex flex-col pb-5">
       <div className="flex w-full justify-between items-center pr-8 ">
@@ -138,6 +166,12 @@ export default function CreateInvoice() {
         data={products.data}
         open={openProductPop}
         setProductPop={setProductPopUp}
+      />
+      <ConfirmationForm
+        open={confirmOpen}
+        setOpen={setConfirmOpen}
+        onConfirm={upserAsyncInvoice}
+        message="crear la factura"
       />
       {/* Invoice  */}
       <div className="flex flex-col h-full w-full shadow-lg rounded-xl my-3">
@@ -408,7 +442,8 @@ export default function CreateInvoice() {
           sx={{ textTransform: "none" }}
           type="submit"
           size="large"
-          className=" w-44 bg-neutral-200 hover:bg-neutral-300 font-extrabold h-12 text-sm rounded-2xl"
+          onClick={() => dispatch(resetState())}
+          className=" w-44 bg-neutral-200 hover:bg-neutral-300 font-extrabold h-12 text-xs rounded-2xl"
         >
           Salvar como Draft
         </Button>
@@ -420,7 +455,7 @@ export default function CreateInvoice() {
           color="secondary"
           size="large"
           className=" w-44 bg-green-600 text-white font-extrabold h-12 rounded-2xl"
-          onClick={() => console.log(invoice)}
+          onClick={() => setConfirmOpen(true)}
         >
           Crear y enviar
         </Button>
