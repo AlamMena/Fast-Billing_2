@@ -47,13 +47,12 @@ export default function Products() {
     try {
       setPageState({ ...pageState, isLoading: true });
 
-      const queryFilters = `page=${pageState.page}&limit=${pageState.pageSize}`;
+      const queryFilters = `page=${pageState.page}&limit=${pageState.pageSize}&value=${filter}&isDeleted=${productStatusFilter}`;
 
       const { data: apiResponse } = await axiosInstance.get(
-        `v1/products?${queryFilters}`
+        `v1/products/filtered?${queryFilters}`
       );
 
-      alert(JSON.stringify(apiResponse.data));
       setPageState({
         ...pageState,
         isLoading: false,

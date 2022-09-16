@@ -23,7 +23,7 @@ import {
   Fade,
 } from "@mui/material";
 import PhotoCamera from "@mui/icons-material/PhotoCamera";
-import ImagePoster from "../Globals/ImagePoster";
+import ImagePoster, { postImage } from "../Globals/ImagePoster";
 import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
@@ -53,19 +53,10 @@ export default function ProductsForm({ product }) {
   const [categories, setCategories] = useState();
   const [category, setCategory] = useState();
   const [images, setImages] = useState([]);
-  const [file, setFile] = useState();
 
   const { axiosInstance } = useAxios();
 
   const router = useRouter();
-
-  const postImage = async () => {
-    const storage = getStorage(app);
-    const storageRef = ref(storage, "products");
-    const response = await uploadBytes(storageRef, file);
-    const url = await getDownloadURL(response.ref);
-    return url;
-  };
 
   const handlePriceChange = (e) => {
     const currentProduct = getValues();
@@ -91,7 +82,10 @@ export default function ProductsForm({ product }) {
   const handleImageChange = (e) => {
     if (e.target.files[0]) {
       const url = URL.createObjectURL(e.target.files[0]);
-      setImages([...images, url]);
+      setImages([
+        ...images,
+        { previewUrl: url, file: e.target.files[0], imageUrl: null },
+      ]);
     }
   };
 
@@ -99,32 +93,50 @@ export default function ProductsForm({ product }) {
     setIsLoading(true);
 
     try {
+      if (images.length > 0) {
+        for (let i = 0; images.length > i; i++) {
+          let currentImage = images[i];
+          if (currentImage.imageUrl === null) {
+            currentImage.imageUrl = await postImage(
+              images[i].file,
+              `products/${data.name}/${currentImage.name}`
+            );
+          }
+        }
+      }
       if (data._id) {
         await toast.promise(
-          axiosInstance.put("/v1/product", { ...data, images }),
+          axiosInstance.put("/v1/product", {
+            ...data,
+            images: images.map((item) => item.imageUrl),
+          }),
           {
             pending: "creando tu producto...",
             success: "Genial!, tu producto ha sido creado",
             error: "Oops!, algo ha ocurrido",
+          },
+          {
+            onOpen: (props) => console.log(props),
           }
         );
       } else {
         await toast.promise(
           axiosInstance.post("/v1/product", {
             ...data,
-            images,
+            images: productImages,
             IsDeleted: false,
           }),
           {
-            pending: "creando tu producto...",
-            success: "Genial!, tu producto ha sido creado",
+            pending: "Creando tu producto...",
+            success: "Proucto actualizado",
             error: "Oops!, algo ha ocurrido",
           }
         );
       }
+
       router.push("/productos");
     } catch (error) {
-      alert(JSON.stringify(error));
+      console.log(error);
     } finally {
       setIsLoading(false);
     }
@@ -132,6 +144,12 @@ export default function ProductsForm({ product }) {
 
   useEffect(() => {
     reset(product);
+    setImages(
+      product &&
+        product.images.map((item) => {
+          return { imageUrl: item };
+        })
+    );
   }, [product]);
 
   useEffect(() => {
@@ -211,24 +229,28 @@ export default function ProductsForm({ product }) {
           </div>
           <div className="flex">
             <TransitionGroup className="flex">
-              {images.map((item) => (
-                <Fade>
-                  <div className="transition-all opacity-40 relative my-4 mx-2">
-                    <RemoveCircleOutline
-                      onClick={(e) => {
-                        setImages(images.filter((url) => url !== item));
-                      }}
-                      className="absolute right-0 text-neutral-300 text-md hover:text-neutral-500 transition-all duration-200 cursor-pointer"
-                    />
-                    <img src={item} className=" w-20 h-20 rounded-2xl" />
-                  </div>
-                </Fade>
-              ))}
+              {images &&
+                images.map((item) => (
+                  <Fade>
+                    <div className="transition-all opacity-40 relative my-4 mx-2">
+                      <RemoveCircleOutline
+                        onClick={(e) => {
+                          setImages(images.filter((url) => url !== item));
+                        }}
+                        className="absolute right-0 text-neutral-300 text-md hover:text-neutral-500 transition-all duration-200 cursor-pointer"
+                      />
+                      <img
+                        src={item.imageUrl || item.previewUrl}
+                        className=" w-20 h-20 rounded-2xl"
+                      />
+                    </div>
+                  </Fade>
+                ))}
             </TransitionGroup>
           </div>
           <div className="flex justify-end space-x-4">
             <Button
-              onClick={() => setImages([])}
+              onClick={() => setImagesPreview([])}
               className=" z-auto rounded-xl py-2 capitalize "
               size="small"
             >
