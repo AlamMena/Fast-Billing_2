@@ -148,9 +148,9 @@ export default function Index() {
             <span className="text-xs text-neutral-500">admin</span>
           </div>
         </div>
-        {routes.map((route) => {
+        {routes.map((route, index) => {
           return (
-            <div>
+            <div key={index}>
               <h2 className=" mt-4 px-4 font-semibold ">{route.header}</h2>
               <div className="flex flex-col text-xs my-2 space-y-2">
                 {route.items.map((item, index) => {

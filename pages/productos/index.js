@@ -10,8 +10,9 @@ import { postImage } from "../../Components/Globals/ImagePoster";
 import ConfirmationForm from "../../Components/Globals/ConfirmationForm";
 import { useRouter } from "next/router";
 import { tr } from "date-fns/locale";
+import ProductList from "../../Components/Products/ProductsList";
 
-export default function Contacts() {
+export default function Products() {
   // list data
   const [pageState, setPageState] = useState({
     isLoading: true,
@@ -23,8 +24,7 @@ export default function Contacts() {
 
   // confirmation form states
   const [confirmOpen, setConfirmOpen] = useState(false);
-  const [contactStatus, setContactStatus] = useState("all");
-  const [contactType, setContactType] = useState("all");
+  const [productStatusFilter, setProductsStatusFilter] = useState("all");
   const [filter, setFilter] = useState("");
   const [itemToDelete, setItemToDelete] = useState();
 
@@ -34,12 +34,12 @@ export default function Contacts() {
   const router = useRouter();
   const locationRoutes = [
     {
-      text: "Home",
+      text: "Inicio",
       link: "/",
     },
     {
-      text: "Contactos",
-      link: "/contactos",
+      text: "Productos",
+      link: "/productos",
     },
   ];
 
@@ -47,10 +47,10 @@ export default function Contacts() {
     try {
       setPageState({ ...pageState, isLoading: true });
 
-      const queryFilters = `page=${pageState.page}&limit=${pageState.pageSize}&value=${filter}&type=${contactType}&isDeleted=${contactStatus}`;
+      const queryFilters = `page=${pageState.page}&limit=${pageState.pageSize}&value=${filter}&isDeleted=${productStatusFilter}`;
 
       const { data: apiResponse } = await axiosInstance.get(
-        `v1/contact/filtered?${queryFilters}`
+        `v1/products/filtered?${queryFilters}`
       );
 
       setPageState({
@@ -68,10 +68,10 @@ export default function Contacts() {
   const deleteAsync = async () => {
     try {
       await toast.promise(
-        axiosInstance.delete(`v1/contact?id=${itemToDelete._id}`),
+        axiosInstance.delete(`v1/product?id=${itemToDelete._id}`),
         {
-          pending: "Eliminando contacto",
-          success: "Genial!, tu contacto ha sido eliminado.",
+          pending: "Eliminando producto...",
+          success: "Genial!, tu producto ha sido eliminado.",
           error: "Oops, algo ha ocurrido",
         }
       );
@@ -85,37 +85,32 @@ export default function Contacts() {
 
   useEffect(() => {
     setDataAsync();
-  }, [pageState.page, pageState.pageSize, filter, contactStatus, contactType]);
+  }, [pageState.page, pageState.pageSize, filter, productStatusFilter]);
   return (
     <div className="w-full md:px-0 px-4 md:pr-8 flex flex-col">
       <div className="flex w-full justify-between items-center pr-8">
         <div>
-          <PageHeader header="Contactos" locationRoutes={locationRoutes} />
+          <PageHeader header="Productos" locationRoutes={locationRoutes} />
         </div>
         <div className="flex">
           <Button
             className=" z-auto rounded-xl py-2 bg-green-600 hover:bg-green-800"
             variant="contained"
             onClick={() => {
-              router.push("/contactos/crear");
+              router.push("/productos/crear");
             }}
             startIcon={<Add className="text-white" />}
           >
-            <span
-              className="text-sm whitespace-nowrap text-neutral-50 capitalize font-bold"
-              onClick={() => Router.push("./contactos/crear")}
-            >
-              Nuevo contacto
+            <span className="text-sm whitespace-nowrap text-neutral-50 capitalize font-bold">
+              Nuevo producto
             </span>
           </Button>
         </div>
       </div>
-      <ContactList
+      <ProductList
         pageState={pageState}
-        setContactStatus={setContactStatus}
-        setContactType={setContactType}
-        contactStatus={contactStatus}
-        contactType={contactType}
+        setProductStatusFilter={setProductsStatusFilter}
+        productStatusFilter={productStatusFilter}
         setFilter={setFilter}
         setPageState={setPageState}
         setItemToDelete={setItemToDelete}

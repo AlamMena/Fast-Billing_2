@@ -33,7 +33,6 @@ const initialState = {
   IsDeleted: true,
   CreatedAt: "1970-01-01T00:00:00.007Z",
   UpdatedAt: "1970-01-01T00:00:00.021Z",
-  _id: "62ddfb808476a82f613e4da2",
   __v: 0,
 };
 
@@ -112,7 +111,6 @@ const invoiceSlice = createSlice({
       );
       // alert(JSON.stringify(state.details));
     },
-
     calculateSubTotal: (state) => {
       let quantity = 0;
       let subTotal = 0;
