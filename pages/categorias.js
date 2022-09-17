@@ -12,6 +12,17 @@ import CategoryForm from "../Components/Categories/CategoryForm";
 import ConfirmationForm from "../Components/Globals/ConfirmationForm";
 
 export default function Categories() {
+  const [pageState, setPageState] = useState({
+    isLoading: true,
+    data: [],
+    pageSize: 5,
+    page: 1,
+    totalData: 0,
+  });
+  const [categoryStatus, setCategoryStatus] = useState("all");
+  const [categoryType, setCategoryType] = useState("all");
+  const [filter, setFilter] = useState("");
+
   const [categories, setCategories] = useState({ isLoading: true, data: [] });
   const [imageFile, setImageFile] = useState();
 
@@ -39,13 +50,23 @@ export default function Categories() {
 
   const setCategoriesAsync = async () => {
     try {
-      const response = await axiosInstance.get(
-        "/v1/categories?limit=200&page=1"
+      setPageState({ ...pageState, isLoading: true });
+
+      const queryFilters = `page=${pageState.page}&limit=${pageState.pageSize}&value=${filter}&isDeleted=${categoryStatus}`;
+
+      const { data: apiResponse } = await axiosInstance.get(
+        `v1/categories/filtered?${queryFilters}`
       );
-      setCategories({ isLoading: false, data: response.data.data });
-      console.log(response.data.data);
+
+      setPageState({
+        ...pageState,
+        isLoading: false,
+        data: apiResponse.data,
+        totalData: apiResponse.dataQuantity,
+      });
     } catch (error) {
-      toast.error(`Opps!, something went wrong${error}`);
+      toast.error(`Opps!, algo ha ocurrido ${error}`);
+      setPageState({ ...pageState, isLoading: false });
     }
   };
 
@@ -79,7 +100,7 @@ export default function Categories() {
       toast.update(toastId.current, {
         type: toast.TYPE.SUCCESS,
         autoClose: 5000,
-        render: "Success",
+        render: "Exito",
       });
     } catch (error) {
       // error toast
@@ -99,11 +120,10 @@ export default function Categories() {
       toast.update(toastId.current, {
         type: toast.TYPE.SUCCESS,
         autoClose: 5000,
-        render: "Success",
+        render: "Exito",
       });
       setConfirmOpen(false);
       await setCategoriesAsync();
-      console.log(categories);
     } catch (error) {
       toast.error(`Opps!, something went wrong${error}`);
       setCategories({ isLoading: false, data: [] });
@@ -113,7 +133,13 @@ export default function Categories() {
 
   useEffect(() => {
     setCategoriesAsync();
-  }, []);
+  }, [
+    pageState.page,
+    pageState.pageSize,
+    filter,
+    categoryStatus,
+    categoryType,
+  ]);
 
   return (
     <>
@@ -139,8 +165,14 @@ export default function Categories() {
           </div>
         </div>
         <CategoryList
+          pageState={pageState}
+          setCategoryStatus={setCategoryStatus}
+          setCategoryType={setCategoryType}
+          categoryStatus={categoryStatus}
+          categoryType={categoryType}
+          setFilter={setFilter}
+          setPageState={setPageState}
           setFormOpen={setFormOpen}
-          data={categories}
           setFormData={setFormData}
           setItemToDelete={setItemToDelete}
           setConfirmOpen={setConfirmOpen}

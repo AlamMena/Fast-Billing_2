@@ -18,16 +18,20 @@ import { useState, useEffect } from "react";
 import { DataGrid, GridToolBar } from "@mui/x-data-grid";
 import Alert from "../Globals/Alert";
 import StatusRow from "../Globals/StatusRow";
+import { debounce } from "../../utils/methods";
 
 export default function BrandList({
   setFormOpen,
   setFormData,
-  data,
+  pageState,
+  setPageState,
+  setFilter,
+  setBrandStatus,
+  brandStatus,
   setItemToDelete,
   setConfirmOpen,
 }) {
   const [statusTab, setStatusTab] = useState("All");
-  const [dataFiltered, setDataFiltered] = useState(data);
 
   const chip = [
     { name: "Ana", src: "/static/images/avatar/1.jpg" },
@@ -105,6 +109,18 @@ export default function BrandList({
     },
   ];
 
+  const onTabStatusChange = debounce((e, newValue) => setBrandStatus(newValue));
+
+  const onInputFilterChange = debounce((e) => setFilter(e.target.value));
+
+  const onDataGridPageChange = (newPage) => {
+    setPageState({ ...pageState, page: newPage + 1 });
+  };
+
+  const onDataGridPageSizeChange = (newPageSize) => {
+    setPageState({ ...pageState, pageSize: newPageSize });
+  };
+
   const handleTabChange = (e, value) => {
     setStatusTab(value);
     const newData = getDataFilterdByTab(value);
@@ -130,18 +146,13 @@ export default function BrandList({
     return newData;
   };
 
-  useEffect(() => {
-    const newData = getDataFilterdByTab(statusTab);
-    setDataFiltered(newData);
-  }, [data]);
-
   return (
     <>
       <div className="flex flex-col h-full  w-full shadow-lg rounded-xl my-3">
         <div className=" bg-slate-200 rounded-t-lg">
           <Tabs
-            value={statusTab}
-            onChange={handleTabChange}
+            value={brandStatus}
+            onChange={onTabStatusChange}
             className="text-neutral-500"
             TabIndicatorProps={{
               style: {
@@ -150,9 +161,9 @@ export default function BrandList({
             }}
             aria-label="secondary tabs example"
           >
-            <Tab className=" capitalize" value="All" label="Todos" />
-            <Tab className=" capitalize" value="Active" label="Activos" />
-            <Tab className=" capitalize" value="Disable" label="Inactivos" />
+            <Tab className=" capitalize" value="all" label="Todos" />
+            <Tab className=" capitalize" value={"false"} label="Activos" />
+            <Tab className=" capitalize" value={"true"} label="Inactivos" />
           </Tabs>
         </div>
         <div className="flex items-center space-x-4 px-4 my-4">
@@ -160,6 +171,7 @@ export default function BrandList({
             id="input-with-icon-adornment"
             className="input-rounded rounded-xl"
             fullWidth
+            onChange={onInputFilterChange}
             placeholder="Buscar marcas..."
             startAdornment={
               <InputAdornment position="start">
@@ -173,21 +185,25 @@ export default function BrandList({
           <DataGrid
             components={{ Toolbar: GridToolBar }}
             getRowId={(row) => row._id}
-            onSelectionModelChange={(row) => {
-              Alert.fire({
-                title: <strong>Success!</strong>,
-                html: <span>{row.map((item) => item)}</span>,
-                icon: "success",
-              });
-            }}
-            rows={dataFiltered.data}
+            rows={pageState.data}
+            page={pageState.page - 1}
+            pageSize={pageState.pageSize}
+            rowCount={pageState.totalData}
             columns={columns}
+            onPageChange={onDataGridPageChange}
+            onPageSizeChange={onDataGridPageSizeChange}
             className="p-2"
-            pageSize={5}
-            loading={dataFiltered.isLoading}
-            rowsPerPageOptions={[5]}
+            loading={pageState.isLoading}
+            rowsPerPageOptions={[5, 20, 50, 100]}
+            paginationMode="server"
             checkboxSelection
-            disableSelectionOnClick
+            localeText={{
+              noRowsLabel: "No hay datos",
+            }}
+            autoHeight
+            pagination
+            disableColumnFilter
+            disableColumnSelector
             experimentalFeatures={{ newEditingApi: true }}
           />
         </div>

@@ -79,7 +79,7 @@ export default function CategoryForm({ open, setOpen, data, onSave, setFile }) {
                   Nombre de la categoria
                 </InputLabel>
                 <OutlinedInput
-                  {...register("Name", {
+                  {...register("name", {
                     required: true,
                   })}
                   id="outlined-adornment-name"

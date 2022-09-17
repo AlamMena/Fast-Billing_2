@@ -9,10 +9,25 @@ import { InvoiceRecipient } from "./InvoiceContact";
 import { useDispatch } from "react-redux";
 import { updateBeneficiary, updateRecipient } from "../../Store/InvoiceSlice";
 import { useState, useEffect } from "react";
+import useAxios from "../../Axios/Axios";
 
-export default function SelectPopUp({ open, setOpenSelect, type, contactos }) {
-  const [contactsInfo, setContactsInfo] = useState([]);
+export default function SelectPopUp({ open, setOpenSelect, type }) {
+  const [contacts, setContacts] = useState({
+    isLoading: true,
+    data: {},
+  });
   const dispatch = useDispatch();
+  const { axiosInstance } = useAxios();
+
+  const setDataAsync = async () => {
+    try {
+      const response = await axiosInstance.get("v1/contacts?page=1&limit=200");
+      setContacts({ isLoading: false, data: response.data });
+    } catch (error) {
+      toast.error(`Opps!, something went wrong${error}`);
+      setContacts({ isLoading: false, data: [] });
+    }
+  };
 
   const handleContact = (item) => {
     if (type === "beneficiente") {
@@ -22,10 +37,10 @@ export default function SelectPopUp({ open, setOpenSelect, type, contactos }) {
     }
   };
   useEffect(() => {
-    console.log(contactos);
+    setDataAsync();
   }, []);
 
-  const contacts = contactsInfo.map((item, index) => {
+  const contact = contacts.data.map((item, index) => {
     return (
       <div
         className="p-3 flex items-center space-x-4 space-y-1 cursor-pointer hover:bg-green-100 w-full "
@@ -51,7 +66,7 @@ export default function SelectPopUp({ open, setOpenSelect, type, contactos }) {
   return (
     <Dialog open={open} fullWidth={true} maxWidth={"sm"}>
       <DialogTitle>Selecciona un {type}</DialogTitle>
-      <DialogContent dividers={true}>{contacts}</DialogContent>
+      <DialogContent dividers={true}>{contact}</DialogContent>
       <DialogActions>
         <Button onClick={() => setOpenSelect(false)}>Cerrar</Button>
       </DialogActions>

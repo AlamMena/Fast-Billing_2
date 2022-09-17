@@ -15,21 +15,25 @@ import {
 import { useState, useEffect } from "react";
 import { DataGrid, GridToolBar } from "@mui/x-data-grid";
 import Alert from "../Globals/Alert";
+import { debounce } from "../../utils/methods";
 import StatusRow from "../Globals/StatusRow.js";
 
 export default function CategoryList({
-  setFormOpen,
-  data,
+  pageState,
+  setPageState,
+  setFilter,
+  setCategoryStatus,
+  categoryStatus,
   setItemToDelete,
-  setConfirmOpen,
   setFormData,
+  setFormOpen,
+  setConfirmOpen,
 }) {
   const [statusTab, setStatusTab] = useState("All");
-  const [dataFiltered, setDataFiltered] = useState(data);
 
   const columns = [
     {
-      field: "Name",
+      field: "name",
       width: 460,
       headerName: "Nombre",
     },
@@ -74,6 +78,20 @@ export default function CategoryList({
     },
   ];
 
+  const onTabStatusChange = debounce((e, newValue) =>
+    setCategoryStatus(newValue)
+  );
+
+  const onInputFilterChange = debounce((e) => setFilter(e.target.value));
+
+  const onDataGridPageChange = (newPage) => {
+    setPageState({ ...pageState, page: newPage + 1 });
+  };
+
+  const onDataGridPageSizeChange = (newPageSize) => {
+    setPageState({ ...pageState, pageSize: newPageSize });
+  };
+
   const handleTabChange = (e, value) => {
     setStatusTab(value);
     const newData = getDataFilterdByTab(value);
@@ -99,18 +117,13 @@ export default function CategoryList({
     return newData;
   };
 
-  useEffect(() => {
-    const newData = getDataFilterdByTab(statusTab);
-    setDataFiltered(newData);
-  }, [data]);
-
   return (
     <>
       <div className="flex flex-col h-full  w-full shadow-lg rounded-xl my-3">
         <div className=" bg-slate-200 rounded-t-lg">
           <Tabs
-            value={statusTab}
-            onChange={handleTabChange}
+            value={categoryStatus}
+            onChange={onTabStatusChange}
             className="text-neutral-500"
             TabIndicatorProps={{
               style: {
@@ -119,9 +132,9 @@ export default function CategoryList({
             }}
             aria-label="secondary tabs example"
           >
-            <Tab className=" capitalize" value="All" label="Todos" active />
-            <Tab className=" capitalize" value="Active" label="Activos" />
-            <Tab className=" capitalize" value="Disable" label="Inactivos" />
+            <Tab className=" capitalize" value="all" label="Todos" />
+            <Tab className=" capitalize" value={"false"} label="Activos" />
+            <Tab className=" capitalize" value={"true"} label="Inactivos" />
           </Tabs>
         </div>
         <div className="flex items-center space-x-4 px-4 my-4">
@@ -129,6 +142,7 @@ export default function CategoryList({
             id="input-with-icon-adornment"
             className="input-rounded rounded-xl"
             fullWidth
+            onChange={onInputFilterChange}
             placeholder="Buscar categorias..."
             startAdornment={
               <InputAdornment position="start">
@@ -138,25 +152,27 @@ export default function CategoryList({
           />
         </div>
 
-        <div className="h-96 w-full my-2">
+        <div className="h-full w-full my-2">
           <DataGrid
-            components={{ Toolbar: GridToolBar }}
             getRowId={(row) => row._id}
-            onSelectionModelChange={(row) => {
-              Alert.fire({
-                title: <strong>Success!</strong>,
-                html: <span>{row.map((item) => item)}</span>,
-                icon: "success",
-              });
-            }}
-            rows={dataFiltered.data}
+            rowCount={pageState.totalData}
+            pageSize={pageState.pageSize}
+            page={pageState.page - 1}
+            rows={pageState.data}
             columns={columns}
             className="p-2"
-            pageSize={5}
-            loading={dataFiltered.isLoading}
-            rowsPerPageOptions={[5]}
-            checkboxSelection
-            disableSelectionOnClick
+            onPageChange={onDataGridPageChange}
+            onPageSizeChange={onDataGridPageSizeChange}
+            loading={pageState.isLoading}
+            rowsPerPageOptions={[5, 20, 50, 100]}
+            paginationMode="server"
+            localeText={{
+              noRowsLabel: "No hay datos",
+            }}
+            autoHeight
+            pagination
+            disableColumnFilter
+            disableColumnSelector
             experimentalFeatures={{ newEditingApi: true }}
           />
         </div>

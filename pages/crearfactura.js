@@ -165,7 +165,6 @@ export default function CreateInvoice() {
         open={openSelect}
         setOpenSelect={setOpenSelect}
         type={type}
-        contactos={data}
       />
       <SelectProducts
         data={products.data}
