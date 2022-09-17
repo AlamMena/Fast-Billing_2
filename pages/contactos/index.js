@@ -2,12 +2,12 @@ import { Add } from "@mui/icons-material";
 import useAxios from "../../Axios/Axios";
 import { Button } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
-import ContactForm from "../../Components/Contacts/ContactForm";
-import ContactList from "../../Components/Contacts/ContactList";
-import PageHeader from "../../Components/Globals/PageHeader";
+import ContactForm from "../../components/Contacts/ContactForm";
+import ContactList from "../../components/Contacts/ContactList";
+import PageHeader from "../../components/Globals/PageHeader";
 import { toast } from "react-toastify";
-import { postImage } from "../../Components/Globals/ImagePoster";
-import ConfirmationForm from "../../Components/Globals/ConfirmationForm";
+import { postImage } from "../../components/Globals/ImageHandler";
+import ConfirmationForm from "../../components/Globals/ConfirmationForm";
 import { useRouter } from "next/router";
 import { tr } from "date-fns/locale";
 

@@ -30,9 +30,9 @@ import { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 
 import { useForm } from "react-hook-form";
-import PageHeader from "../../Components/Globals/PageHeader";
+import PageHeader from "../Globals/PageHeader";
 import useAxios from "../../Axios/Axios";
-import { postImage } from "../../Components/Globals/ImagePoster";
+import { postImage } from "../Globals/ImageHandler";
 import { useRouter } from "next/router";
 
 export default function ContactForm({ contact }) {

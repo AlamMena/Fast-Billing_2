@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import Login from "../pages/login";
 import axios from "axios";
 import auth from "./FirebaseAuthContext";
-import Loading from "../Components/Loading/Loading";
+import Loading from "../components/Loading/Loading";
 
 export default function PrivateRouter({ children }) {
   const [isLoading, setIsLoading] = useState(true);
