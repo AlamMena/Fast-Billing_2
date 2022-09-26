@@ -14,7 +14,7 @@ import useAxios from "../../Axios/Axios";
 export default function SelectPopUp({ open, setOpenSelect, type }) {
   const [contacts, setContacts] = useState({
     isLoading: true,
-    data: {},
+    data: [],
   });
   const dispatch = useDispatch();
   const { axiosInstance } = useAxios();
@@ -22,7 +22,7 @@ export default function SelectPopUp({ open, setOpenSelect, type }) {
   const setDataAsync = async () => {
     try {
       const response = await axiosInstance.get("v1/contacts?page=1&limit=200");
-      setContacts({ isLoading: false, data: response.data });
+      setContacts({ isLoading: false, data: response.data.data });
     } catch (error) {
       toast.error(`Opps!, something went wrong${error}`);
       setContacts({ isLoading: false, data: [] });
@@ -40,33 +40,34 @@ export default function SelectPopUp({ open, setOpenSelect, type }) {
     setDataAsync();
   }, []);
 
-  const contact = contacts.data.map((item, index) => {
-    return (
-      <div
-        className="p-3 flex items-center space-x-4 space-y-1 cursor-pointer hover:bg-green-100 w-full "
-        key={index}
-        onClick={() => {
-          handleContact(item), setOpenSelect(false);
-        }}
-      >
-        <div className="h-14 w-14">
-          <img src={item.imageUrl} className="rounded-full" />
-        </div>
-        <div className="flex flex-col">
-          {/* Name */}
-          <span className="font-bold">{item.name}</span>
-          {/* Address */}
-          <span className="text-sm">Direccion: {item.address}</span>
-          {/* Phone */}
-          <span className="text-sm">Tel: {item.phone}</span>
-        </div>
-      </div>
-    );
-  });
   return (
     <Dialog open={open} fullWidth={true} maxWidth={"sm"}>
       <DialogTitle>Selecciona un {type}</DialogTitle>
-      <DialogContent dividers={true}>{contact}</DialogContent>
+      <DialogContent dividers={true}>
+        {contacts.data.map((item, index) => {
+          return (
+            <div
+              className="p-3 flex items-center space-x-4 space-y-1 cursor-pointer hover:bg-green-100 w-full "
+              key={index}
+              onClick={() => {
+                handleContact(item), setOpenSelect(false);
+              }}
+            >
+              <div className="h-14 w-14">
+                <img src={item.imageUrl} className="rounded-full" />
+              </div>
+              <div className="flex flex-col">
+                {/* Name */}
+                <span className="font-bold">{item.name}</span>
+                {/* Address */}
+                <span className="text-sm">Direccion: {item.address}</span>
+                {/* Phone */}
+                <span className="text-sm">Tel: {item.phone}</span>
+              </div>
+            </div>
+          );
+        })}
+      </DialogContent>
       <DialogActions>
         <Button onClick={() => setOpenSelect(false)}>Cerrar</Button>
       </DialogActions>

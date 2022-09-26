@@ -53,7 +53,15 @@ export default function CreateInvoice() {
   const [status, setStatus] = useState("Pagado");
   const [products, setProducts] = useState({ isLoading: true, data: [] });
   const invoice = useSelector((state) => state.invoice);
-  const { discountAmount, subTotal, total, taxesAmount, invoiceNo } = invoice;
+  const {
+    discountAmount,
+    subTotal,
+    total,
+    taxesAmount,
+    invoiceNo,
+    details,
+    recipient,
+  } = invoice;
 
   const { axiosInstance } = useAxios();
   const dispatch = useDispatch();
@@ -128,25 +136,33 @@ export default function CreateInvoice() {
 
   const upserAsyncInvoice = async () => {
     try {
-      // logic
-      if (invoice._id !== undefined) {
-        // if the item exists
-        await toast.promise(axiosInstance.put("v1/invoice", invoice), {
-          pending: "Creando factura",
-          success: "Genial!, tu factura ha sido creada.",
-          error: "Oops, algo ha ocurrido",
-        });
-        alert("se envio");
+      if (Object.keys(recipient) <= 0 || details.length <= 0) {
+        if (Object.keys(recipient) <= 0) {
+          toast.error(`Porfavor agrega un recipiente`);
+        }
+        if (details.length <= 0) {
+          toast.error(`Porfavor agrega al menos un detalle`);
+        }
       } else {
-        // if the item doesnt exists
-        await toast.promise(axiosInstance.post("v1/invoice", invoice), {
-          pending: "Creando factura",
-          success: "Genial!, tu factura ha sido creada.",
-          error: "Oops, algo ha ocurrido",
-        });
-        alert("no existe");
+        console.log("enviado");
+        // if (invoice._id !== undefined) {
+        //   // logic
+        //   // if the item exists
+        //   await toast.promise(axiosInstance.put("v1/invoice", invoice), {
+        //     pending: "Creando factura",
+        //     success: "Genial!, tu factura ha sido actualizada.",
+        //     error: "Oops, algo ha ocurrido",
+        //   });
+        // } else {
+        //   // if the item doesnt exists
+        //   await toast.promise(axiosInstance.post("v1/invoice", invoice), {
+        //     pending: "Actualizando factura",
+        //     success: "Genial!, tu factura ha sido creada.",
+        //     error: "Oops, algo ha ocurrido",
+        //   });
+        // }
+        dispatch(resetState());
       }
-      dispatch(resetState());
 
       setConfirmOpen(false);
     } catch (error) {

@@ -38,7 +38,7 @@ export default function SelectProducts({ data, open, setProductPop }) {
   };
 
   const handleProduct = (item) => {
-    dispatch(addItem(item));
+    dispatch(addItem(item.row));
     setProductPop(false);
     setProducts([]);
   };
@@ -62,7 +62,12 @@ export default function SelectProducts({ data, open, setProductPop }) {
       fullWidth={true}
       maxWidth={"sm"}
     >
-      <ProductList statusFilter={"false"} actions={false} maxRow={3} />
+      <ProductList
+        statusFilter={"false"}
+        actions={false}
+        maxRow={3}
+        onRowClick={handleProduct}
+      />
     </Dialog>
   );
 }

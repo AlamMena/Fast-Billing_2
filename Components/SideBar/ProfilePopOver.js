@@ -4,6 +4,7 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import { Divider } from "@mui/material";
 import useAuth, { LogOut } from "../../Auth/useAuth";
+import Router from "next/router";
 
 export default function ProfilePopOver() {
   const { LogOut } = useAuth();
@@ -53,7 +54,10 @@ export default function ProfilePopOver() {
             <span className="px-2 py-2 cursor-pointer hover:bg-slate-100 rounded-lg duration-200">
               Profile
             </span>
-            <span className="px-2 py-2 cursor-pointer hover:bg-slate-100 rounded-lg duration-200">
+            <span
+              className="px-2 py-2 cursor-pointer hover:bg-slate-100 rounded-lg duration-200"
+              onClick={() => Router.push("/ajustes")}
+            >
               Settings
             </span>
           </div>
