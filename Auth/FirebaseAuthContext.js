@@ -1,4 +1,4 @@
-import App from "./FirebaseAppConfig";
+import App from "./FireBaseAppConfig";
 import { getAuth } from "firebase/auth";
 
 const Auth = getAuth(App);

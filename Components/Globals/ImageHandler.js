@@ -1,7 +1,7 @@
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
-import app from "../../Firebase/FirebaseAppConfig";
+import app from "../../Auth/FireBaseAppConfig";
 import { AiOutlineCloseCircle } from "react-icons/ai";
-import styles from "./ImagePosterCss.module.css";
+import styles from "../Globals/ImageHandlerStyles.module.css";
 
 export default function ImagePoster({
   images,

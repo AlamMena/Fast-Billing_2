@@ -23,7 +23,7 @@ import {
   Fade,
 } from "@mui/material";
 import PhotoCamera from "@mui/icons-material/PhotoCamera";
-import ImagePoster, { postImage } from "../Globals/ImagePoster";
+import ImagePoster, { postImage } from "../Globals/ImageHandler";
 import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";

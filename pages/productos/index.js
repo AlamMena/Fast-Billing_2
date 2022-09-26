@@ -1,17 +1,12 @@
 import { Add } from "@mui/icons-material";
 import useAxios from "../../Axios/Axios";
 import { Button, debounce, Tab, Tabs } from "@mui/material";
-import { useEffect, useRef, useState } from "react";
-import ContactForm from "../../Components/Contacts/ContactForm";
-import ContactList from "../../Components/Contacts/ContactList";
-import PageHeader from "../../Components/Globals/PageHeader";
+import { useRef, useState } from "react";
+import PageHeader from "../../components/Globals/PageHeader";
 import { toast } from "react-toastify";
-import { postImage } from "../../Components/Globals/ImagePoster";
-import ConfirmationForm from "../../Components/Globals/ConfirmationForm";
+import ConfirmationForm from "../../components/Globals/ConfirmationForm";
 import { useRouter } from "next/router";
-import { tr } from "date-fns/locale";
-import ProductList from "../../Components/Products/ProductsList";
-import { useDispatch, useSelector } from "react-redux";
+import ProductList from "../../components/Products/ProductsList";
 
 export default function Products() {
   // list data
