@@ -200,6 +200,16 @@ export default function CreateInvoice() {
           <Grid item className="w-full" xs={12} md={6}>
             <div className=" flex items-center justify-between">
               <span className="text-neutral-500 text-lg">De:</span>
+              <Button
+                startIcon={<Edit />}
+                className="h-10 font-bold"
+                size="small"
+                onClick={() => {
+                  setOpenSelect(true), setType("beneficiente");
+                }}
+              >
+                Cambiar
+              </Button>
             </div>
             <InvoiceBeneficiary />
           </Grid>

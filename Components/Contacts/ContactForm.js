@@ -8,9 +8,10 @@ import {
   EmailOutlined,
   EmailRounded,
   PhoneOutlined,
-  RampRightOutlined,
-  RouteOutlined,
+  AddCard,
   RouteRounded,
+  CalendarMonth,
+  AttachMoney,
 } from "@mui/icons-material";
 import {
   Button,
@@ -54,6 +55,8 @@ export default function ContactForm({ contact }) {
   );
   const [fileContainer, setFileContainer] = useState();
   const [currentImage, setCurrentImage] = useState(contact && contact.imageUrl);
+  const [allowCredit, setAllowCredit] = useState(true);
+  const [allowDiscount, setAllowDiscount] = useState(true);
 
   const toastId = useRef(null);
 
@@ -114,30 +117,8 @@ export default function ContactForm({ contact }) {
     await upsertAsync(dataParsed);
   };
 
-  const locationRoutes = [
-    {
-      text: "home",
-      link: "/",
-    },
-    {
-      text: "contactos",
-      link: "/contactos",
-    },
-    {
-      text: "crear",
-      link: "/contactos/crear",
-    },
-  ];
   return (
     <div className="w-full h-full grid grid-cols-12 gap-x-2">
-      <div className="col-span-12 flex w-full justify-between items-center pr-8">
-        <div>
-          <PageHeader
-            header={contact ? "Modificar contacto" : "Crear contacto"}
-            locationRoutes={locationRoutes}
-          />
-        </div>
-      </div>
       <div className="flex w-full justify-center col-span-12 lg:col-span-4">
         <div className="rounded-2xl lg:shadow-md  px-8 py-12 flex flex-col items-center">
           <figure className=" relative w-40 h-40 outline-dashed outline-2 outline-neutral-200  p-2 rounded-full">
@@ -179,7 +160,7 @@ export default function ContactForm({ contact }) {
       <div className=" rounded-2xl shadow-md col-span-12 lg:col-span-8 md:mx-6">
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className="flex flex-col p-8 space-y-6 px-6"
+          className="flex flex-col p-8 space-y-4 px-6"
         >
           <div className="flex w-full space-x-4">
             <FormControl className="w-full">
@@ -207,33 +188,6 @@ export default function ContactForm({ contact }) {
               />
             </FormControl>
             <FormControl className="w-full">
-              <TextField
-                {...register("email", {
-                  required: true,
-                })}
-                id="outlined-adornment-name"
-                label="Correo"
-                size="medium"
-                error={errors.email && "value"}
-                className="input-rounded"
-                helperText={errors.email && `El campo no es valido`}
-                variant="outlined"
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <EmailOutlined
-                        className={`${errors.email && "text-red-500"} `}
-                      />
-                    </InputAdornment>
-                  ),
-                }}
-                fullWidth
-              />
-            </FormControl>
-          </div>
-
-          <div className="flex w-full items-center space-x-4">
-            <FormControl className="w-full">
               <InputLabel id="select-type-identification">
                 Tipo Identificacion
               </InputLabel>
@@ -245,7 +199,7 @@ export default function ContactForm({ contact }) {
                 onChange={(params) =>
                   setIdentificationType(params.target.value)
                 }
-                size="medium"
+                size="small"
                 className="rounded-xl text-md"
                 label="Identification type"
               >
@@ -280,39 +234,32 @@ export default function ContactForm({ contact }) {
                 </MenuItem>
               </Select>
             </FormControl>
-            <FormControl className="w-full">
-              <InputLabel id="select-type-contact">Tipo de contacto</InputLabel>
-              <Select
-                {...register("type")}
-                labelId="select-type-contact"
-                id="select-type-contact"
-                value={contactType}
-                onChange={(params) => setContactType(params.target.value)}
-                size="medium"
-                className="rounded-xl text-md"
-                label="Tipo de contacto"
-              >
-                <MenuItem value={1}>
-                  <div className="flex items-center">
-                    <img
-                      src="/contacts_clients_profile.png"
-                      className="w-8 h-8"
-                    ></img>
-                    <span className="mx-2">Cliente</span>
-                  </div>
-                </MenuItem>
-                <MenuItem value={2}>
-                  <div className="flex items-center">
-                    <img
-                      src="/contacts_suppliers_profile.png"
-                      className="w-8 h-8"
-                    ></img>
-                    <span className="mx-2">Proveedor</span>
-                  </div>
-                </MenuItem>
-              </Select>
-            </FormControl>
           </div>
+          <FormControl className="w-full">
+            <TextField
+              {...register("email", {
+                required: true,
+              })}
+              id="outlined-adornment-name"
+              label="Correo"
+              size="large"
+              error={errors.email && "value"}
+              className="input-rounded"
+              helperText={errors.email && `El campo no es valido`}
+              variant="outlined"
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <EmailOutlined
+                      className={`${errors.email && "text-red-500"} `}
+                    />
+                  </InputAdornment>
+                ),
+              }}
+              fullWidth
+            />
+          </FormControl>
+          <div className="flex w-full items-center space-x-4"></div>
           <FormControl className="w-full">
             <TextField
               {...register("noIdentification", { required: true })}
@@ -381,7 +328,86 @@ export default function ContactForm({ contact }) {
               />
             </FormControl>
           </div>
+          <div className="flex space-x-4">
+            <FormControl className="w-full">
+              <InputLabel id="select-type-identification">
+                Permitir credito?
+              </InputLabel>
+              <Select
+                {...register("allowcredit", { required: true })}
+                className="rounded-xl text-md"
+                label="Permitir credito?"
+                value={allowCredit}
+              >
+                <MenuItem value={true} onClick={() => setAllowCredit(true)}>
+                  Si
+                </MenuItem>
+                <MenuItem value={false} onClick={() => setAllowCredit(false)}>
+                  No
+                </MenuItem>
+              </Select>
+            </FormControl>
+            <FormControl className="w-full">
+              <TextField
+                {...register("creditdays", { required: true })}
+                id="outlined-adornment-phone"
+                label="Dias de credito"
+                size="medium"
+                type="number"
+                className="input-rounded text-md"
+                variant="outlined"
+                disabled={!allowCredit}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <CalendarMonth />
+                    </InputAdornment>
+                  ),
+                }}
+              />
+            </FormControl>
+          </div>
+          <div className="flex space-x-4">
+            <FormControl className="w-full">
+              <InputLabel id="select-type-identification">
+                Permitir descuento?
+              </InputLabel>
+              <Select
+                {...register("allowdiscount", { required: true })}
+                className="rounded-xl text-md"
+                label="Permitir descuento?"
+                value={allowDiscount}
+              >
+                <MenuItem value={true} onClick={() => setAllowDiscount(true)}>
+                  Si
+                </MenuItem>
+                <MenuItem value={false} onClick={() => setAllowDiscount(false)}>
+                  No
+                </MenuItem>
+              </Select>
+            </FormControl>
+            <FormControl className="w-full">
+              <TextField
+                {...register("discount", { required: true })}
+                id="outlined-adornment-phone"
+                label="Descuento"
+                size="medium"
+                type="number"
+                className="input-rounded text-md"
+                variant="outlined"
+                disabled={!allowDiscount}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <AttachMoney />
+                    </InputAdornment>
+                  ),
+                }}
+              />
+            </FormControl>
+          </div>
 
+          {/* Save Button */}
           <div className="flex w-full justify-end space-x-4 ">
             <Button
               variant="contained"

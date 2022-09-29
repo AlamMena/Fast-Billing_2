@@ -103,7 +103,7 @@ export default function Contacts() {
           >
             <span
               className="text-sm whitespace-nowrap text-neutral-50 capitalize font-bold"
-              onClick={() => Router.push("./contactos/crear")}
+              onClick={() => router.push("./contactos/crear")}
             >
               Nuevo contacto
             </span>

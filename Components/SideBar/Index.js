@@ -66,6 +66,11 @@ const routes = [
         path: "/",
         Icon: <AssessmentOutlined />,
       },
+      {
+        text: "Contactos",
+        path: "/",
+        Icon: <ContactPageOutlined />,
+      },
     ],
   },
   {
@@ -75,6 +80,11 @@ const routes = [
         text: "Ventas",
         path: "/facturas",
         Icon: <SellOutlined />,
+      },
+      {
+        text: "Suplidores",
+        path: "/",
+        Icon: <ContactPageOutlined />,
       },
       {
         text: "Transacciones",
