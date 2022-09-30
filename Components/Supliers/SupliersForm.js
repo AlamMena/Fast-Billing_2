@@ -36,7 +36,7 @@ import useAxios from "../../Axios/Axios";
 import { postImage } from "../../Components/Globals/ImagePoster";
 import { useRouter } from "next/router";
 
-export default function ContactForm({ contact }) {
+export default function SuplierForm({ suplier }) {
   const {
     handleSubmit,
     register,
@@ -47,10 +47,6 @@ export default function ContactForm({ contact }) {
     defaultValues: contact,
   });
 
-  const [contactType, setContactType] = useState(
-    contact ? parseInt(contact.type) : 1
-  );
-  const [clientType, setClientType] = useState(1);
   const [fileContainer, setFileContainer] = useState();
   const [currentImage, setCurrentImage] = useState(contact && contact.imageUrl);
   const [allowCredit, setAllowCredit] = useState(false);
@@ -62,13 +58,8 @@ export default function ContactForm({ contact }) {
   const router = useRouter();
 
   useEffect(() => {
-    reset(contact);
-  }, [contact]);
-
-  useEffect(() => {
-    getClientsTypesAsync();
-  }, []);
-
+    reset(suplier);
+  }, [suplier]);
   const handleImageInput = (e) => {
     setCurrentImage(URL.createObjectURL(e.target.files[0]));
     setFileContainer(e.target.files[0]);
@@ -81,7 +72,7 @@ export default function ContactForm({ contact }) {
       if (fileContainer) {
         imageUrl = await postImage(
           fileContainer,
-          `clients/${requestData.name}`
+          `supliers/${requestData.name}`
         );
       }
 
@@ -90,34 +81,25 @@ export default function ContactForm({ contact }) {
       // logic
       if (requestData._id !== undefined) {
         // if the item exists
-        await toast.promise(axiosInstance.put("v1/client", parsedData), {
-          pending: "guardando cliente",
-          success: "Genial!, tu cliente ha sido actualizado.",
+        await toast.promise(axiosInstance.put("v1/suplier", parsedData), {
+          pending: "guardando suplidor",
+          success: "Genial!, tu suplidor ha sido actualizado.",
           error: "Oops, algo ha ocurrido",
         });
       } else {
         // if the item dosent exists
-        await toast.promise(axiosInstance.post("v1/client", parsedData), {
-          pending: "guardando cliente",
-          success: "Genial!, tu cliente ha sido creado.",
+        await toast.promise(axiosInstance.post("v1/suplier", parsedData), {
+          pending: "guardando suplidor",
+          success: "Genial!, tu sulidor ha sido creado.",
           error: "Oops, algo ha ocurrido",
         });
       }
 
       setFileContainer(null);
-      await router.push("/contactos");
+      await router.push("/supliers");
     } catch (error) {
       // error toast
       toast.error(`Opps!, something went wrong${error}`);
-    }
-  };
-
-  const getClientsTypesAsync = async () => {
-    try {
-      const response = await axiosInstance.get("clients/types");
-      console.log(response);
-    } catch (error) {
-      console.log(error);
     }
   };
   const onSubmit = async (data) => {
@@ -155,8 +137,8 @@ export default function ContactForm({ contact }) {
               src={
                 currentImage
                   ? currentImage
-                  : contact?.imageUrl
-                  ? contact.imageUrl
+                  : suplier?.imageUrl
+                  ? suplier.imageUrl
                   : "/dashboard_welcome.png"
               }
               alt=""
@@ -201,26 +183,47 @@ export default function ContactForm({ contact }) {
             </FormControl>
             <FormControl className="w-full">
               <InputLabel id="select-type-identification">
-                Tipo de Cliente
+                Tipo Identificacion
               </InputLabel>
               <Select
-                {...register("typeId")}
+                {...register("noIdentificationType")}
                 labelId="select-type-identification"
                 id="select-type-identificationr"
-                value={clientType}
-                onChange={(params) => setClientType(params.target.value)}
-                size="large"
+                value={identificationType}
+                onChange={(params) =>
+                  setIdentificationType(params.target.value)
+                }
+                size="small"
                 className="rounded-xl text-md"
-                label="Tipo de cliente"
+                label="Identification type"
               >
                 <MenuItem value={1}>
                   {" "}
                   <div className="flex items-center">
-                    {/* <img
+                    <img
                       src="https://cdn-icons-png.flaticon.com/128/1726/1726620.png"
                       className="w-8 h-8"
-                    ></img> */}
+                    ></img>
                     <span className="mx-2">Cedula</span>
+                  </div>
+                </MenuItem>
+                <MenuItem value={2}>
+                  <div className="flex items-center">
+                    <img
+                      src="https://cdn-icons-png.flaticon.com/128/620/620765.png"
+                      className="w-8 h-8"
+                    ></img>
+                    <span className="mx-2">Pasaporte</span>
+                  </div>
+                </MenuItem>
+                <MenuItem value={3}>
+                  {" "}
+                  <div className="flex items-center">
+                    <img
+                      src="https://cdn-icons-png.flaticon.com/128/3188/3188580.png"
+                      className="w-8 h-8"
+                    ></img>
+                    <span className="mx-2">RNC</span>
                   </div>
                 </MenuItem>
               </Select>

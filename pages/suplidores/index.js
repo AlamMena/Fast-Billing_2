@@ -23,8 +23,7 @@ export default function Contacts() {
 
   // confirmation form states
   const [confirmOpen, setConfirmOpen] = useState(false);
-  const [contactStatus, setContactStatus] = useState("all");
-  const [contactType, setContactType] = useState("all");
+  const [suplierStatus, setSuplierStatus] = useState("all");
   const [filter, setFilter] = useState("");
   const [itemToDelete, setItemToDelete] = useState();
 
@@ -38,8 +37,8 @@ export default function Contacts() {
       link: "/",
     },
     {
-      text: "Clientes",
-      link: "/contactos",
+      text: "Suplidores",
+      link: "/suplidores",
     },
   ];
 
@@ -47,10 +46,10 @@ export default function Contacts() {
     try {
       setPageState({ ...pageState, isLoading: true });
 
-      const queryFilters = `page=${pageState.page}&limit=${pageState.pageSize}&value=${filter}&isDeleted=${contactStatus}`;
+      const queryFilters = `page=${pageState.page}&limit=${pageState.pageSize}&value=${filter}&isDeleted=${suplierStatus}`;
 
       const { data: apiResponse } = await axiosInstance.get(
-        `v1/clients/filtered?${queryFilters}`
+        `v1/suplier/filtered?${queryFilters}`
       );
 
       setPageState({
@@ -68,10 +67,10 @@ export default function Contacts() {
   const deleteAsync = async () => {
     try {
       await toast.promise(
-        axiosInstance.delete(`v1/clients?id=${itemToDelete._id}`),
+        axiosInstance.delete(`v1/suplier?id=${itemToDelete._id}`),
         {
-          pending: "Eliminando cliente",
-          success: "Genial!, tu cliente ha sido eliminado.",
+          pending: "Eliminando suplidor",
+          success: "Genial!, tu suplidor ha sido eliminado.",
           error: "Oops, algo ha ocurrido",
         }
       );
@@ -97,25 +96,20 @@ export default function Contacts() {
             className=" z-auto rounded-xl py-2 bg-green-600 hover:bg-green-800"
             variant="contained"
             onClick={() => {
-              router.push("/contactos/crear");
+              router.push("/suplier/crear");
             }}
             startIcon={<Add className="text-white" />}
           >
-            <span
-              className="text-sm whitespace-nowrap text-neutral-50 capitalize font-bold"
-              onClick={() => router.push("./contactos/crear")}
-            >
-              Nuevo cliente
+            <span className="text-sm whitespace-nowrap text-neutral-50 capitalize font-bold">
+              Nuevo suplidor
             </span>
           </Button>
         </div>
       </div>
       <ContactList
         pageState={pageState}
-        setContactStatus={setContactStatus}
-        setContactType={setContactType}
-        contactStatus={contactStatus}
-        contactType={contactType}
+        setSuplierStatus={setSuplierStatus}
+        suplierStatus={suplierStatus}
         setFilter={setFilter}
         setPageState={setPageState}
         setItemToDelete={setItemToDelete}

@@ -6,15 +6,15 @@ import PageHeader from "../../Components/Globals/PageHeader";
 export default function CreateContact() {
   const locationRoutes = [
     {
-      text: "home",
+      text: "Home",
       link: "/",
     },
     {
-      text: "contactos",
+      text: "Clientes",
       link: "/contactos",
     },
     {
-      text: "crear",
+      text: "Crear",
       link: "/contactos/crear",
     },
   ];
@@ -23,10 +23,7 @@ export default function CreateContact() {
     <>
       <div className="col-span-12 flex w-full justify-between items-center pr-8">
         <div>
-          <PageHeader
-            header={"Crear contacto"}
-            locationRoutes={locationRoutes}
-          />
+          <PageHeader header="Crear cliente" locationRoutes={locationRoutes} />
         </div>
       </div>
       <ContactForm></ContactForm>

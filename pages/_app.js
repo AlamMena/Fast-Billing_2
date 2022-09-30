@@ -37,15 +37,15 @@ function MyApp({ Component, pageProps }) {
       />
       <StyledEngineProvider injectFirst>
         <AuthContext.Provider value={user}>
-          <PrivateRouter>
-            <Provider store={store}>
+          <Provider store={store}>
+            <PrivateRouter>
               <SideBar />
               <div className="md:ml-72">
                 <Component {...pageProps} />
                 <ToastContainer />
               </div>
-            </Provider>
-          </PrivateRouter>
+            </PrivateRouter>
+          </Provider>
         </AuthContext.Provider>
       </StyledEngineProvider>
     </ThemeProvider>

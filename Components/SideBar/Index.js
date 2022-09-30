@@ -39,11 +39,6 @@ const routes = [
         path: "./",
         Icon: <DashboardOutlined />,
       },
-      {
-        text: "Contactos",
-        path: "/contactos",
-        Icon: <ContactPageOutlined />,
-      },
     ],
   },
 
@@ -67,8 +62,8 @@ const routes = [
         Icon: <AssessmentOutlined />,
       },
       {
-        text: "Contactos",
-        path: "/",
+        text: "Clientes",
+        path: "/contactos",
         Icon: <ContactPageOutlined />,
       },
     ],
