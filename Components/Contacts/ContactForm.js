@@ -55,6 +55,7 @@ export default function ContactForm({ contact }) {
   const [currentImage, setCurrentImage] = useState(contact && contact.imageUrl);
   const [allowCredit, setAllowCredit] = useState(false);
   const [allowDiscount, setAllowDiscount] = useState(false);
+  const [clientTypes, setClientTypes] = useState();
 
   const toastId = useRef(null);
 
@@ -114,8 +115,9 @@ export default function ContactForm({ contact }) {
 
   const getClientsTypesAsync = async () => {
     try {
-      const response = await axiosInstance.get("clients/types");
-      console.log(response);
+      const { data } = await axiosInstance.get("clients/types");
+      setClientTypes(data);
+      alert(JSON.stringify(data));
     } catch (error) {
       console.log(error);
     }
@@ -213,16 +215,21 @@ export default function ContactForm({ contact }) {
                 className="rounded-xl text-md"
                 label="Tipo de cliente"
               >
-                <MenuItem value={1}>
-                  {" "}
-                  <div className="flex items-center">
-                    {/* <img
+                {clientTypes &&
+                  clientTypes.map((type) => {
+                    return (
+                      <MenuItem value={type.id}>
+                        {" "}
+                        <div className="flex items-center">
+                          {/* <img
                       src="https://cdn-icons-png.flaticon.com/128/1726/1726620.png"
                       className="w-8 h-8"
                     ></img> */}
-                    <span className="mx-2">Cedula</span>
-                  </div>
-                </MenuItem>
+                          <span className="mx-2">{type.name}</span>
+                        </div>
+                      </MenuItem>
+                    );
+                  })}
               </Select>
             </FormControl>
           </div>

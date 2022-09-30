@@ -5,17 +5,29 @@ import { useDispatch } from "react-redux";
 import { setUser } from "../Store/UserSlice";
 import auth from "../Auth/FirebaseAuthContext";
 import AuthContext from "../Auth/AuthContext";
+import Auth from "../Auth/FirebaseAuthContext";
 
 export default function useAxios() {
-  // const [user, setUser] = useState(null);
-  const { data: user } = useSelector((state) => state.user);
+  // const { data: user } = useSelector((state) => state.user);
 
   const axiosInstance = axios.create({
     baseURL: "https://fastbilling.azurewebsites.net/api/",
-    headers: {
-      Authorization: `Bearer ${user.stsTokenManager.accessToken}`,
-    },
   });
+
+  axiosInstance.interceptors.request.use(
+    function (config) {
+      Auth.onAuthStateChanged(function (user) {
+        if (user) {
+          config.headers.Authorization = `Bearer ${user.accessToken}`;
+        }
+      });
+      return config;
+    },
+    function (error) {
+      // Request error
+      return Promise.reject(error);
+    }
+  );
 
   return { axiosInstance };
 }

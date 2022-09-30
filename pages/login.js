@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import {
   TextField,
   Button,
@@ -18,14 +18,13 @@ import { setUser } from "../Store/UserSlice";
 import { useRouter } from "next/router";
 import auth from "../Auth/FirebaseAuthContext";
 import { signInWithEmailAndPassword } from "firebase/auth";
+import AuthContext from "../Auth/AuthContext";
 
 export default function Login() {
   const { register, handleSubmit } = useForm();
   const [error, setError] = useState(false);
   const { LogIn } = useAuth();
   const router = useRouter();
-
-  const dispatch = useDispatch();
 
   const handleLogin = async (data) => {
     try {
