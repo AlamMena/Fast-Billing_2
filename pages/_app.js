@@ -13,7 +13,6 @@ import { Provider } from "react-redux";
 import { store } from "../Store/Store";
 
 function MyApp({ Component, pageProps }) {
-  const { user } = useAuth();
   const theme = createTheme({
     palette: {
       primary: {
@@ -36,17 +35,15 @@ function MyApp({ Component, pageProps }) {
         rel="stylesheet"
       />
       <StyledEngineProvider injectFirst>
-        <AuthContext.Provider value={user}>
-          <Provider store={store}>
-            <PrivateRouter>
-              <SideBar />
-              <div className="md:ml-72">
-                <Component {...pageProps} />
-                <ToastContainer />
-              </div>
-            </PrivateRouter>
-          </Provider>
-        </AuthContext.Provider>
+        <Provider store={store}>
+          <PrivateRouter>
+            <SideBar />
+            <div className="md:ml-72">
+              <Component {...pageProps} />
+              <ToastContainer />
+            </div>
+          </PrivateRouter>
+        </Provider>
       </StyledEngineProvider>
     </ThemeProvider>
   );

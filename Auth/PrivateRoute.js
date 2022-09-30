@@ -2,46 +2,29 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import Login from "../pages/login";
 import axios from "axios";
-<<<<<<< HEAD
-import auth from "./FirebaseAuthContext";
-import Loading from "../components/Loading/Loading";
-=======
-import auth from "../Firebase/FirebaseAuth";
+import auth from "../Auth/FirebaseAuthContext";
 import Loading from "../Components/Loading/Loading";
 import AuthContext from "./AuthContext";
 import { useContext } from "react";
 import { useSelector } from "react-redux";
->>>>>>> development
+import { setUser } from "../Store/UserSlice";
+import { useDispatch } from "react-redux";
+import useAuth from "./useAuth";
 
 export default function PrivateRouter({ children }) {
   // const [user, setUser] = useState(null);
 
-  const user = useSelector((state) => state.user);
-
+  const [isLoading, setIsLoading] = useState(false);
   // Router
   const { pathname } = useRouter();
 
-  // useEffect(() => {
-  //   // auth.onAuthStateChanged(function (user) {
-  //   //   setIsLoading(false);
-  //   //   setUser(user);
-  //   //   axios.create({
-  //   //     baseURL: "https://fastbilling.azurewebsites.net/api/",
-  //   //     headers: {
-  //   //       Authorization: `Bearer ${user?.accessToken}`,
-  //   //     },
-  //   //   });
-  //   //   alert(JSON.stringify(user));
-  //   // });
-  //   setIsLoading(false);
-  //   alert(JSON.stringify(user));
-  // }, [user]);
-  if (user.data !== null) {
+  const { data: user } = useSelector((state) => state.user);
+  if (user) {
     if (pathname === "/login") {
       return <Login />;
     }
     return children;
-  } else if (user.data === null) {
+  } else if (!user && !isLoading) {
     return <Login />;
   }
   return <Loading />;

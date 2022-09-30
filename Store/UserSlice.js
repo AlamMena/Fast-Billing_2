@@ -1,16 +1,11 @@
-import { Router } from "@mui/icons-material";
 import { createSlice } from "@reduxjs/toolkit";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import auth from "../Firebase/FirebaseAuth";
-
 const userSlice = createSlice({
   name: "user",
   initialState: { data: null, isLoading: true },
 
   reducers: {
     setUser: async (state, { payload }) => {
-      alert(JSON.stringify({ payload, yo: "STATE" }));
-      return (state = payload.user);
+      state = { data: payload, isLoading: false };
 
       //   const { email, password } = payload;
       //   const response = await signInWithEmailAndPassword(auth, email, password);

@@ -16,7 +16,7 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { setUser } from "../Store/UserSlice";
 import { useRouter } from "next/router";
-import auth from "../Firebase/FirebaseAuth";
+import auth from "../Auth/FirebaseAuthContext";
 import { signInWithEmailAndPassword } from "firebase/auth";
 
 export default function Login() {
@@ -29,14 +29,8 @@ export default function Login() {
 
   const handleLogin = async (data) => {
     try {
-      const response = await signInWithEmailAndPassword(
-        auth,
-        data.email,
-        data.password
-      );
-      dispatch(setUser(response));
+      await LogIn(data);
       router.push("/");
-      console.log("LOGIN");
     } catch (error) {
       console.log(error);
       setError(true);
