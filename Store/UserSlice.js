@@ -9,12 +9,15 @@ const userSlice = createSlice({
 
   reducers: {
     setUser: async (state, { payload }) => {
-      const { email, password } = payload;
-      const response = await signInWithEmailAndPassword(auth, email, password);
+      alert(JSON.stringify({ payload, yo: "STATE" }));
+      return (state = payload.user);
 
-      console.log("ok");
-      state = { data: response, isLoading: false };
-      alert(JSON.stringify({ state, yo: "STATE SLICE" }));
+      //   const { email, password } = payload;
+      //   const response = await signInWithEmailAndPassword(auth, email, password);
+
+      //   console.log("ok");
+      //   state = { data: response, isLoading: false };
+      //   alert(JSON.stringify({ state, yo: "STATE SLICE" }));
 
       //   auth.onAuthStateChanged(function (response) {
       //     if (response) {
