@@ -13,15 +13,27 @@ import { FiFacebook, FiGithub } from "react-icons/fi";
 import { useForm } from "react-hook-form";
 import useAuth from "../Auth/useAuth";
 import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { setUser } from "../Store/UserSlice";
+import { useRouter } from "next/router";
 
 export default function Login() {
   const { register, handleSubmit } = useForm();
   const [error, setError] = useState(false);
   const { LogIn } = useAuth();
+  const router = useRouter();
+
+  const dispatch = useDispatch();
 
   const handleLogin = async (data) => {
     try {
-      await LogIn(data);
+      dispatch(
+        await setUser({
+          email: data.email,
+          password: data.password,
+        })
+      );
+      console.log("LOGIN");
     } catch (error) {
       console.log(error);
       setError(true);

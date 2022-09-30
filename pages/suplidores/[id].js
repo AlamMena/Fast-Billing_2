@@ -4,8 +4,8 @@ import ContactForm from "../../components/Contacts/ContactForm";
 import PageHeader from "../../Components/Globals/PageHeader";
 import { Box, Tabs, Tab, Typography } from "@mui/material";
 import { AccountCircle, Receipt } from "@mui/icons-material";
-import ContactHistory from "../../Components/Contacts/ContactHistory";
 import { fontSize } from "@mui/system";
+import SuplierForm from "../../Components/Supliers/SupliersForm";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -33,17 +33,17 @@ function a11yProps(index) {
   };
 }
 
-export default function UpsertContact({ id }) {
+export default function UpsertSuplier({ id }) {
   const [value, setValue] = useState(0);
-  const [contact, setContact] = useState();
+  const [suplier, setSuplier] = useState();
   const { axiosInstance } = useAxios();
-  const getContactAsync = async () => {
-    const { data } = await axiosInstance.get(`v1/contact?id=${id}`);
-    setContact(data);
+  const getSuplierAsync = async () => {
+    const { data } = await axiosInstance.get(`v1/suplier?id=${id}`);
+    setSuplier(data);
   };
 
   useEffect(() => {
-    getContactAsync();
+    getSuplierAsync();
   }, []);
 
   const handleChange = (e, newValue) => {
@@ -56,12 +56,12 @@ export default function UpsertContact({ id }) {
       link: "/",
     },
     {
-      text: "contactos",
-      link: "/contactos",
+      text: "Suplidores",
+      link: "/suplidores",
     },
     {
       text: "crear",
-      link: "/contactos/crear",
+      link: "/suplidores/crear",
     },
   ];
 
@@ -104,10 +104,10 @@ export default function UpsertContact({ id }) {
         </Tabs>
       </Box>
       <TabPanel value={value} index={0}>
-        <ContactForm contact={contact} />
+        <SuplierForm suplier={suplier} />
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <ContactHistory contact={contact} />
+        {/* <ContactHistory contact={contact} /> */}
       </TabPanel>
     </div>
   );

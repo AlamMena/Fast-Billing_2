@@ -271,6 +271,7 @@ export default function ProductList({
           experimentalFeatures={{ newEditingApi: true }}
           paginationMode="server"
 <<<<<<< HEAD
+<<<<<<< HEAD
           className={`p-2 h-96 ${maxRow && `h-${80}`}`}
           rowHeight={60}
           pagination
@@ -283,6 +284,13 @@ export default function ProductList({
           autoPageSize={maxRow}
           autoHeight={maxRow ? false : true}
 >>>>>>> 7f3230b3772b306b6165b7a78131136c42d488d3
+=======
+          className={`p-2 h-80`}
+          rowHeight={60}
+          pagination
+          autoPageSize={maxRow}
+          autoHeight={maxRow ? false : true}
+>>>>>>> development
           disableColumnFilter
           selectionModel={false}
           disableColumnSelector

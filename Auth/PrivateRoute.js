@@ -2,34 +2,46 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import Login from "../pages/login";
 import axios from "axios";
+<<<<<<< HEAD
 import auth from "./FirebaseAuthContext";
 import Loading from "../components/Loading/Loading";
+=======
+import auth from "../Firebase/FirebaseAuth";
+import Loading from "../Components/Loading/Loading";
+import AuthContext from "./AuthContext";
+import { useContext } from "react";
+import { useSelector } from "react-redux";
+>>>>>>> development
 
 export default function PrivateRouter({ children }) {
-  const [isLoading, setIsLoading] = useState(true);
-  const [user, setUser] = useState(null);
+  // const [user, setUser] = useState(null);
+
+  const user = useSelector((state) => state.user);
 
   // Router
   const { pathname } = useRouter();
 
-  useEffect(() => {
-    auth.onAuthStateChanged(function (user) {
-      setIsLoading(false);
-      setUser(user);
-      axios.create({
-        baseURL: "http://localhost:8080/",
-        headers: {
-          Authorization: `Bearer ${user?.accessToken}`,
-        },
-      });
-    });
-  }, []);
-  if (user) {
+  // useEffect(() => {
+  //   // auth.onAuthStateChanged(function (user) {
+  //   //   setIsLoading(false);
+  //   //   setUser(user);
+  //   //   axios.create({
+  //   //     baseURL: "https://fastbilling.azurewebsites.net/api/",
+  //   //     headers: {
+  //   //       Authorization: `Bearer ${user?.accessToken}`,
+  //   //     },
+  //   //   });
+  //   //   alert(JSON.stringify(user));
+  //   // });
+  //   setIsLoading(false);
+  //   alert(JSON.stringify(user));
+  // }, [user]);
+  if (user.data !== null) {
     if (pathname === "/login") {
       return <Login />;
     }
     return children;
-  } else if (!isLoading && !user) {
+  } else if (user.data === null) {
     return <Login />;
   }
   return <Loading />;

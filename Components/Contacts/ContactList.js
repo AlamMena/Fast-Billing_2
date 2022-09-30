@@ -64,22 +64,6 @@ export default function ContactList({
       headerName: "Telefono",
     },
     {
-      field: "type",
-      width: "150",
-      headerName: "Tipo",
-      renderCell: (cells) => {
-        return (
-          <StatusRow
-            color={cells.row.type == 1 ? "bg-yellow-400" : "bg-orange-400"}
-            textColor={
-              cells.row.type == 1 ? "text-yellow-900" : "text-bg-yellow-900"
-            }
-            text={cells.row.type == 1 ? "Cliente" : "Proveedor"}
-          />
-        );
-      },
-    },
-    {
       field: "isDeleted",
       width: "150",
       headerName: "Estatus",
@@ -194,7 +178,7 @@ export default function ContactList({
             id="input-with-icon-adornment"
             className="input-rounded rounded-xl"
             onChange={onInputFilterChange}
-            placeholder="Buscar contactos..."
+            placeholder="Buscar clientes..."
             fullWidth
             startAdornment={
               <InputAdornment position="start">
