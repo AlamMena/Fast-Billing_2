@@ -10,6 +10,7 @@ import { useDispatch } from "react-redux";
 import { updateBeneficiary, updateRecipient } from "../../Store/InvoiceSlice";
 import { useState, useEffect } from "react";
 import useAxios from "../../Axios/Axios";
+import { toast } from "react-toastify";
 
 export default function SelectPopUp({ open, setOpenSelect, type }) {
   const [contacts, setContacts] = useState({

@@ -44,7 +44,14 @@ export default function ContactForm({ contact }) {
     setValue,
     formState: { errors },
   } = useForm({
-    defaultValues: contact,
+    defaultValues: contact
+      ? contact
+      : {
+          allowCredit: false,
+          creditdays: 0,
+          allowDiscount: false,
+          discount: 0,
+        },
   });
 
   const [contactType, setContactType] = useState(
@@ -89,19 +96,19 @@ export default function ContactForm({ contact }) {
       const parsedData = { ...requestData, imageUrl };
 
       // logic
-      if (requestData._id !== undefined) {
+      if (requestData.id !== undefined) {
         // if the item exists
-        await toast.promise(axiosInstance.put("v1/client", parsedData), {
+        await toast.promise(axiosInstance.put("client", parsedData), {
           pending: "guardando cliente",
           success: "Genial!, tu cliente ha sido actualizado.",
-          error: "Oops, algo ha ocurrido",
+          error: "Oops, algo ha ocurrido put",
         });
       } else {
-        // if the item dosent exists
-        await toast.promise(axiosInstance.post("v1/client", parsedData), {
+        // if the item doesnt exists
+        await toast.promise(axiosInstance.post("client", parsedData), {
           pending: "guardando cliente",
           success: "Genial!, tu cliente ha sido creado.",
-          error: "Oops, algo ha ocurrido",
+          error: "Oops, algo ha ocurrido post",
         });
       }
 
@@ -117,17 +124,15 @@ export default function ContactForm({ contact }) {
     try {
       const { data } = await axiosInstance.get("clients/types");
       setClientTypes(data);
-      alert(JSON.stringify(data));
     } catch (error) {
       console.log(error);
     }
   };
   const onSubmit = async (data) => {
     const dataParsed = {
-      address: "none",
-      isDeleted: false,
       ...data,
     };
+    alert(JSON.stringify(data));
     await upsertAsync(dataParsed);
   };
 
@@ -216,10 +221,9 @@ export default function ContactForm({ contact }) {
                 label="Tipo de cliente"
               >
                 {clientTypes &&
-                  clientTypes.map((type) => {
+                  clientTypes.map((type, index) => {
                     return (
-                      <MenuItem value={type.id}>
-                        {" "}
+                      <MenuItem value={type.id} key={index}>
                         <div className="flex items-center">
                           {/* <img
                       src="https://cdn-icons-png.flaticon.com/128/1726/1726620.png"
@@ -264,7 +268,6 @@ export default function ContactForm({ contact }) {
               id="outlined-adornment-identification"
               label=" No. Identification"
               size="medium"
-              type="number"
               className="input-rounded text-md"
               variant="outlined"
               error={errors.noIdentification}
@@ -285,7 +288,7 @@ export default function ContactForm({ contact }) {
           <div className="flex space-x-4">
             <FormControl className="w-full">
               <TextField
-                {...register("phone", { required: true })}
+                {...register("contact[0].phone", { required: true })}
                 id="outlined-adornment-phone"
                 label="Numero de telefono"
                 size="medium"
@@ -306,7 +309,7 @@ export default function ContactForm({ contact }) {
             </FormControl>
             <FormControl className="w-full">
               <TextField
-                {...register("address", { required: true })}
+                {...register("addresses[0].address", { required: true })}
                 id="outlined-adornment-phone"
                 label="Direccion"
                 size="medium"
@@ -332,22 +335,22 @@ export default function ContactForm({ contact }) {
                 Permitir credito?
               </InputLabel>
               <Select
-                {...register("allowcredit", { required: true })}
+                {...register("allowCredit")}
                 className="rounded-xl text-md"
                 label="Permitir credito?"
                 value={allowCredit}
               >
                 <MenuItem value={true} onClick={() => setAllowCredit(true)}>
-                  Si
+                  Permitir
                 </MenuItem>
                 <MenuItem value={false} onClick={() => setAllowCredit(false)}>
-                  No
+                  No Permitir
                 </MenuItem>
               </Select>
             </FormControl>
             <FormControl className="w-full">
               <TextField
-                {...register("creditdays", { required: true })}
+                {...register("creditdays")}
                 id="outlined-adornment-phone"
                 label="Dias de credito"
                 size="medium"
@@ -371,22 +374,22 @@ export default function ContactForm({ contact }) {
                 Permitir descuento?
               </InputLabel>
               <Select
-                {...register("allowdiscount", { required: true })}
+                {...register("allowdiscount")}
                 className="rounded-xl text-md"
                 label="Permitir descuento?"
                 value={allowDiscount}
               >
                 <MenuItem value={true} onClick={() => setAllowDiscount(true)}>
-                  Si
+                  Permitir
                 </MenuItem>
                 <MenuItem value={false} onClick={() => setAllowDiscount(false)}>
-                  No
+                  No Permitir
                 </MenuItem>
               </Select>
             </FormControl>
             <FormControl className="w-full">
               <TextField
-                {...register("discount", { required: true })}
+                {...register("discount")}
                 id="outlined-adornment-phone"
                 label="Descuento"
                 size="medium"

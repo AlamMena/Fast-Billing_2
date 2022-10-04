@@ -47,10 +47,10 @@ export default function Contacts() {
     try {
       setPageState({ ...pageState, isLoading: true });
 
-      const queryFilters = `page=${pageState.page}&limit=${pageState.pageSize}&value=${filter}&isDeleted=${contactStatus}`;
+      const queryFilters = `page=${pageState.page}&limit=${pageState.pageSize}`; //$vaue=${filter}
 
       const { data: apiResponse } = await axiosInstance.get(
-        `v1/clients/filtered?${queryFilters}`
+        `clients?${queryFilters}` //filtered?
       );
 
       setPageState({
@@ -67,14 +67,11 @@ export default function Contacts() {
 
   const deleteAsync = async () => {
     try {
-      await toast.promise(
-        axiosInstance.delete(`v1/clients?id=${itemToDelete._id}`),
-        {
-          pending: "Eliminando cliente",
-          success: "Genial!, tu cliente ha sido eliminado.",
-          error: "Oops, algo ha ocurrido",
-        }
-      );
+      await toast.promise(axiosInstance.delete(`client/${itemToDelete.id}`), {
+        pending: "Eliminando cliente",
+        success: "Genial!, tu cliente ha sido eliminado.",
+        error: "Oops, algo ha ocurrido",
+      });
 
       setConfirmOpen(false);
       await setDataAsync();

@@ -33,7 +33,7 @@ export default function ContactList({
 
   const columns = [
     {
-      field: "_id",
+      field: "id",
       width: 120,
       headerName: "Id",
     },
@@ -59,17 +59,9 @@ export default function ContactList({
     },
 
     {
-      field: "phone",
+      field: "email", //Phone
       width: 190,
-      headerName: "Telefono",
-    },
-    {
-      field: "isDeleted",
-      width: "150",
-      headerName: "Estatus",
-      renderCell: (cells) => {
-        return <StatusRow active={!cells.row.IsDeleted} />;
-      },
+      headerName: "Correo electronico",
     },
 
     {
@@ -81,7 +73,7 @@ export default function ContactList({
           <div className="flex space-x-4">
             <a
               onClick={() => {
-                router.push(`/contactos/${cells.row._id}`);
+                router.push(`/contactos/${cells.row.id}`);
               }}
               className="text-green-400 cursor-pointer"
             >
@@ -141,8 +133,6 @@ export default function ContactList({
         >
           {/* select contact type options */}
           <MenuItem value="all">Todos</MenuItem>
-          <MenuItem value={1}>Clientes</MenuItem>
-          <MenuItem value={2}>Proveedores</MenuItem>
         </Select>
       </>
     );
@@ -160,8 +150,8 @@ export default function ContactList({
         >
           {/* tab options */}
           <Tab className="capitalize" value="all" label="Todos" />
-          <Tab className="capitalize" value={"false"} label="Activos" />
-          <Tab className="capitalize" value={"true"} label="Inactivos" />
+          {/* <Tab className="capitalize" value={"false"} label="Activos" />
+          <Tab className="capitalize" value={"true"} label="Inactivos" /> */}
         </Tabs>
       </div>
 
@@ -192,7 +182,7 @@ export default function ContactList({
       {/*------------------ DataGrid ---------------- */}
       <div className=" w-full h-full my-2">
         <DataGrid
-          getRowId={(row) => row._id}
+          getRowId={(row) => row.id}
           rows={pageState.data}
           rowCount={pageState.totalData}
           pageSize={pageState.pageSize}

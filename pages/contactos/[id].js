@@ -35,15 +35,16 @@ function a11yProps(index) {
 
 export default function UpsertContact({ id }) {
   const [value, setValue] = useState(0);
-  const [contact, setContact] = useState();
+  const [client, setClient] = useState();
   const { axiosInstance } = useAxios();
-  const getContactAsync = async () => {
-    const { data } = await axiosInstance.get(`v1/contact?id=${id}`);
-    setContact(data);
+
+  const getClientAsync = async () => {
+    const { data } = await axiosInstance.get(`client/${id}`);
+    setClient(data);
   };
 
   useEffect(() => {
-    getContactAsync();
+    getClientAsync();
   }, []);
 
   const handleChange = (e, newValue) => {
@@ -69,7 +70,7 @@ export default function UpsertContact({ id }) {
     <div className="-full md:px-0 px-4 md:pr-8 flex flex-col pb-5">
       <div className="flex w-full justify-between items-center pr-8 ">
         <PageHeader
-          header="Modificar Contactos"
+          header="Modificar Cliente"
           locationRoutes={locationRoutes}
         />
       </div>
@@ -104,10 +105,10 @@ export default function UpsertContact({ id }) {
         </Tabs>
       </Box>
       <TabPanel value={value} index={0}>
-        <ContactForm contact={contact} />
+        <ContactForm contact={client} />
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <ContactHistory contact={contact} />
+        <ContactHistory contact={client} />
       </TabPanel>
     </div>
   );
