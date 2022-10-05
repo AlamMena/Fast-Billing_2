@@ -1,21 +1,21 @@
 import React from "react";
 import { Add } from "@mui/icons-material";
-import useAxios from "../Axios/Axios";
+import useAxios from "../../Axios/Axios";
 import { Button } from "@mui/material";
 import { useEffect, useState, useRef } from "react";
-import PageHeader from "../Components/Globals/PageHeader";
+import PageHeader from "../../Components/Globals/PageHeader";
 import { toast } from "react-toastify";
-import { postImage } from "../Components/Globals/ImagePoster";
+import { postImage } from "../../Components/Globals/ImageHandler";
 
-import CategoryList from "../Components/Categories/CategoryList";
-import CategoryForm from "../Components/Categories/CategoryForm";
-import ConfirmationForm from "../Components/Globals/ConfirmationForm";
+import CategoryList from "../../Components/Categories/CategoryList";
+import CategoryForm from "../../Components/Categories/CategoryForm";
+import ConfirmationForm from "../../Components/Globals/ConfirmationForm";
 
 export default function Categories() {
   const [pageState, setPageState] = useState({
     isLoading: true,
     data: [],
-    pageSize: 5,
+    pageSize: 20,
     page: 1,
     totalData: 0,
   });
@@ -52,10 +52,10 @@ export default function Categories() {
     try {
       setPageState({ ...pageState, isLoading: true });
 
-      const queryFilters = `page=${pageState.page}&limit=${pageState.pageSize}&value=${filter}&isDeleted=${categoryStatus}`;
+      const queryFilters = `page=${pageState.page}&limit=${pageState.pageSize}`;
 
       const { data: apiResponse } = await axiosInstance.get(
-        `v1/categories/filtered?${queryFilters}`
+        `categories?${queryFilters}`
       );
 
       setPageState({
@@ -65,7 +65,7 @@ export default function Categories() {
         totalData: apiResponse.dataQuantity,
       });
     } catch (error) {
-      toast.error(`Opps!, algo ha ocurrido ${error}`);
+      toast.error(`Opps!, algo ha ocurrido ${error} `);
       setPageState({ ...pageState, isLoading: false });
     }
   };
@@ -85,12 +85,12 @@ export default function Categories() {
       const parsedData = { ...data, imageUrl };
 
       // logic
-      if (data._id !== undefined) {
+      if (data.id !== undefined) {
         // if the item exists
-        await axiosInstance.put("v1/category", parsedData);
+        await axiosInstance.put("/category", parsedData);
       } else {
         // if the item doesnt exists
-        await axiosInstance.post("v1/category", parsedData);
+        await axiosInstance.post("/category", parsedData);
       }
 
       // getting data back
@@ -116,7 +116,7 @@ export default function Categories() {
       toastId.current = toast("Please wait...", {
         type: toast.TYPE.LOADING,
       });
-      await axiosInstance.delete(`v1/category?id=${itemToDelete._id}`);
+      await axiosInstance.delete(`/category/ ${itemToDelete.id}`);
       toast.update(toastId.current, {
         type: toast.TYPE.SUCCESS,
         autoClose: 5000,

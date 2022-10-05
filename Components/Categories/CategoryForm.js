@@ -17,7 +17,7 @@ import {
 import { useEffect, useRef, useState } from "react";
 import IconButton from "@mui/material/IconButton";
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
-import ImagePoster from "../Globals/ImagePoster";
+import ImagePoster from "../Globals/ImageHandler";
 import PhotoCamera from "@mui/icons-material/PhotoCamera";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
@@ -46,7 +46,6 @@ export default function CategoryForm({ open, setOpen, data, onSave, setFile }) {
 
   const onSubmit = async (data) => {
     const dataParsed = {
-      IsDeleted: false,
       ...data,
     };
     await onSave(dataParsed);

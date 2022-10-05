@@ -37,14 +37,14 @@ export default function CategoryList({
       width: 460,
       headerName: "Nombre",
     },
-    {
-      field: "IsDeleted",
-      width: "150",
-      headerName: "Estatus",
-      renderCell: (cells) => {
-        return <StatusRow active={!cells.row.IsDeleted} />;
-      },
-    },
+    // {
+    //   field: "IsDeleted",
+    //   width: "150",
+    //   headerName: "Estatus",
+    //   renderCell: (cells) => {
+    //     return <StatusRow active={!cells.row.IsDeleted} />;
+    //   },
+    // },
 
     {
       field: "Acciones",
@@ -154,7 +154,7 @@ export default function CategoryList({
 
         <div className="h-full w-full my-2">
           <DataGrid
-            getRowId={(row) => row._id}
+            getRowId={(row) => row.id}
             rowCount={pageState.totalData}
             pageSize={pageState.pageSize}
             page={pageState.page - 1}
