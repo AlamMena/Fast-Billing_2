@@ -132,7 +132,6 @@ export default function ContactForm({ contact }) {
     const dataParsed = {
       ...data,
     };
-    alert(JSON.stringify(data));
     await upsertAsync(dataParsed);
   };
 
@@ -261,7 +260,6 @@ export default function ContactForm({ contact }) {
               fullWidth
             />
           </FormControl>
-          <div className="flex w-full items-center space-x-4"></div>
           <FormControl className="w-full">
             <TextField
               {...register("noIdentification", { required: true })}
@@ -288,7 +286,7 @@ export default function ContactForm({ contact }) {
           <div className="flex space-x-4">
             <FormControl className="w-full">
               <TextField
-                {...register("contact[0].phone", { required: true })}
+                {...register("contacts[0].number", { required: true })}
                 id="outlined-adornment-phone"
                 label="Numero de telefono"
                 size="medium"
@@ -309,14 +307,76 @@ export default function ContactForm({ contact }) {
             </FormControl>
             <FormControl className="w-full">
               <TextField
-                {...register("addresses[0].address", { required: true })}
+                {...register("contacts[0].name", { required: true })}
                 id="outlined-adornment-phone"
-                label="Direccion"
+                label="Nombre de telefono"
                 size="medium"
                 className="input-rounded text-md"
                 variant="outlined"
-                error={errors.phone}
-                helperText={errors.phone && `El campo no es valido`}
+                // error={errors.phone}
+                // helperText={errors.phone && `El campo no es valido`}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <PhoneOutlined
+                        className={`${errors.phone && "text-red-500"} `}
+                      />
+                    </InputAdornment>
+                  ),
+                }}
+              />
+            </FormControl>
+          </div>
+          {/* Addresses */}
+          <FormControl className="w-full">
+            <TextField
+              {...register("addresses[0].address", { required: true })}
+              id="outlined-adornment-phone"
+              label="Direccion"
+              size="medium"
+              className="input-rounded text-md"
+              variant="outlined"
+              error={errors.phone}
+              helperText={errors.phone && `El campo no es valido`}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <RouteRounded
+                      className={`${errors.phone && "text-red-500"} `}
+                    />
+                  </InputAdornment>
+                ),
+              }}
+            />
+          </FormControl>
+          <div className="flex space-x-4">
+            <FormControl className="w-full">
+              <TextField
+                {...register("addresses[0].country", { required: true })}
+                id="outlined-adornment-phone"
+                label="Pais"
+                size="medium"
+                className="input-rounded text-md"
+                variant="outlined"
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <RouteRounded
+                        className={`${errors.phone && "text-red-500"} `}
+                      />
+                    </InputAdornment>
+                  ),
+                }}
+              />
+            </FormControl>
+            <FormControl className="w-full">
+              <TextField
+                {...register("addresses[0].name", { required: true })}
+                id="outlined-adornment-phone"
+                label="Nombre de la direccion"
+                size="medium"
+                className="input-rounded text-md"
+                variant="outlined"
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
@@ -329,6 +389,7 @@ export default function ContactForm({ contact }) {
               />
             </FormControl>
           </div>
+          {/* Credit field */}
           <div className="flex space-x-4">
             <FormControl className="w-full">
               <InputLabel id="select-type-identification">
@@ -410,6 +471,14 @@ export default function ContactForm({ contact }) {
 
           {/* Save Button */}
           <div className="flex w-full justify-end space-x-4 ">
+            <Button
+              variant="contained"
+              size="medium"
+              className=" w-28 shadow-xl bg-neutral-200 rounded-2xl hover:bg-neutral-400 hover:text-white"
+              onClick={() => router.push("../contactos")}
+            >
+              Cancelar
+            </Button>
             <Button
               variant="contained"
               type="submit"
