@@ -22,8 +22,6 @@ export default function CategoryList({
   pageState,
   setPageState,
   setFilter,
-  setCategoryStatus,
-  categoryStatus,
   setItemToDelete,
   setFormData,
   setFormOpen,
@@ -36,6 +34,11 @@ export default function CategoryList({
       field: "name",
       width: 460,
       headerName: "Nombre",
+    },
+    {
+      field: "description",
+      width: 260,
+      headerName: "Descripcion",
     },
     // {
     //   field: "IsDeleted",
@@ -122,8 +125,6 @@ export default function CategoryList({
       <div className="flex flex-col h-full  w-full shadow-lg rounded-xl my-3">
         <div className=" bg-slate-200 rounded-t-lg">
           <Tabs
-            value={categoryStatus}
-            onChange={onTabStatusChange}
             className="text-neutral-500"
             TabIndicatorProps={{
               style: {
@@ -131,11 +132,7 @@ export default function CategoryList({
               },
             }}
             aria-label="secondary tabs example"
-          >
-            <Tab className=" capitalize" value="all" label="Todos" />
-            {/* <Tab className=" capitalize" value={"false"} label="Activos" />
-            <Tab className=" capitalize" value={"true"} label="Inactivos" /> */}
-          </Tabs>
+          ></Tabs>
         </div>
         <div className="flex items-center space-x-4 px-4 my-4">
           <OutlinedInput

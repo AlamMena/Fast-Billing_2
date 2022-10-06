@@ -27,13 +27,16 @@ export default function SubCategoryList({
   setFormOpen,
   setConfirmOpen,
 }) {
-  const [statusTab, setStatusTab] = useState("All");
-
   const columns = [
     {
       field: "name",
       width: 460,
       headerName: "Nombre",
+    },
+    {
+      field: "description",
+      width: 260,
+      headerName: "Descripcion",
     },
     // {
     //   field: "IsDeleted",

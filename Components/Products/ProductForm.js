@@ -230,8 +230,8 @@ export default function ProductsForm({ product }) {
           <div className="flex">
             <TransitionGroup className="flex">
               {images &&
-                images.map((item) => (
-                  <Fade>
+                images.map((item, index) => (
+                  <Fade key={index}>
                     <div className="transition-all opacity-40 relative my-4 mx-2">
                       <RemoveCircleOutline
                         onClick={(e) => {

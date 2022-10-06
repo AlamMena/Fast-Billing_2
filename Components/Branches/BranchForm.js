@@ -1,7 +1,5 @@
 import FactCheckIcon from "@mui/icons-material/FactCheck";
 import DescriptionIcon from "@mui/icons-material/Description";
-import IconButton from "@mui/material/IconButton";
-import CoPresentIcon from "@mui/icons-material/CoPresent";
 import {
   Button,
   Dialog,
@@ -12,13 +10,8 @@ import {
   InputAdornment,
   FormControl,
   InputLabel,
-  Autocomplete,
-  Select,
-  Chip,
-  Avatar,
-  MenuItem,
-  FormHelperText,
 } from "@mui/material";
+import { AddLocationAlt, PhoneOutlined } from "@mui/icons-material";
 import PhotoCamera from "@mui/icons-material/PhotoCamera";
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 import ImagePoster from "../Globals/ImageHandler";
@@ -26,7 +19,7 @@ import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import Alert from "../Globals/Alert";
 
-export default function BrandForm({ onSave, open, setOpen, data, setFile }) {
+export default function BranchForm({ onSave, open, setOpen, data, setFile }) {
   const {
     handleSubmit,
     register,
@@ -40,15 +33,15 @@ export default function BrandForm({ onSave, open, setOpen, data, setFile }) {
 
   const [suplierValue, setSuplierValue] = useState();
 
-  const handleSuplier = () => {
-    register("suplier", { value: suplierValue });
-  };
+  //   const handleSuplier = () => {
+  //     register("suplier", { value: suplierValue });
+  //   };
 
-  const chip = [
-    { name: "Ana", src: "/static/images/avatar/1.jpg" },
-    { name: "Pibull", src: "/static/images/avatar/1.jpg" },
-    { name: "Junior", src: "/static/images/avatar/1.jpg" },
-  ];
+  //   const chip = [
+  //     { name: "Ana", src: "/static/images/avatar/1.jpg" },
+  //     { name: "Pibull", src: "/static/images/avatar/1.jpg" },
+  //     { name: "Junior", src: "/static/images/avatar/1.jpg" },
+  //   ];
 
   const onSubmit = async (data) => {
     const dataParsed = {
@@ -77,18 +70,17 @@ export default function BrandForm({ onSave, open, setOpen, data, setFile }) {
             onSubmit={handleSubmit(onSubmit)}
             className="flex flex-col p-8 space-y-6 px-10"
           >
-            <h2 className="text-xl font-bold">Formulario de Marca </h2>
-
+            <h2 className="text-xl font-bold">Formulario de Sucursal </h2>
             <FormControl>
               <InputLabel size="normal" htmlFor="outlined-adornment-name">
-                Nombre de la marca
+                Nombre de la sucursal
               </InputLabel>
               <OutlinedInput
                 {...register("name", {
                   required: true,
                 })}
                 id="outlined-adornment-name"
-                label="Nombre de la marca"
+                label="Nombre de la sucursal"
                 size="small"
                 className="rounded-xl"
                 error={errors.name && "value"}
@@ -120,7 +112,51 @@ export default function BrandForm({ onSave, open, setOpen, data, setFile }) {
                 }
               />
             </FormControl>
-            <FormControl className="w-full">
+            <div className="flex space-x-4">
+              <FormControl className="w-full">
+                <TextField
+                  {...register("phoneNumber", { required: true })}
+                  id="outlined-adornment-phone"
+                  label="Numero de telefono"
+                  size="medium"
+                  className="input-rounded text-md"
+                  variant="outlined"
+                  error={errors.phone}
+                  helperText={errors.phone && `El campo no es valido`}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <PhoneOutlined
+                          className={`${errors.phone && "text-red-500"} `}
+                        />
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+              </FormControl>
+              <FormControl className="w-full">
+                <TextField
+                  {...register("location", { required: true })}
+                  id="outlined-adornment-phone"
+                  label="Ubicacion"
+                  size="medium"
+                  className="input-rounded text-md"
+                  variant="outlined"
+                  error={errors.location}
+                  helperText={errors.location && `El campo no es valido`}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <AddLocationAlt
+                          className={`${errors.phone && "text-red-500"} `}
+                        />
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+              </FormControl>
+            </div>
+            {/* <FormControl className="w-full">
               <Autocomplete
                 onChange={(event, newValue) => {
                   setSuplierValue(newValue);
@@ -140,15 +176,15 @@ export default function BrandForm({ onSave, open, setOpen, data, setFile }) {
                 )}
               />
 
-              {/* <FormHelperText>With label + helper text</FormHelperText> */}
-            </FormControl>
-            <FormControl>
+              {/* <FormHelperText>With label + helper text</FormHelperText> </FormControl>  */}
+
+            {/* <FormControl>
               <ImagePoster
                 images={images}
                 setImages={setImages}
                 setFile={setFile}
               />
-            </FormControl>
+            </FormControl> */}
             <div className="flex w-full justify-end space-x-4">
               <Button
                 variant="contained"

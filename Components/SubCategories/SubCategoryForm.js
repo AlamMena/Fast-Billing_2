@@ -41,7 +41,7 @@ export default function SubCategoryForm({
   });
 
   const { axiosInstance } = useAxios();
-  const [categories, setCategories] = useState([]);
+  const [categories, setCategories] = useState([""]);
 
   const [images, setImages] = useState([]);
 
@@ -56,7 +56,7 @@ export default function SubCategoryForm({
   };
   useEffect(() => {
     setCategoriesAsync();
-  }, [categories]);
+  }, [data]);
 
   const onSubmit = async (data) => {
     const dataParsed = {
@@ -86,38 +86,39 @@ export default function SubCategoryForm({
               className="flex flex-col p-8 space-y-5 px-10"
             >
               <h2 className="text-xl font-bold">Formulario de SubCategoria </h2>
+              <div className="flex w-full space-x-4">
+                <FormControl className="w-full">
+                  <InputLabel size="small" htmlFor="outlined-adornment-name">
+                    Nombre de la subcategoria
+                  </InputLabel>
+                  <OutlinedInput
+                    {...register("name", {
+                      required: true,
+                    })}
+                    id="outlined-adornment-name"
+                    label="Nombre de la subcategoria"
+                    size="small"
+                    error={errors.name && "value"}
+                    helpertext={errors.name && `El campo 'nombre' es requerido`}
+                    className="rounded-xl"
+                    variant="outlined"
+                    startAdornment={
+                      <InputAdornment position="start">
+                        <CategoryIcon />
+                      </InputAdornment>
+                    }
+                  />
+                </FormControl>
 
-              <FormControl>
-                <InputLabel size="small" htmlFor="outlined-adornment-name">
-                  Nombre de la subcategoria
-                </InputLabel>
-                <OutlinedInput
-                  {...register("name", {
-                    required: true,
-                  })}
-                  id="outlined-adornment-name"
-                  label="Nombre de la subcategoria"
-                  size="small"
-                  error={errors.name && "value"}
-                  helperText={errors.name && `El campo 'nombre' es requerido`}
-                  className="rounded-xl"
-                  variant="outlined"
-                  startAdornment={
-                    <InputAdornment position="start">
-                      <CategoryIcon />
-                    </InputAdornment>
-                  }
-                />
-              </FormControl>
-              <FormControl>
                 <FormControl className="w-full">
                   <TextField
                     select
                     label="Tipo de categoria"
                     id="trinity"
+                    size="small"
                     {...register("categoryId", { required: true })}
                     error={errors.categoryId && "value"}
-                    helperText={
+                    helpertext={
                       errors.categoryId &&
                       `El campo 'Tipo de categoria' es requerido`
                     }
@@ -129,7 +130,21 @@ export default function SubCategoryForm({
                     ))}
                   </TextField>
                 </FormControl>
-              </FormControl>
+              </div>
+              <TextField
+                {...register("description")}
+                className="input-rounded w-full outline-2 outline-slate-500"
+                minRows={4}
+                placeholder="Descripcion detallada del tipo de subcategoria..."
+                multiline
+                label="Descripcion"
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                error={errors.description}
+                helpertext={errors.description && "La descripcion es requerida"}
+                fullWidth
+              />
               <FormControl>
                 <ImagePoster
                   images={images}

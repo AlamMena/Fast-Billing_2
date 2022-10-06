@@ -25,11 +25,7 @@ function TabPanel(props) {
       aria-labelledby={`simple-tab-${index}`}
       {...other}
     >
-      {value === index && (
-        <Box sx={{ p: 3 }}>
-          <Typography>{children}</Typography>
-        </Box>
-      )}
+      {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
     </div>
   );
 }
@@ -55,8 +51,8 @@ export default function Categories() {
     page: 1,
     totalData: 0,
   });
-  const [categoryStatus, setCategoryStatus] = useState("all");
-  const [categoryType, setCategoryType] = useState("all");
+  // const [categoryStatus, setCategoryStatus] = useState("all");
+  // const [categoryType, setCategoryType] = useState("all");
   const [title, setTitle] = useState("Nueva Categoria");
   const [filter, setFilter] = useState("");
   const [value, setValue] = useState(0);
@@ -134,7 +130,7 @@ export default function Categories() {
       );
 
       setSubCatPageState({
-        ...pageState,
+        ...SubCatpageState,
         isLoading: false,
         data: apiResponse.data,
         totalData: apiResponse.dataQuantity,
@@ -174,7 +170,7 @@ export default function Categories() {
       // success toast
       toast.update(toastId.current, {
         type: toast.TYPE.SUCCESS,
-        autoClose: 5000,
+        autoClose: 3000,
         render: "Exito",
       });
     } catch (error) {
@@ -215,7 +211,7 @@ export default function Categories() {
       // success toast
       toast.update(toastId.current, {
         type: toast.TYPE.SUCCESS,
-        autoClose: 5000,
+        autoClose: 3000,
         render: "Exito",
       });
     } catch (error) {
@@ -267,14 +263,16 @@ export default function Categories() {
     }
   };
 
-  useEffect(
-    () => {
-      setCategoriesAsync();
-      setSubCategoriesAsync();
-    },
-    [pageState.page, pageState.pageSize, filter],
-    [SubCatpageState.page, pageState.SubCatpageSize, filter]
-  );
+  useEffect(() => {
+    setCategoriesAsync();
+    setSubCategoriesAsync();
+  }, [
+    pageState.page,
+    pageState.pageSize,
+    filter,
+    SubCatpageState.page,
+    SubCatpageState.pageSize,
+  ]);
 
   return (
     <>
@@ -351,10 +349,10 @@ export default function Categories() {
         <TabPanel value={value} index={0}>
           <CategoryList
             pageState={pageState}
-            setCategoryStatus={setCategoryStatus}
-            setCategoryType={setCategoryType}
-            categoryStatus={categoryStatus}
-            categoryType={categoryType}
+            // setCategoryStatus={setCategoryStatus}
+            // setCategoryType={setCategoryType}
+            // categoryStatus={categoryStatus}
+            // categoryType={categoryType}
             setFilter={setFilter}
             setPageState={setPageState}
             setFormOpen={setFormOpen}
@@ -366,6 +364,7 @@ export default function Categories() {
         <TabPanel value={value} index={1}>
           <SubCategoryList
             pageState={SubCatpageState}
+            setPageState={setSubCatPageState}
             setItemToDelete={setSubCatToDelete}
             setConfirmOpen={setSubCatConfirmOpen}
             setFormOpen={setSubCatFormOpen}

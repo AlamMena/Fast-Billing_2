@@ -20,27 +20,16 @@ import Alert from "../Globals/Alert";
 import StatusRow from "../Globals/StatusRow";
 import { debounce } from "../../utils/methods";
 
-export default function BrandList({
+export default function BranchList({
   setFormOpen,
   setFormData,
   pageState,
   setPageState,
   setFilter,
-  setBrandStatus,
-  brandStatus,
   setItemToDelete,
   setConfirmOpen,
 }) {
   const [statusTab, setStatusTab] = useState("All");
-
-  const chip = [
-    { name: "Ana", src: "/static/images/avatar/1.jpg" },
-    { name: "TrapKing", src: "/static/images/avatar/1.jpg" },
-    { name: "Eldiablo", src: "/static/images/avatar/1.jpg" },
-    { name: "Yagaloski", src: "/static/images/avatar/1.jpg" },
-    { name: "Pibull", src: "/static/images/avatar/1.jpg" },
-    { name: "Junior", src: "/static/images/avatar/1.jpg" },
-  ];
 
   const columns = [
     {
@@ -53,28 +42,15 @@ export default function BrandList({
       width: 270,
       headerName: "Descripcion",
     },
-
     {
-      field: "supliers",
-      width: 190,
-      headerName: "Proveedores",
-      renderCell: (cell) => {
-        return (
-          <AvatarGroup max={4}>
-            {chip.map((item, index) => {
-              return <Avatar key={index} alt={item.name} />;
-            })}
-          </AvatarGroup>
-        );
-      },
+      field: "location",
+      width: 270,
+      headerName: "Ubicacion",
     },
     {
-      field: "IsDeleted",
-      width: 150,
-      headerName: "Estatus",
-      renderCell: (cells) => {
-        return <StatusRow active={!cells.row.IsDeleted} />;
-      },
+      field: "phoneNumber",
+      width: 270,
+      headerName: "Numero de Telefono",
     },
 
     {
@@ -166,7 +142,7 @@ export default function BrandList({
             className="input-rounded rounded-xl"
             fullWidth
             onChange={onInputFilterChange}
-            placeholder="Buscar marcas..."
+            placeholder="Buscar sucursales..."
             startAdornment={
               <InputAdornment position="start">
                 <SearchRounded className="text-slate-400" />

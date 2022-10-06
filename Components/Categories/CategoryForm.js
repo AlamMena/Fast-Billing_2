@@ -85,7 +85,7 @@ export default function CategoryForm({ open, setOpen, data, onSave, setFile }) {
                   label="Nombre de la categoria"
                   size="small"
                   error={errors.name && "value"}
-                  helperText={errors.name && `El campo 'nombre' es requerido`}
+                  helpertext={errors.name && `El campo 'nombre' es requerido`}
                   className="rounded-xl"
                   variant="outlined"
                   startAdornment={
@@ -95,9 +95,24 @@ export default function CategoryForm({ open, setOpen, data, onSave, setFile }) {
                   }
                 />
               </FormControl>
+              <TextField
+                {...register("description")}
+                className="input-rounded w-full outline-2 outline-slate-500"
+                minRows={4}
+                placeholder="Descripcion detallada del tipo de categoria..."
+                multiline
+                label="Descripcion"
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                // error={errors.description}
+                // helpertext={errors.description && "La descripcion es requerida"}
+                fullWidth
+              />
+              {/* Supliers */}
               <FormControl>
                 <Autocomplete
-                  onChange={{ ...register("supliers") }}
+                  {...register("supliers")}
                   multiple
                   options={chip}
                   freeSolo
@@ -111,6 +126,7 @@ export default function CategoryForm({ open, setOpen, data, onSave, setFile }) {
                   )}
                 />
               </FormControl>
+              {/* Image Handeler */}
               <FormControl>
                 <ImagePoster
                   images={images}
