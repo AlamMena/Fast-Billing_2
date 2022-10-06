@@ -6,7 +6,7 @@ import ContactForm from "../../Components/Contacts/ContactForm";
 import ContactList from "../../Components/Contacts/ContactList";
 import PageHeader from "../../Components/Globals/PageHeader";
 import { toast } from "react-toastify";
-import { postImage } from "../../Components/Globals/ImagePoster";
+import { postImage } from "../../Components/Globals/ImageHandler";
 import ConfirmationForm from "../../Components/Globals/ConfirmationForm";
 import { useRouter } from "next/router";
 import { tr } from "date-fns/locale";
