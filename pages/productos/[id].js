@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import useAxios from "../../Axios/Axios";
-import ProductFrom from "../../components/Products/ProductForm";
+import ProductFrom from "../../Components/Products/ProductForm";
 
 export default function UpsertProduct({ id }) {
   const [product, setProduct] = useState();

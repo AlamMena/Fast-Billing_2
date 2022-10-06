@@ -2,11 +2,11 @@ import { Add } from "@mui/icons-material";
 import useAxios from "../../Axios/Axios";
 import { Button, debounce, Tab, Tabs } from "@mui/material";
 import { useRef, useState } from "react";
-import PageHeader from "../../components/Globals/PageHeader";
+import PageHeader from "../../Components/Globals/PageHeader";
 import { toast } from "react-toastify";
-import ConfirmationForm from "../../components/Globals/ConfirmationForm";
+import ConfirmationForm from "../../Components/Globals/ConfirmationForm";
 import { useRouter } from "next/router";
-import ProductList from "../../components/Products/ProductsList";
+import ProductList from "../../Components/Products/ProductsList";
 
 export default function Products() {
   // list data
