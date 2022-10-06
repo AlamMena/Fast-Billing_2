@@ -25,7 +25,7 @@ import useAxios from "../Axios/Axios";
 import {
   InvoiceRecipient,
   InvoiceBeneficiary,
-} from "../components/CreateInvoice/InvoiceContact";
+} from "../Components/CreateInvoice/InvoiceContact";
 import SelectPopUp from "../Components/CreateInvoice/SelectPopUp";
 import { useDispatch } from "react-redux";
 import {
