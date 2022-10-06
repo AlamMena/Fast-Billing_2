@@ -18,12 +18,10 @@ import Alert from "../Globals/Alert";
 import { debounce } from "../../utils/methods";
 import StatusRow from "../Globals/StatusRow.js";
 
-export default function CategoryList({
+export default function SubCategoryList({
   pageState,
   setPageState,
   setFilter,
-  setCategoryStatus,
-  categoryStatus,
   setItemToDelete,
   setFormData,
   setFormOpen,
@@ -78,9 +76,9 @@ export default function CategoryList({
     },
   ];
 
-  const onTabStatusChange = debounce((e, newValue) =>
-    setCategoryStatus(newValue)
-  );
+  //   const onTabStatusChange = debounce((e, newValue) =>
+  //     setCategoryStatus(newValue)
+  //   );
 
   const onInputFilterChange = debounce((e) => setFilter(e.target.value));
 
@@ -92,38 +90,38 @@ export default function CategoryList({
     setPageState({ ...pageState, pageSize: newPageSize });
   };
 
-  const handleTabChange = (e, value) => {
-    setStatusTab(value);
-    const newData = getDataFilterdByTab(value);
-    setDataFiltered(newData);
-  };
+  //   const handleTabChange = (e, value) => {
+  //     setStatusTab(value);
+  //     const newData = getDataFilterdByTab(value);
+  //     setDataFiltered(newData);
+  //   };
 
-  const getDataFilterdByTab = (value) => {
-    let newData = { isLoading: true, data: [] };
+  //   const getDataFilterdByTab = (value) => {
+  //     let newData = { isLoading: true, data: [] };
 
-    if (value === "All") {
-      newData = data;
-    } else if (value === "Active") {
-      newData = {
-        isLoading: false,
-        data: data.data.filter((item) => !item.IsDeleted),
-      };
-    } else if (value === "Disable") {
-      newData = {
-        isLoading: false,
-        data: data.data.filter((item) => item.IsDeleted),
-      };
-    }
-    return newData;
-  };
+  //     if (value === "All") {
+  //       newData = data;
+  //     } else if (value === "Active") {
+  //       newData = {
+  //         isLoading: false,
+  //         data: data.data.filter((item) => !item.IsDeleted),
+  //       };
+  //     } else if (value === "Disable") {
+  //       newData = {
+  //         isLoading: false,
+  //         data: data.data.filter((item) => item.IsDeleted),
+  //       };
+  //     }
+  //     return newData;
+  //   };
 
   return (
     <>
       <div className="flex flex-col h-full  w-full shadow-lg rounded-xl my-3">
         <div className=" bg-slate-200 rounded-t-lg">
           <Tabs
-            value={categoryStatus}
-            onChange={onTabStatusChange}
+            value={"all"}
+            // onChange={onTabStatusChange}
             className="text-neutral-500"
             TabIndicatorProps={{
               style: {
@@ -143,7 +141,7 @@ export default function CategoryList({
             className="input-rounded rounded-xl"
             fullWidth
             onChange={onInputFilterChange}
-            placeholder="Buscar categorias..."
+            placeholder="Buscar subcategorias..."
             startAdornment={
               <InputAdornment position="start">
                 <SearchRounded className="text-slate-400" />
