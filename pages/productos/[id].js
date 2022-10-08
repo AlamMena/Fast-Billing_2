@@ -5,8 +5,9 @@ import ProductFrom from "../../Components/Products/ProductForm";
 export default function UpsertProduct({ id }) {
   const [product, setProduct] = useState();
   const { axiosInstance } = useAxios();
+
   const getProductAsync = async () => {
-    const { data } = await axiosInstance.get(`v1/product?id=${id}`);
+    const { data } = await axiosInstance.get(`product/${id}`);
     setProduct(data);
   };
 

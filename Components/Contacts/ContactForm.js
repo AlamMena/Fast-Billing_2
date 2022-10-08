@@ -113,7 +113,7 @@ export default function ContactForm({ contact }) {
       }
 
       setFileContainer(null);
-      await router.push("/contactos");
+      await router.push("/clientes");
     } catch (error) {
       // error toast
       toast.error(`Opps!, something went wrong${error}`);
@@ -475,7 +475,7 @@ export default function ContactForm({ contact }) {
               variant="contained"
               size="medium"
               className=" w-28 shadow-xl bg-neutral-200 rounded-2xl hover:bg-neutral-400 hover:text-white"
-              onClick={() => router.push("../contactos")}
+              onClick={() => router.push("../clientes")}
             >
               Cancelar
             </Button>

@@ -85,7 +85,7 @@ export default function BranchList({
     },
   ];
 
-  const onTabStatusChange = debounce((e, newValue) => setBrandStatus(newValue));
+  // const onTabStatusChange = debounce((e, newValue) => setBrandStatus(newValue));
 
   const onInputFilterChange = debounce((e) => setFilter(e.target.value));
 
@@ -97,11 +97,11 @@ export default function BranchList({
     setPageState({ ...pageState, pageSize: newPageSize });
   };
 
-  const handleTabChange = (e, value) => {
-    setStatusTab(value);
-    const newData = getDataFilterdByTab(value);
-    setDataFiltered(newData);
-  };
+  // const handleTabChange = (e, value) => {
+  //   setStatusTab(value);
+  //   const newData = getDataFilterdByTab(value);
+  //   setDataFiltered(newData);
+  // };
 
   // const getDataFilterdByTab = (value) => {
   //   let newData = { isLoading: true, data: [] };
@@ -124,8 +124,8 @@ export default function BranchList({
 
   return (
     <>
-      <div className="flex flex-col h-full  w-full shadow-lg rounded-xl my-3">
-        <div className=" bg-slate-200 rounded-t-lg">
+      <div className="flex flex-col h-full  w-full shadow-lg rounded-xl">
+        {/* <div className=" bg-slate-200 rounded-t-lg">
           <Tabs
             className="text-neutral-500"
             TabIndicatorProps={{
@@ -135,8 +135,8 @@ export default function BranchList({
             }}
             aria-label="secondary tabs example"
           ></Tabs>
-        </div>
-        <div className="flex items-center space-x-4 px-4 my-4">
+        </div> */}
+        <div className="flex items-center space-x-4 px-4 my-2">
           <OutlinedInput
             id="input-with-icon-adornment"
             className="input-rounded rounded-xl"

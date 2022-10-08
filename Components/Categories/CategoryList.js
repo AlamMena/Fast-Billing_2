@@ -81,9 +81,9 @@ export default function CategoryList({
     },
   ];
 
-  const onTabStatusChange = debounce((e, newValue) =>
-    setCategoryStatus(newValue)
-  );
+  // const onTabStatusChange = debounce((e, newValue) =>
+  //   setCategoryStatus(newValue)
+  // );
 
   const onInputFilterChange = debounce((e) => setFilter(e.target.value));
 
@@ -95,35 +95,35 @@ export default function CategoryList({
     setPageState({ ...pageState, pageSize: newPageSize });
   };
 
-  const handleTabChange = (e, value) => {
-    setStatusTab(value);
-    const newData = getDataFilterdByTab(value);
-    setDataFiltered(newData);
-  };
+  // const handleTabChange = (e, value) => {
+  //   setStatusTab(value);
+  //   const newData = getDataFilterdByTab(value);
+  //   setDataFiltered(newData);
+  // };
 
-  const getDataFilterdByTab = (value) => {
-    let newData = { isLoading: true, data: [] };
+  // const getDataFilterdByTab = (value) => {
+  //   let newData = { isLoading: true, data: [] };
 
-    if (value === "All") {
-      newData = data;
-    } else if (value === "Active") {
-      newData = {
-        isLoading: false,
-        data: data.data.filter((item) => !item.IsDeleted),
-      };
-    } else if (value === "Disable") {
-      newData = {
-        isLoading: false,
-        data: data.data.filter((item) => item.IsDeleted),
-      };
-    }
-    return newData;
-  };
+  //   if (value === "All") {
+  //     newData = data;
+  //   } else if (value === "Active") {
+  //     newData = {
+  //       isLoading: false,
+  //       data: data.data.filter((item) => !item.IsDeleted),
+  //     };
+  //   } else if (value === "Disable") {
+  //     newData = {
+  //       isLoading: false,
+  //       data: data.data.filter((item) => item.IsDeleted),
+  //     };
+  //   }
+  //   return newData;
+  // };
 
   return (
     <>
       <div className="flex flex-col h-full  w-full shadow-lg rounded-xl my-3">
-        <div className=" bg-slate-200 rounded-t-lg">
+        {/* <div className=" bg-slate-200 rounded-t-lg">
           <Tabs
             className="text-neutral-500"
             TabIndicatorProps={{
@@ -133,8 +133,8 @@ export default function CategoryList({
             }}
             aria-label="secondary tabs example"
           ></Tabs>
-        </div>
-        <div className="flex items-center space-x-4 px-4 my-4">
+        </div> */}
+        <div className="flex items-center space-x-4 px-4 my-2">
           <OutlinedInput
             id="input-with-icon-adornment"
             className="input-rounded rounded-xl"

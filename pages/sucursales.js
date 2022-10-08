@@ -38,15 +38,11 @@ export default function Brand() {
 
   const locationRoutes = [
     {
-      text: "Dashboard",
+      text: "Inicio",
       link: "/",
     },
     {
       text: "Sucursales",
-      link: "/",
-    },
-    {
-      text: "Lista de sucursales",
       link: "/",
     },
   ];

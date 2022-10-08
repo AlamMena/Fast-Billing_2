@@ -55,6 +55,8 @@ export default function Categories() {
   // const [categoryType, setCategoryType] = useState("all");
   const [title, setTitle] = useState("Nueva Categoria");
   const [filter, setFilter] = useState("");
+  const [subCatfilter, setSubCatFilter] = useState("");
+
   const [value, setValue] = useState(0);
 
   const [categories, setCategories] = useState({ isLoading: true, data: [] });
@@ -93,7 +95,7 @@ export default function Categories() {
     },
     {
       text: "Categorias",
-      link: "/",
+      link: "/categorias",
     },
   ];
 
@@ -101,7 +103,7 @@ export default function Categories() {
     try {
       setPageState({ ...pageState, isLoading: true });
 
-      const queryFilters = `page=${pageState.page}&limit=${pageState.pageSize}`;
+      const queryFilters = `page=${pageState.page}&limit=${pageState.pageSize}&value=${filter}`;
 
       const { data: apiResponse } = await axiosInstance.get(
         `categories?${queryFilters}`
@@ -123,7 +125,7 @@ export default function Categories() {
     try {
       setSubCatPageState({ ...SubCatpageState, isLoading: true });
 
-      const queryFilters = `page=${SubCatpageState.page}&limit=${SubCatpageState.pageSize}`;
+      const queryFilters = `page=${SubCatpageState.page}&limit=${SubCatpageState.pageSize}&value=${subCatfilter}`;
 
       const { data: apiResponse } = await axiosInstance.get(
         `subcategories?${queryFilters}`
@@ -272,6 +274,7 @@ export default function Categories() {
     filter,
     SubCatpageState.page,
     SubCatpageState.pageSize,
+    subCatfilter,
   ]);
 
   return (
@@ -369,6 +372,7 @@ export default function Categories() {
             setConfirmOpen={setSubCatConfirmOpen}
             setFormOpen={setSubCatFormOpen}
             setFormData={setSubCatFormData}
+            setFilter={setSubCatFilter}
           />
         </TabPanel>
 

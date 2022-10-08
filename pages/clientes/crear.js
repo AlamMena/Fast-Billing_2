@@ -6,16 +6,16 @@ import PageHeader from "../../Components/Globals/PageHeader";
 export default function CreateContact() {
   const locationRoutes = [
     {
-      text: "Home",
+      text: "Inicio",
       link: "/",
     },
     {
       text: "Clientes",
-      link: "/contactos",
+      link: "/clientes",
     },
     {
       text: "Crear",
-      link: "/contactos/crear",
+      link: "/clientes/crear",
     },
   ];
 

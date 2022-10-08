@@ -34,12 +34,12 @@ export default function Contacts() {
   const router = useRouter();
   const locationRoutes = [
     {
-      text: "Home",
+      text: "Inicio",
       link: "/",
     },
     {
       text: "Clientes",
-      link: "/contactos",
+      link: "/clientes",
     },
   ];
 
@@ -47,7 +47,7 @@ export default function Contacts() {
     try {
       setPageState({ ...pageState, isLoading: true });
 
-      const queryFilters = `page=${pageState.page}&limit=${pageState.pageSize}`; //$vaue=${filter}
+      const queryFilters = `page=${pageState.page}&limit=${pageState.pageSize}&value=${filter}`;
 
       const { data: apiResponse } = await axiosInstance.get(
         `clients?${queryFilters}` //filtered?
@@ -94,13 +94,13 @@ export default function Contacts() {
             className=" z-auto rounded-xl py-2 bg-green-600 hover:bg-green-800"
             variant="contained"
             onClick={() => {
-              router.push("/contactos/crear");
+              router.push("/clientes/crear");
             }}
             startIcon={<Add className="text-white" />}
           >
             <span
               className="text-sm whitespace-nowrap text-neutral-50 capitalize font-bold"
-              onClick={() => router.push("./contactos/crear")}
+              // onClick={() => router.push("./clientes/crear")}
             >
               Nuevo cliente
             </span>

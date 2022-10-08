@@ -36,17 +36,17 @@ export default function Brand() {
 
   const locationRoutes = [
     {
-      text: "Dashboard",
+      text: "Inicio",
       link: "/",
     },
     {
       text: "Marcas",
-      link: "/",
+      link: "/Marcas",
     },
-    {
-      text: "Lista",
-      link: "/",
-    },
+    // {
+    //   text: "Lista",
+    //   link: "/",
+    // },
   ];
 
   const setBrandsAsync = async () => {

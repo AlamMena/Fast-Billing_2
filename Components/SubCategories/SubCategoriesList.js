@@ -120,25 +120,8 @@ export default function SubCategoryList({
 
   return (
     <>
-      <div className="flex flex-col h-full  w-full shadow-lg rounded-xl my-3">
-        <div className=" bg-slate-200 rounded-t-lg">
-          <Tabs
-            value={"all"}
-            // onChange={onTabStatusChange}
-            className="text-neutral-500"
-            TabIndicatorProps={{
-              style: {
-                backgroundColor: "rgb(22 163 74 / var(--tw-text-opacity))",
-              },
-            }}
-            aria-label="secondary tabs example"
-          >
-            <Tab className=" capitalize" value="all" label="Todos" />
-            {/* <Tab className=" capitalize" value={"false"} label="Activos" />
-            <Tab className=" capitalize" value={"true"} label="Inactivos" /> */}
-          </Tabs>
-        </div>
-        <div className="flex items-center space-x-4 px-4 my-4">
+      <div className="flex flex-col h-full  w-full shadow-lg rounded-xl my-2">
+        <div className="flex items-center space-x-4 px-4 my-2">
           <OutlinedInput
             id="input-with-icon-adornment"
             className="input-rounded rounded-xl"

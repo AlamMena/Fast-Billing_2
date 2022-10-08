@@ -57,13 +57,18 @@ const routes = [
         Icon: <ReceiptOutlined />,
       },
       {
+        text: "Marcas",
+        path: "/marcas",
+        Icon: <AssessmentOutlined />,
+      },
+      {
         text: "Reportes",
         path: "/",
         Icon: <AssessmentOutlined />,
       },
       {
         text: "Clientes",
-        path: "/contactos",
+        path: "/clientes",
         Icon: <ContactPageOutlined />,
       },
     ],
@@ -78,7 +83,7 @@ const routes = [
       },
       {
         text: "Suplidores",
-        path: "/",
+        path: "/suplidores",
         Icon: <ContactPageOutlined />,
       },
       {
@@ -122,7 +127,7 @@ export default function Index() {
 
         <div className="flex items-center space-x-4">
           <img
-            className="w-6 h-6 mx-2 appBar-button-animation"
+            className="w-6 h-5 mx-2 appBar-button-animation"
             src="https://cdn-icons-png.flaticon.com/128/299/299901.png"
           />
 
@@ -156,8 +161,10 @@ export default function Index() {
         {routes.map((route, index) => {
           return (
             <div key={index}>
-              <h2 className=" mt-4 px-4 font-semibold ">{route.header}</h2>
-              <div className="flex flex-col text-xs my-2 space-y-2">
+              <h2 className=" mt-4 px-4 font-semibold tracking-wider ">
+                {route.header}
+              </h2>
+              <div className="flex flex-col text-xs my-2 space-y-2 ml-2">
                 {route.items.map((item, index) => {
                   let isActive = item.path === router.pathname;
                   return (

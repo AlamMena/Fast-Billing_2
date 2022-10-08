@@ -84,7 +84,7 @@ export default function Contacts() {
 
   useEffect(() => {
     setDataAsync();
-  }, [pageState.page, pageState.pageSize, filter, contactStatus, contactType]);
+  }, [pageState.page, pageState.pageSize, filter]);
   return (
     <div className="w-full md:px-0 px-4 md:pr-8 flex flex-col">
       <div className="flex w-full justify-between items-center pr-8">
@@ -96,7 +96,7 @@ export default function Contacts() {
             className=" z-auto rounded-xl py-2 bg-green-600 hover:bg-green-800"
             variant="contained"
             onClick={() => {
-              router.push("/suplier/crear");
+              // router.push("/suplier/crear");
             }}
             startIcon={<Add className="text-white" />}
           >
@@ -106,7 +106,7 @@ export default function Contacts() {
           </Button>
         </div>
       </div>
-      <ContactList
+      {/* <ContactList
         pageState={pageState}
         setSuplierStatus={setSuplierStatus}
         suplierStatus={suplierStatus}
@@ -121,7 +121,7 @@ export default function Contacts() {
         onConfirm={() => {
           deleteAsync(itemToDelete);
         }}
-      />
+      /> */}
     </div>
   );
 }

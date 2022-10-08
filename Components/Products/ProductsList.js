@@ -56,9 +56,9 @@ export default function ProductList({
   ];
   const columns = [
     {
-      field: "_id",
+      field: "id",
       width: 70,
-      headerName: "Id",
+      headerName: "Id   ",
       renderCell: (cells) => {
         return <span>{Math.floor(Math.random() * 999)}</span>;
       },
@@ -117,18 +117,18 @@ export default function ProductList({
       },
     },
     {
-      field: "s",
+      field: "stock",
       width: 150,
       headerName: "Inventario",
       renderCell: (cells) => {
         return Math.floor(Math.random() * 999) > 100 ? (
           <span className="bg-red-200 rounded-2xl px-2 py-1 flex items-center">
-            <span className="w-2 h-2 rounded-full mx-2 bg-red-700 animate-pulse  "></span>{" "}
+            <span className="w-2 h-2 rounded-full mx-2 bg-red-700 animate-pulse  "></span>
             Agotados
           </span>
         ) : (
           <span className="bg-green-200 rounded-2xl px-2 py-1 flex items-center">
-            <span className="w-2 h-2 rounded-full mx-2 bg-green-700 animate-pulse  "></span>{" "}
+            <span className="w-2 h-2 rounded-full mx-2 bg-green-700 animate-pulse  "></span>
             Disponible
           </span>
         );
@@ -194,9 +194,9 @@ export default function ProductList({
       // set loading
       setPageState({ ...pageState, isLoading: true });
       // querys filters definition
-      const queryFilters = `page=${pageState.page}&limit=${pageState.pageSize}&value=${pageState.filter.value}&isDeleted=${statusFilter}`;
+      const queryFilters = `page=${pageState.page}&limit=${pageState.pageSize}&value=${pageState.filter.value}`;
       const { data: apiResponse } = await axiosInstance.get(
-        `v1/products/filtered?${queryFilters}`
+        `products?${queryFilters}`
       );
       setPageState({
         ...pageState,
@@ -257,7 +257,7 @@ export default function ProductList({
       {/*------------------ DataGrid ---------------- */}
       <div className=" w-full my-2">
         <DataGrid
-          getRowId={(row) => row._id}
+          getRowId={(row) => row.id}
           rows={pageState.data}
           rowCount={pageState.totalData}
           pageSize={maxRow ? maxRow : pageState.pageSize}

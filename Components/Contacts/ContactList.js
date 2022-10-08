@@ -59,9 +59,20 @@ export default function ContactList({
     },
 
     {
-      field: "email", //Phone
+      field: "email",
       width: 190,
       headerName: "Correo electronico",
+    },
+    {
+      field: "contacts[0].number",
+      width: 190,
+      headerName: "Telefono",
+    },
+
+    {
+      field: "adresses[0].address",
+      width: 190,
+      headerName: "Direccion",
     },
 
     {
@@ -73,7 +84,7 @@ export default function ContactList({
           <div className="flex space-x-4">
             <a
               onClick={() => {
-                router.push(`/contactos/${cells.row.id}`);
+                router.push(`/clientes/${cells.row.id}`);
               }}
               className="text-green-400 cursor-pointer"
             >
@@ -102,11 +113,11 @@ export default function ContactList({
 
   // methods
 
-  const onTabStatusChange = debounce((e, newValue) =>
-    setContactStatus(newValue)
-  );
+  // const onTabStatusChange = debounce((e, newValue) =>
+  //   setContactStatus(newValue)
+  // );
 
-  const onSelectTypeChange = debounce((e) => setContactType(e.target.value));
+  // const onSelectTypeChange = debounce((e) => setContactType(e.target.value));
   const onInputFilterChange = debounce((e) => setFilter(e.target.value));
 
   const onDataGridPageChange = (newPage) => {
@@ -117,51 +128,20 @@ export default function ContactList({
     setPageState({ ...pageState, pageSize: newPageSize });
   };
 
-  const SelectContactType = () => {
-    return (
-      <>
-        {/* select label */}
-        <InputLabel id="select-type-label">Tipos</InputLabel>
-        <Select
-          id="id"
-          className="rounded-xl text-md"
-          labelId="select-type-label"
-          label="Tipos"
-          size="large"
-          value={contactType}
-          onChange={onSelectTypeChange}
-        >
-          {/* select contact type options */}
-          <MenuItem value="all">Todos</MenuItem>
-        </Select>
-      </>
-    );
-  };
-
   return (
-    <div className="flex flex-col h-full w-full shadow-lg rounded-xl my-3">
+    <div className="flex flex-col h-full w-full shadow-lg rounded-xl">
       {/* ------------------   Tab Status -------------------- */}
-      <div className=" bg-slate-200 rounded-t-lg">
-        <Tabs
-          value={contactStatus}
-          onChange={onTabStatusChange}
-          TabIndicatorProps={tabStyle}
-          className="text-neutral-500"
-        >
-          {/* tab options */}
-          <Tab className="capitalize" value="all" label="Todos" />
-          {/* <Tab className="capitalize" value={"false"} label="Activos" />
-          <Tab className="capitalize" value={"true"} label="Inactivos" /> */}
+      {/* <div className=" bg-slate-200 rounded-t-lg">
+        <Tabs className="text-neutral-500">
+          tab options
+          <Tab className="capitalize" value="all" label="Tabla de clientes" />
+          <Tab className="capitalize" value={"false"} label="Activos" />
+          <Tab className="capitalize" value={"true"} label="Inactivos" />
         </Tabs>
-      </div>
+      </div> */}
 
       {/* ----------------------- Grid header ----------------- */}
       <div className="flex items-center space-x-4 px-4 mt-4">
-        {/* select contact type */}
-        <FormControl className="w-44">
-          <SelectContactType />
-        </FormControl>
-
         {/* search input */}
         <FormControl className="w-full">
           <OutlinedInput
