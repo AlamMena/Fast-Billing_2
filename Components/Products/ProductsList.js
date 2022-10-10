@@ -58,10 +58,7 @@ export default function ProductList({
     {
       field: "id",
       width: 70,
-      headerName: "Id   ",
-      renderCell: (cells) => {
-        return <span>{Math.floor(Math.random() * 999)}</span>;
-      },
+      headerName: "Id",
     },
     {
       field: "name",
@@ -100,7 +97,7 @@ export default function ProductList({
       },
     },
     {
-      field: "benefit",
+      field: "marginBenefit",
       width: 120,
       headerName: "Beneficio",
       renderCell: (cells) => {
@@ -121,7 +118,7 @@ export default function ProductList({
       width: 150,
       headerName: "Inventario",
       renderCell: (cells) => {
-        return Math.floor(Math.random() * 999) > 100 ? (
+        return cells.row.stock < 1 ? (
           <span className="bg-red-200 rounded-2xl px-2 py-1 flex items-center">
             <span className="w-2 h-2 rounded-full mx-2 bg-red-700 animate-pulse  "></span>
             Agotados
@@ -165,7 +162,7 @@ export default function ProductList({
           <div className="flex space-x-4">
             <a
               onClick={() => {
-                router.push(`/productos/${cells.row._id}`);
+                router.push(`/productos/${cells.row.id}`);
               }}
               className="text-green-400 cursor-pointer"
             >
@@ -174,7 +171,7 @@ export default function ProductList({
             </a>
             <a
               onClick={() => {
-                setItemToDelete(cells.row);
+                setItemToDelete(cells.row.id);
                 setConfirmOpen(true);
               }}
               className="text-red-500 cursor-pointer"

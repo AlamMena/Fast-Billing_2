@@ -31,14 +31,11 @@ export default function Products() {
 
   const deleteAsync = async () => {
     try {
-      await toast.promise(
-        axiosInstance.delete(`v1/product?id=${itemToDelete.id}`),
-        {
-          pending: "Eliminando producto...",
-          success: "Genial!, tu producto ha sido eliminado.",
-          error: "Oops, algo ha ocurrido",
-        }
-      );
+      await toast.promise(axiosInstance.delete(`product/${itemToDelete.id}`), {
+        pending: "Eliminando producto...",
+        success: "Genial!, tu producto ha sido eliminado.",
+        error: "Oops, algo ha ocurrido",
+      });
 
       setConfirmOpen(false);
       await setDataAsync();

@@ -40,12 +40,12 @@ export default function Settings() {
 
   const locationRoutes = [
     {
-      text: "Dashboard",
+      text: "Inicio",
       link: "/",
     },
     {
       text: "Ajustes",
-      link: "/",
+      link: "/ajustes",
     },
   ];
 

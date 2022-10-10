@@ -104,9 +104,9 @@ export default function ProductsForm({ product }) {
           }
         }
       }
-      if (data._id) {
+      if (data.id) {
         await toast.promise(
-          axiosInstance.put("/v1/product", {
+          axiosInstance.put("/product", {
             ...data,
             images: images.map((item) => item.imageUrl),
           }),
@@ -121,7 +121,7 @@ export default function ProductsForm({ product }) {
         );
       } else {
         await toast.promise(
-          axiosInstance.post("/v1/product", {
+          axiosInstance.post("/product", {
             ...data,
             images: productImages,
             IsDeleted: false,

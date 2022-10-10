@@ -13,7 +13,7 @@ export default function UpsertProduct({ id }) {
 
   useEffect(() => {
     getProductAsync();
-    alert(JSON.stringify(product));
+    // alert(JSON.stringify(product));
   }, []);
   return <ProductFrom product={product} />;
 }

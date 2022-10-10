@@ -21,6 +21,7 @@ import {
   RoomRounded,
   RouteRounded,
   SearchRounded,
+  Settings,
   SellOutlined,
 } from "@mui/icons-material";
 import { Menu, MenuItem, Popover, Slide, Typography } from "@mui/material";
@@ -39,6 +40,16 @@ const routes = [
         path: "./",
         Icon: <DashboardOutlined />,
       },
+      {
+        text: "Ajustes",
+        path: "./ajustes",
+        Icon: <Settings />,
+      },
+      {
+        text: "Sucursales",
+        path: "/sucursales",
+        Icon: <AssessmentOutlined />,
+      },
     ],
   },
 
@@ -52,8 +63,8 @@ const routes = [
         Icon: <Inventory2Outlined />,
       },
       {
-        text: "R. Mercancia",
-        path: "/",
+        text: "Categorias",
+        path: "/categorias",
         Icon: <ReceiptOutlined />,
       },
       {
@@ -61,11 +72,7 @@ const routes = [
         path: "/marcas",
         Icon: <AssessmentOutlined />,
       },
-      {
-        text: "Reportes",
-        path: "/",
-        Icon: <AssessmentOutlined />,
-      },
+
       {
         text: "Clientes",
         path: "/clientes",
@@ -81,21 +88,16 @@ const routes = [
         path: "/facturas",
         Icon: <SellOutlined />,
       },
-      {
-        text: "Suplidores",
-        path: "/suplidores",
-        Icon: <ContactPageOutlined />,
-      },
-      {
-        text: "Transacciones",
-        path: "./",
-        Icon: <PaidOutlined />,
-      },
-      {
-        text: "Reportes",
-        path: "./",
-        Icon: <AssessmentOutlined />,
-      },
+      // {
+      //   text: "Suplidores",
+      //   path: "/suplidores",
+      //   Icon: <ContactPageOutlined />,
+      // },
+      // {
+      //   text: "Transacciones",
+      //   path: "./",
+      //   Icon: <PaidOutlined />,
+      // },
     ],
   },
 ];
