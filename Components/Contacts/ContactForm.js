@@ -63,6 +63,8 @@ export default function ContactForm({ contact }) {
   const [allowCredit, setAllowCredit] = useState(false);
   const [allowDiscount, setAllowDiscount] = useState(false);
   const [clientTypes, setClientTypes] = useState();
+  const [discount, setDiscount] = useState();
+  const [credit, setCredit] = useState();
 
   const toastId = useRef(null);
 
@@ -175,120 +177,193 @@ export default function ContactForm({ contact }) {
         </div>
       </div>
 
-      <div className=" rounded-2xl shadow-md col-span-12 lg:col-span-8 md:mx-6">
+      <div className="  col-span-12 lg:col-span-8 md:mx-6">
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className="flex flex-col p-8 space-y-4 px-6"
+          className="flex flex-col space-y-2 px-6"
         >
-          <div className="flex w-full space-x-4">
-            <FormControl className="w-full">
-              <TextField
-                {...register("name", {
-                  required: true,
-                })}
-                id="outlined-adornment-name"
-                label="Nombre"
-                size="medium"
-                error={errors.name && "value"}
-                className="input-rounded"
-                helperText={errors.name && `El campo no es valido`}
-                variant="outlined"
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <BadgeOutlined
-                        className={`${errors.name && "text-red-500"} `}
-                      />
-                    </InputAdornment>
-                  ),
-                }}
-                fullWidth
-              />
-            </FormControl>
-            <FormControl className="w-full">
-              <InputLabel id="select-type-identification">
-                Tipo de Cliente
-              </InputLabel>
-              <Select
-                {...register("typeId")}
-                labelId="select-type-identification"
-                id="select-type-identificationr"
-                value={clientType}
-                onChange={(params) => setClientType(params.target.value)}
-                size="large"
-                className="rounded-xl text-md"
-                label="Tipo de cliente"
-              >
-                {clientTypes &&
-                  clientTypes.map((type, index) => {
-                    return (
-                      <MenuItem value={type.id} key={index}>
-                        <div className="flex items-center">
-                          {/* <img
+          {/* Personal info client */}
+          <div className=" shadow-md rounded-2xl p-4 space-y-3">
+            <div className="flex flex-col mx-2 space-y-1 py-2">
+              <span className="font-bold tracking-wider">
+                Informacion de cliente
+              </span>
+              <span className="text-sm text-neutral-500">
+                Ingresa datos especificos del cliente.
+              </span>
+            </div>
+            <div className="flex w-full space-x-4">
+              <FormControl className="w-full">
+                <TextField
+                  {...register("name", {
+                    required: true,
+                  })}
+                  id="outlined-adornment-name"
+                  label="Nombre"
+                  size="medium"
+                  error={errors.name && "value"}
+                  className="input-rounded"
+                  helperText={errors.name && `El campo no es valido`}
+                  variant="outlined"
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <BadgeOutlined
+                          className={`${errors.name && "text-red-500"} `}
+                        />
+                      </InputAdornment>
+                    ),
+                  }}
+                  fullWidth
+                />
+              </FormControl>
+              <FormControl className="w-full">
+                <InputLabel id="select-type-identification">
+                  Tipo de Cliente
+                </InputLabel>
+                <Select
+                  {...register("typeId")}
+                  labelId="select-type-identification"
+                  id="select-type-identificationr"
+                  value={clientType}
+                  onChange={(params) => setClientType(params.target.value)}
+                  size="large"
+                  className="rounded-xl text-md"
+                  label="Tipo de cliente"
+                >
+                  {clientTypes &&
+                    clientTypes.map((type, index) => {
+                      return (
+                        <MenuItem value={type.id} key={index}>
+                          <div className="flex items-center">
+                            {/* <img
                       src="https://cdn-icons-png.flaticon.com/128/1726/1726620.png"
                       className="w-8 h-8"
                     ></img> */}
-                          <span className="mx-2">{type.name}</span>
-                        </div>
-                      </MenuItem>
-                    );
+                            <span className="mx-2">{type.name}</span>
+                          </div>
+                        </MenuItem>
+                      );
+                    })}
+                </Select>
+              </FormControl>
+            </div>
+            <div className=" space-y-3">
+              <FormControl className="w-full">
+                <TextField
+                  {...register("email", {
+                    required: true,
                   })}
-              </Select>
-            </FormControl>
+                  id="outlined-adornment-name"
+                  label="Correo"
+                  size="large"
+                  error={errors.email && "value"}
+                  className="input-rounded"
+                  helperText={errors.email && `El campo no es valido`}
+                  variant="outlined"
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <EmailOutlined
+                          className={`${errors.email && "text-red-500"} `}
+                        />
+                      </InputAdornment>
+                    ),
+                  }}
+                  fullWidth
+                />
+              </FormControl>
+              <FormControl className="w-full">
+                <TextField
+                  {...register("noIdentification", { required: true })}
+                  id="outlined-adornment-identification"
+                  label=" No. Identification"
+                  size="medium"
+                  className="input-rounded text-md"
+                  variant="outlined"
+                  error={errors.noIdentification}
+                  helperText={
+                    errors.noIdentification && `El campo no es valido`
+                  }
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <ArticleOutlined
+                          className={`${
+                            errors.noIdentification && "text-red-500"
+                          } `}
+                        />
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+              </FormControl>
+            </div>
           </div>
-          <FormControl className="w-full">
-            <TextField
-              {...register("email", {
-                required: true,
-              })}
-              id="outlined-adornment-name"
-              label="Correo"
-              size="large"
-              error={errors.email && "value"}
-              className="input-rounded"
-              helperText={errors.email && `El campo no es valido`}
-              variant="outlined"
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <EmailOutlined
-                      className={`${errors.email && "text-red-500"} `}
-                    />
-                  </InputAdornment>
-                ),
-              }}
-              fullWidth
-            />
-          </FormControl>
-          <FormControl className="w-full">
-            <TextField
-              {...register("noIdentification", { required: true })}
-              id="outlined-adornment-identification"
-              label=" No. Identification"
-              size="medium"
-              className="input-rounded text-md"
-              variant="outlined"
-              error={errors.noIdentification}
-              helperText={errors.noIdentification && `El campo no es valido`}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <ArticleOutlined
-                      className={`${
-                        errors.noIdentification && "text-red-500"
-                      } `}
-                    />
-                  </InputAdornment>
-                ),
-              }}
-            />
-          </FormControl>
-          <div className="flex space-x-4">
+          {/* Contact info client */}
+          <div className="flex flex-col  shadow-md rounded-2xl p-4 ">
+            <div className="flex flex-col mx-2 space-y-1 py-4">
+              <span className="text-sm text-neutral-500">
+                Agrega el numero de telefono de tu cliente.
+              </span>
+            </div>
+            <div className="flex space-x-4">
+              <FormControl className="w-full">
+                <TextField
+                  {...register("contacts[0].number", { required: true })}
+                  id="outlined-adornment-phone"
+                  label="Numero de telefono"
+                  size="medium"
+                  className="input-rounded text-md"
+                  variant="outlined"
+                  error={errors.phone}
+                  helperText={errors.phone && `El campo no es valido`}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <PhoneOutlined
+                          className={`${errors.phone && "text-red-500"} `}
+                        />
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+              </FormControl>
+              <FormControl className="w-full">
+                <TextField
+                  {...register("contacts[0].name", { required: true })}
+                  id="outlined-adornment-phone"
+                  label="Nombre de telefono"
+                  size="medium"
+                  className="input-rounded text-md"
+                  variant="outlined"
+                  // error={errors.phone}
+                  // helperText={errors.phone && `El campo no es valido`}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <PhoneOutlined
+                          className={`${errors.phone && "text-red-500"} `}
+                        />
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+              </FormControl>
+            </div>
+          </div>
+          {/* Address info client */}
+          <div className="flex flex-col space-y-3  shadow-md rounded-2xl p-4 ">
+            <div className="flex flex-col mx-2 space-y-1 py-1">
+              <span className="text-sm text-neutral-500">
+                Direcciones del cliente.
+              </span>
+            </div>
             <FormControl className="w-full">
               <TextField
-                {...register("contacts[0].number", { required: true })}
+                {...register("addresses[0].address", { required: true })}
                 id="outlined-adornment-phone"
-                label="Numero de telefono"
+                label="Direccion"
                 size="medium"
                 className="input-rounded text-md"
                 variant="outlined"
@@ -297,70 +372,6 @@ export default function ContactForm({ contact }) {
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
-                      <PhoneOutlined
-                        className={`${errors.phone && "text-red-500"} `}
-                      />
-                    </InputAdornment>
-                  ),
-                }}
-              />
-            </FormControl>
-            <FormControl className="w-full">
-              <TextField
-                {...register("contacts[0].name", { required: true })}
-                id="outlined-adornment-phone"
-                label="Nombre de telefono"
-                size="medium"
-                className="input-rounded text-md"
-                variant="outlined"
-                // error={errors.phone}
-                // helperText={errors.phone && `El campo no es valido`}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <PhoneOutlined
-                        className={`${errors.phone && "text-red-500"} `}
-                      />
-                    </InputAdornment>
-                  ),
-                }}
-              />
-            </FormControl>
-          </div>
-          {/* Addresses */}
-          <FormControl className="w-full">
-            <TextField
-              {...register("addresses[0].address", { required: true })}
-              id="outlined-adornment-phone"
-              label="Direccion"
-              size="medium"
-              className="input-rounded text-md"
-              variant="outlined"
-              error={errors.phone}
-              helperText={errors.phone && `El campo no es valido`}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <RouteRounded
-                      className={`${errors.phone && "text-red-500"} `}
-                    />
-                  </InputAdornment>
-                ),
-              }}
-            />
-          </FormControl>
-          <div className="flex space-x-4">
-            <FormControl className="w-full">
-              <TextField
-                {...register("addresses[0].country", { required: true })}
-                id="outlined-adornment-phone"
-                label="Pais"
-                size="medium"
-                className="input-rounded text-md"
-                variant="outlined"
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
                       <RouteRounded
                         className={`${errors.phone && "text-red-500"} `}
                       />
@@ -369,108 +380,150 @@ export default function ContactForm({ contact }) {
                 }}
               />
             </FormControl>
-            <FormControl className="w-full">
-              <TextField
-                {...register("addresses[0].name", { required: true })}
-                id="outlined-adornment-phone"
-                label="Nombre de la direccion"
-                size="medium"
-                className="input-rounded text-md"
-                variant="outlined"
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <RouteRounded
-                        className={`${errors.phone && "text-red-500"} `}
-                      />
-                    </InputAdornment>
-                  ),
-                }}
-              />
-            </FormControl>
+            <div className="flex space-x-4">
+              <FormControl className="w-full">
+                <TextField
+                  {...register("addresses[0].country", { required: true })}
+                  id="outlined-adornment-phone"
+                  label="Pais"
+                  size="medium"
+                  className="input-rounded text-md"
+                  variant="outlined"
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <RouteRounded
+                          className={`${errors.phone && "text-red-500"} `}
+                        />
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+              </FormControl>
+              <FormControl className="w-full">
+                <TextField
+                  {...register("addresses[0].name", { required: true })}
+                  id="outlined-adornment-phone"
+                  label="Nombre de la direccion"
+                  size="medium"
+                  className="input-rounded text-md"
+                  variant="outlined"
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <RouteRounded
+                          className={`${errors.phone && "text-red-500"} `}
+                        />
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+              </FormControl>
+            </div>
           </div>
           {/* Credit field */}
-          <div className="flex space-x-4">
-            <FormControl className="w-full">
-              <InputLabel id="select-type-identification">
-                Permitir credito?
-              </InputLabel>
-              <Select
-                {...register("allowCredit")}
-                className="rounded-xl text-md"
-                label="Permitir credito?"
-                value={allowCredit}
-              >
-                <MenuItem value={true} onClick={() => setAllowCredit(true)}>
-                  Permitir
-                </MenuItem>
-                <MenuItem value={false} onClick={() => setAllowCredit(false)}>
-                  No Permitir
-                </MenuItem>
-              </Select>
-            </FormControl>
-            <FormControl className="w-full">
-              <TextField
-                {...register("creditdays")}
-                id="outlined-adornment-phone"
-                label="Dias de credito"
-                size="medium"
-                type="number"
-                className="input-rounded text-md"
-                variant="outlined"
-                disabled={!allowCredit}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <CalendarMonth />
-                    </InputAdornment>
-                  ),
-                }}
-              />
-            </FormControl>
+          <div className=" flex flex-col space-y-3  shadow-md rounded-2xl p-4">
+            <div className="flex flex-col mx-2 space-y-1 py-1">
+              <span className="font-bold tracking-wider">
+                Permisos otorgados al cliente
+              </span>
+              <span className="text-sm text-neutral-500">
+                Descuentos y creditos otorgados.
+              </span>
+            </div>
+            <div className="flex space-x-4">
+              <FormControl className="w-full">
+                <InputLabel id="select-type-identification">
+                  Permitir credito?
+                </InputLabel>
+                <Select
+                  {...register("allowCredit")}
+                  className="rounded-xl text-md"
+                  label="Permitir credito?"
+                  value={allowCredit}
+                >
+                  <MenuItem value={true} onClick={() => setAllowCredit(true)}>
+                    Permitir
+                  </MenuItem>
+                  <MenuItem
+                    value={false}
+                    onClick={() => {
+                      setAllowCredit(false), setCredit(0);
+                    }}
+                  >
+                    No Permitir
+                  </MenuItem>
+                </Select>
+              </FormControl>
+              <FormControl className="w-full">
+                <TextField
+                  {...register("creditdays")}
+                  id="outlined-adornment-phone"
+                  label="Dias de credito"
+                  size="medium"
+                  type="number"
+                  className="input-rounded text-md"
+                  variant="outlined"
+                  value={credit}
+                  disabled={!allowCredit}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <CalendarMonth />
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+              </FormControl>
+            </div>
+            <div className="flex space-x-4">
+              <FormControl className="w-full">
+                <InputLabel id="select-type-identification">
+                  Permitir descuento?
+                </InputLabel>
+                <Select
+                  {...register("allowdiscount")}
+                  className="rounded-xl text-md"
+                  label="Permitir descuento?"
+                  value={allowDiscount}
+                >
+                  <MenuItem value={true} onClick={() => setAllowDiscount(true)}>
+                    Permitir
+                  </MenuItem>
+                  <MenuItem
+                    value={false}
+                    onClick={() => {
+                      setAllowDiscount(false), setDiscount(0);
+                    }}
+                  >
+                    No Permitir
+                  </MenuItem>
+                </Select>
+              </FormControl>
+              <FormControl className="w-full">
+                <TextField
+                  {...register("discount")}
+                  id="outlined-adornment-phone"
+                  label="Descuento"
+                  size="medium"
+                  type="number"
+                  className="input-rounded text-md"
+                  variant="outlined"
+                  value={discount}
+                  disabled={!allowDiscount}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <AttachMoney />
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+              </FormControl>
+            </div>
           </div>
-          <div className="flex space-x-4">
-            <FormControl className="w-full">
-              <InputLabel id="select-type-identification">
-                Permitir descuento?
-              </InputLabel>
-              <Select
-                {...register("allowdiscount")}
-                className="rounded-xl text-md"
-                label="Permitir descuento?"
-                value={allowDiscount}
-              >
-                <MenuItem value={true} onClick={() => setAllowDiscount(true)}>
-                  Permitir
-                </MenuItem>
-                <MenuItem value={false} onClick={() => setAllowDiscount(false)}>
-                  No Permitir
-                </MenuItem>
-              </Select>
-            </FormControl>
-            <FormControl className="w-full">
-              <TextField
-                {...register("discount")}
-                id="outlined-adornment-phone"
-                label="Descuento"
-                size="medium"
-                type="number"
-                className="input-rounded text-md"
-                variant="outlined"
-                disabled={!allowDiscount}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <AttachMoney />
-                    </InputAdornment>
-                  ),
-                }}
-              />
-            </FormControl>
-          </div>
-
           {/* Save Button */}
-          <div className="flex w-full justify-end space-x-4 ">
+          <div className="flex w-full justify-end space-x-4 py-4 ">
             <Button
               variant="contained"
               size="medium"

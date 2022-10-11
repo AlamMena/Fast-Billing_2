@@ -6,9 +6,13 @@ import { setUser } from "../Store/UserSlice";
 import auth from "../Auth/FirebaseAuthContext";
 import AuthContext from "../Auth/AuthContext";
 import Auth from "../Auth/FirebaseAuthContext";
+import Router from "next/router";
+import useAuth from "../Auth/useAuth";
 
 export default function useAxios() {
   // const { data: user } = useSelector((state) => state.user);
+  const router = Router;
+  const { LogOut } = useAuth();
 
   const axiosInstance = axios.create({
     baseURL: "https://fastbilling.azurewebsites.net/api/",
@@ -25,7 +29,27 @@ export default function useAxios() {
     },
     function (error) {
       // Request error
-      return Promise.reject(error);
+      return console.log(error.response.status), "response error";
+    }
+  );
+
+  axiosInstance.interceptors.response.use(
+    function (response) {
+      // Any status code that lie within the range of 2xx cause this function to trigger
+      // Do something with response data
+      return response;
+    },
+    function (error) {
+      // Any status codes that falls outside the range of 2xx cause this function to trigger
+      // Do something with response error
+      if (error.response) {
+        if (error.response.status < 500) {
+          LogOut();
+          router.push("./login");
+          console.log("401 0 404");
+        }
+      }
+      return error;
     }
   );
 

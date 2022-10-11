@@ -123,8 +123,8 @@ export default function SubCategoryForm({
                       `El campo 'Tipo de categoria' es requerido`
                     }
                   >
-                    {categories.map((item) => (
-                      <MenuItem key={item.id} value={item.id}>
+                    {categories.map((item, index) => (
+                      <MenuItem key={index} value={item.id}>
                         {item.name}
                       </MenuItem>
                     ))}

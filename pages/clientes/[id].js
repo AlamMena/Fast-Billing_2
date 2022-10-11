@@ -53,16 +53,16 @@ export default function UpsertContact({ id }) {
 
   const locationRoutes = [
     {
-      text: "home",
+      text: "Inicio",
       link: "/",
     },
     {
-      text: "contactos",
-      link: "/contactos",
+      text: "Clientes",
+      link: "/clientes",
     },
     {
-      text: "crear",
-      link: "/contactos/crear",
+      text: "Crear",
+      link: "/clientes/crear",
     },
   ];
 
