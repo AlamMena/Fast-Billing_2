@@ -18,11 +18,7 @@ function TabPanel(props) {
       aria-labelledby={`simple-tab-${index}`}
       {...other}
     >
-      {value === index && (
-        <Box>
-          <div> {children}</div>
-        </Box>
-      )}
+      {value === index && <Box>{children}</Box>}
     </div>
   );
 }
@@ -74,7 +70,7 @@ export default function UpsertContact({ id }) {
           locationRoutes={locationRoutes}
         />
       </div>
-      <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+      {/* <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
         <Tabs
           aria-label="basic tabs example"
           value={value}
@@ -103,13 +99,13 @@ export default function UpsertContact({ id }) {
             {...a11yProps(1)}
           />
         </Tabs>
-      </Box>
-      <TabPanel value={value} index={0}>
-        <ContactForm contact={client} />
-      </TabPanel>
-      <TabPanel value={value} index={1}>
+      </Box> */}
+      {/* <TabPanel value={value} index={0}> */}
+      <ContactForm contact={client} invoices={true} />
+      {/* </TabPanel> */}
+      {/* <TabPanel value={value} index={1}>
         <ContactHistory contact={client} />
-      </TabPanel>
+      </TabPanel> */}
     </div>
   );
 }
