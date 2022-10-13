@@ -189,6 +189,7 @@ export default function ContactForm({ contact, invoices }) {
             aria-label="basic tabs example"
             value={content}
             onChange={handleChange}
+            sx={{ overflow: "visible" }}
           >
             <Tab
               icon={<AccountCircle />}

@@ -8,10 +8,29 @@ import {
   Avatar,
   Typography,
   Divider,
+  InputLabel,
+  InputAdornment,
+  OutlinedInput,
 } from "@mui/material";
+
+import { Add, DateRangeRounded, Edit } from "@mui/icons-material";
+
 import { Download } from "@mui/icons-material";
+import dayjs from "dayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { MobileDatePicker } from "@mui/x-date-pickers";
+
+import { useState, useEffect } from "react";
+import { borderColor } from "@mui/system";
 
 export default function ContactHistory({ contact }) {
+  const [currentDate, setCurrentDate] = useState(dayjs());
+
+  const handleDateChange = (value) => {
+    setCurrentDate(value);
+  };
+
   const item = (
     <List sx={{ width: "100%", bgcolor: "background.paper" }}>
       <div className="flex justify-around items-center">
@@ -61,10 +80,48 @@ export default function ContactHistory({ contact }) {
 
   return (
     <div className="col-span-12 p-5">
-      <div className=" rounded-t-lg shadow-sm text-lg tracking-wider font-bold p-2 ">
-        Transacciones
+      <div className="flex-col lg:flex justify-center md:justify-between p-4 items-center">
+        <span className=" text-lg tracking-wider font-bold ">
+          Transacciones
+        </span>
+        <div className=" space-x-2 ">
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <MobileDatePicker
+              inputFormat="MM/DD/YYYY"
+              value={currentDate}
+              className="rounded-xl"
+              onChange={handleDateChange}
+              renderInput={(params) => (
+                <OutlinedInput
+                  size="small"
+                  sx={{
+                    backgroundColor: "#F5F5F5	",
+                    borderColor: "#F5F5F5",
+                    color: "#B0B0B0	",
+                    width: 180,
+                  }}
+                  endAdornment={
+                    <InputAdornment position="start">
+                      <DateRangeRounded />
+                    </InputAdornment>
+                  }
+                  {...params}
+                />
+              )}
+            />
+          </LocalizationProvider>
+          <IconButton
+            size="medium"
+            className="w-10  bg-green-600 hover:bg-green-700 hover:text-white text-white rounded-2xl"
+            // onClick={() => setContent(0)}
+            color="secondary"
+            variant="contained"
+          >
+            <Add />
+          </IconButton>
+        </div>
       </div>
-      <div className="max-h-80 overflow-auto">
+      <div className="max-h-80 overflow-auto w-full min-h-full">
         {item}
         {item}
       </div>
