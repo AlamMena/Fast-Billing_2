@@ -18,7 +18,7 @@ function TabPanel(props) {
       aria-labelledby={`simple-tab-${index}`}
       {...other}
     >
-      {value === index && <Box>{children}</Box>}
+      {value === index && <Box className="p-2">{children}</Box>}
     </div>
   );
 }
@@ -63,7 +63,7 @@ export default function UpsertContact({ id }) {
   ];
 
   return (
-    <div className="-full md:px-0 px-4 md:pr-8 flex flex-col pb-5">
+    <div className="w-full md:px-0 md:pr-8 flex flex-col pb-5">
       <div className="flex w-full justify-between items-center pr-8 ">
         <PageHeader
           header="Modificar Cliente"
