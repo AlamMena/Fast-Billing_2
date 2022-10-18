@@ -33,7 +33,7 @@ export default function Contacts() {
   const router = useRouter();
   const locationRoutes = [
     {
-      text: "Home",
+      text: "Inicio",
       link: "/",
     },
     {
@@ -46,10 +46,10 @@ export default function Contacts() {
     try {
       setPageState({ ...pageState, isLoading: true });
 
-      const queryFilters = `page=${pageState.page}&limit=${pageState.pageSize}&value=${filter}&isDeleted=${suplierStatus}`;
+      const queryFilters = `page=${pageState.page}&limit=${pageState.pageSize}&value=${filter}`;
 
       const { data: apiResponse } = await axiosInstance.get(
-        `v1/suplier/filtered?${queryFilters}`
+        `/suplier?${queryFilters}`
       );
 
       setPageState({
@@ -89,14 +89,14 @@ export default function Contacts() {
     <div className="w-full md:px-0 px-4 md:pr-8 flex flex-col">
       <div className="flex w-full justify-between items-center pr-8">
         <div>
-          <PageHeader header="Clientes" locationRoutes={locationRoutes} />
+          <PageHeader header="Suplidores" locationRoutes={locationRoutes} />
         </div>
         <div className="flex">
           <Button
             className=" z-auto rounded-xl py-2 bg-green-600 hover:bg-green-800"
             variant="contained"
             onClick={() => {
-              // router.push("/suplier/crear");
+              router.push("/suplidores/crear");
             }}
             startIcon={<Add className="text-white" />}
           >

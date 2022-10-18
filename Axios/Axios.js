@@ -43,7 +43,7 @@ export default function useAxios() {
       // Any status codes that falls outside the range of 2xx cause this function to trigger
       // Do something with response error
       if (error.response) {
-        if (error.response.status < 500) {
+        if (error.response.status === 401) {
           LogOut();
           router.push("./login");
           console.log("401 0 404");
