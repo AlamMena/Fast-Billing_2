@@ -29,6 +29,7 @@ import {
   InputLabel,
   Select,
   MenuItem,
+  AppBar,
   Tabs,
 } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
@@ -51,7 +52,9 @@ function TabPanel(props) {
       aria-labelledby={`simple-tab-${index}`}
       {...other}
     >
-      {value === index && <Box className="grid-cols-12 grid">{children}</Box>}
+      {value === index && (
+        <Box className="p-5 grid-cols-12 grid">{children}</Box>
+      )}
     </div>
   );
 }
@@ -153,12 +156,20 @@ export default function SuplierForm({ suplier }) {
 
   return (
     <div>
-      <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+      <Box
+        sx={{
+          borderBottom: 1,
+          borderColor: "divider",
+          overflow: "auto",
+        }}
+      >
         <Tabs
           aria-label="basic tabs example"
           value={content}
           onChange={handleChange}
           sx={{ overflow: "visible" }}
+          variant="scrollable"
+          allowScrollButtonsMobile
         >
           <Tab
             icon={<AccountCircle />}
@@ -200,7 +211,7 @@ export default function SuplierForm({ suplier }) {
       <div className=" md:mx-6">
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className="flex flex-col p-8 space-y-4 rounded-2xl"
+          className="flex flex-col  space-y-4 rounded-2xl"
         >
           <TabPanel value={content} index={0}>
             {/* Image handeler */}
@@ -251,7 +262,7 @@ export default function SuplierForm({ suplier }) {
               <span className="text-sm text-neutral-500">
                 Ingresa datos especificos del suplidor.
               </span>
-              <div className="flex w-full space-x-4">
+              <div className="lg:flex w-full space-y-3 lg:space-y-0 lg:space-x-4">
                 <FormControl className="w-full">
                   <TextField
                     {...register("name", {
@@ -467,291 +478,215 @@ export default function SuplierForm({ suplier }) {
             </div>
           </TabPanel>
           <TabPanel value={content} index={1}>
-            <div className=" md:col-span-6 col-span-12 m-2 space-y-4 lg:shadow-md rounded-xl lg:border p-6 ">
-              <div className="flex space-x-4 ">
-                {/* Address info supplier */}
-                <FormControl className="w-full">
-                  <TextField
-                    {...register("addresses[0].name", { required: true })}
-                    id="outlined-adornment-phone"
-                    label="Nombre de la direccion"
-                    size="medium"
-                    className="input-rounded text-md"
-                    variant="outlined"
-                    error={errors.phone}
-                    helperText={errors.phone && `El campo no es valido`}
-                  />
-                </FormControl>
-                <FormControl className="w-full">
-                  <TextField
-                    {...register("addresses[0].address", { required: true })}
-                    id="outlined-adornment-phone"
-                    label="Direccion 1"
-                    size="medium"
-                    className="input-rounded text-md"
-                    variant="outlined"
-                    error={errors.phone}
-                    helperText={errors.phone && `El campo no es valido`}
-                  />
-                </FormControl>
-              </div>
-              <div className="flex space-x-4">
-                <FormControl className="w-full">
-                  <TextField
-                    {...register("addresses[0].country", { required: true })}
-                    id="outlined-adornment-phone"
-                    label="Pais"
-                    size="medium"
-                    className="input-rounded text-md"
-                    variant="outlined"
-                    // InputProps={{
-                    //   startAdornment: (
-                    //     <InputAdornment position="start">
-                    //       <RouteRounded
-                    //         className={`${errors.phone && "text-red-500"} `}
-                    //       />
-                    //     </InputAdornment>
-                    //   ),
-                    // }}
-                  />
-                </FormControl>
-                <FormControl className="w-full">
-                  <TextField
-                    {...register("addresses[0].postalCode", {
-                      required: true,
-                    })}
-                    id="outlined-adornment-phone"
-                    label="Codigo postal"
-                    size="medium"
-                    className="input-rounded text-md"
-                    variant="outlined"
-                    // InputProps={{
-                    //   startAdornment: (
-                    //     <InputAdornment position="start">
-                    //       <RouteRounded
-                    //         className={`${errors.phone && "text-red-500"} `}
-                    //       />
-                    //     </InputAdornment>
-                    //   ),
-                    // }}
-                  />
-                </FormControl>
-              </div>
+            <div className=" col-span-12 m-2 space-y-4 shadow-md rounded-xl border p-6 ">
+              {/* Address info supplier */}
+              <FormControl className="w-full">
+                <TextField
+                  {...register("addresses[0].name", { required: true })}
+                  id="outlined-adornment-phone"
+                  label="Nombre de la direccion"
+                  size="medium"
+                  className="input-rounded text-md"
+                  variant="outlined"
+                  error={errors.phone}
+                  helperText={errors.phone && `El campo no es valido`}
+                />
+              </FormControl>
+              <FormControl className="w-full">
+                <TextField
+                  {...register("addresses[0].address", { required: true })}
+                  id="outlined-adornment-phone"
+                  label="Direccion 1"
+                  size="medium"
+                  className="input-rounded text-md"
+                  variant="outlined"
+                  error={errors.phone}
+                  helperText={errors.phone && `El campo no es valido`}
+                />
+              </FormControl>
+              <FormControl className="w-full">
+                <TextField
+                  {...register("addresses[0].country", { required: true })}
+                  id="outlined-adornment-phone"
+                  label="Pais"
+                  size="medium"
+                  className="input-rounded text-md"
+                  variant="outlined"
+                  // InputProps={{
+                  //   startAdornment: (
+                  //     <InputAdornment position="start">
+                  //       <RouteRounded
+                  //         className={`${errors.phone && "text-red-500"} `}
+                  //       />
+                  //     </InputAdornment>
+                  //   ),
+                  // }}
+                />
+              </FormControl>
+              <FormControl className="w-full">
+                <TextField
+                  {...register("addresses[0].postalCode", {
+                    required: true,
+                  })}
+                  id="outlined-adornment-phone"
+                  label="Codigo postal"
+                  size="medium"
+                  className="input-rounded text-md"
+                  variant="outlined"
+                  // InputProps={{
+                  //   startAdornment: (
+                  //     <InputAdornment position="start">
+                  //       <RouteRounded
+                  //         className={`${errors.phone && "text-red-500"} `}
+                  //       />
+                  //     </InputAdornment>
+                  //   ),
+                  // }}
+                />
+              </FormControl>
             </div>
-            <div className="md:col-span-6 col-span-12 m-2  space-y-4 lg:shadow-md lg:border p-6 rounded-xl ">
-              <div className="flex space-x-4">
-                {/* Address info supplier */}
-                <FormControl className="w-full">
-                  <TextField
-                    {...register("addresses[0].name", { required: true })}
-                    id="outlined-adornment-phone"
-                    label="Nombre de la direccion"
-                    size="medium"
-                    className="input-rounded text-md"
-                    variant="outlined"
-                    error={errors.phone}
-                    helperText={errors.phone && `El campo no es valido`}
-                  />
-                </FormControl>
-                <FormControl className="w-full">
-                  <TextField
-                    {...register("addresses[0].address", { required: true })}
-                    id="outlined-adornment-phone"
-                    label="Direccion 1"
-                    size="medium"
-                    className="input-rounded text-md"
-                    variant="outlined"
-                    error={errors.phone}
-                    helperText={errors.phone && `El campo no es valido`}
-                  />
-                </FormControl>
-              </div>
-              <div className="flex space-x-4">
-                <FormControl className="w-full">
-                  <TextField
-                    {...register("addresses[0].country", { required: true })}
-                    id="outlined-adornment-phone"
-                    label="Pais"
-                    size="medium"
-                    className="input-rounded text-md"
-                    variant="outlined"
-                    // InputProps={{
-                    //   startAdornment: (
-                    //     <InputAdornment position="start">
-                    //       <RouteRounded
-                    //         className={`${errors.phone && "text-red-500"} `}
-                    //       />
-                    //     </InputAdornment>
-                    //   ),
-                    // }}
-                  />
-                </FormControl>
-                <FormControl className="w-full">
-                  <TextField
-                    {...register("addresses[0].postalCode", {
-                      required: true,
-                    })}
-                    id="outlined-adornment-phone"
-                    label="Codigo postal"
-                    size="medium"
-                    className="input-rounded text-md"
-                    variant="outlined"
-                    // InputProps={{
-                    //   startAdornment: (
-                    //     <InputAdornment position="start">
-                    //       <RouteRounded
-                    //         className={`${errors.phone && "text-red-500"} `}
-                    //       />
-                    //     </InputAdornment>
-                    //   ),
-                    // }}
-                  />
-                </FormControl>
-              </div>
+            <div className="col-span-12 m-2  space-y-4 shadow-md border p-6 rounded-xl ">
+              {/* Address info supplier */}
+              <FormControl className="w-full">
+                <TextField
+                  {...register("addresses[0].name", { required: true })}
+                  id="outlined-adornment-phone"
+                  label="Nombre de la direccion"
+                  size="medium"
+                  className="input-rounded text-md"
+                  variant="outlined"
+                  error={errors.phone}
+                  helperText={errors.phone && `El campo no es valido`}
+                />
+              </FormControl>
+              <FormControl className="w-full">
+                <TextField
+                  {...register("addresses[0].address", { required: true })}
+                  id="outlined-adornment-phone"
+                  label="Direccion 2"
+                  size="medium"
+                  className="input-rounded text-md"
+                  variant="outlined"
+                  error={errors.phone}
+                  helperText={errors.phone && `El campo no es valido`}
+                />
+              </FormControl>
+
+              <FormControl className="w-full">
+                <TextField
+                  {...register("addresses[0].country", { required: true })}
+                  id="outlined-adornment-phone"
+                  label="Pais"
+                  size="medium"
+                  className="input-rounded text-md"
+                  variant="outlined"
+                  // InputProps={{
+                  //   startAdornment: (
+                  //     <InputAdornment position="start">
+                  //       <RouteRounded
+                  //         className={`${errors.phone && "text-red-500"} `}
+                  //       />
+                  //     </InputAdornment>
+                  //   ),
+                  // }}
+                />
+              </FormControl>
+              <FormControl className="w-full">
+                <TextField
+                  {...register("addresses[0].postalCode", {
+                    required: true,
+                  })}
+                  id="outlined-adornment-phone"
+                  label="Codigo postal"
+                  size="medium"
+                  className="input-rounded text-md"
+                  variant="outlined"
+                  // InputProps={{
+                  //   startAdornment: (
+                  //     <InputAdornment position="start">
+                  //       <RouteRounded
+                  //         className={`${errors.phone && "text-red-500"} `}
+                  //       />
+                  //     </InputAdornment>
+                  //   ),
+                  // }}
+                />
+              </FormControl>
             </div>
           </TabPanel>
           <TabPanel value={content} index={2}>
-            <div className=" md:col-span-6 col-span-12 m-2 space-y-4 lg:shadow-md rounded-xl lg:border p-6 ">
-              <div className="flex space-x-4 ">
-                {/* Address info supplier */}
-                <FormControl className="w-full">
-                  <TextField
-                    {...register("contacts[0].name", { required: true })}
-                    id="outlined-adornment-phone"
-                    label="Nombre del telefono"
-                    size="medium"
-                    className="input-rounded text-md"
-                    variant="outlined"
-                    error={errors.phone}
-                    helperText={errors.phone && `El campo no es valido`}
-                  />
-                </FormControl>
-                <FormControl className="w-full">
-                  <TextField
-                    {...register("contacts[0].phone", { required: true })}
-                    id="outlined-adornment-phone"
-                    label="Numero de telefono"
-                    size="medium"
-                    className="input-rounded text-md"
-                    variant="outlined"
-                    error={errors.phone}
-                    helperText={errors.phone && `El campo no es valido`}
-                  />
-                </FormControl>
-              </div>
-              <div className="flex space-x-4">
-                <FormControl className="w-full">
-                  <TextField
-                    {...register("addresses[0].country", { required: true })}
-                    id="outlined-adornment-phone"
-                    label="Pais"
-                    size="medium"
-                    className="input-rounded text-md"
-                    variant="outlined"
-                    // InputProps={{
-                    //   startAdornment: (
-                    //     <InputAdornment position="start">
-                    //       <RouteRounded
-                    //         className={`${errors.phone && "text-red-500"} `}
-                    //       />
-                    //     </InputAdornment>
-                    //   ),
-                    // }}
-                  />
-                </FormControl>
-                <FormControl className="w-full">
-                  <TextField
-                    {...register("addresses[0].postalCode", {
-                      required: true,
-                    })}
-                    id="outlined-adornment-phone"
-                    label="Codigo postal"
-                    size="medium"
-                    className="input-rounded text-md"
-                    variant="outlined"
-                    // InputProps={{
-                    //   startAdornment: (
-                    //     <InputAdornment position="start">
-                    //       <RouteRounded
-                    //         className={`${errors.phone && "text-red-500"} `}
-                    //       />
-                    //     </InputAdornment>
-                    //   ),
-                    // }}
-                  />
-                </FormControl>
-              </div>
+            <div className=" col-span-12 m-2 space-y-4 shadow-md rounded-xl lg:border p-6 ">
+              {/* Address info supplier */}
+              <FormControl className="w-full">
+                <TextField
+                  {...register("contacts[0].name", { required: true })}
+                  id="outlined-adornment-phone"
+                  label="Nombre del telefono"
+                  size="medium"
+                  className="input-rounded text-md"
+                  variant="outlined"
+                  error={errors.phone}
+                  helperText={errors.phone && `El campo no es valido`}
+                />
+              </FormControl>
+              <FormControl className="w-full">
+                <TextField
+                  {...register("contacts[0].phone", { required: true })}
+                  id="outlined-adornment-phone"
+                  label="Telefono 1"
+                  size="medium"
+                  className="input-rounded text-md"
+                  variant="outlined"
+                  error={errors.phone}
+                  helperText={errors.phone && `El campo no es valido`}
+                />
+              </FormControl>
             </div>
-            <div className="md:col-span-6 col-span-12 m-2  space-y-4 lg:shadow-md lg:border p-6 rounded-xl ">
-              <div className="flex space-x-4">
-                {/* Address info supplier */}
-                <FormControl className="w-full">
-                  <TextField
-                    {...register("addresses[0].name", { required: true })}
-                    id="outlined-adornment-phone"
-                    label="Nombre de la direccion"
-                    size="medium"
-                    className="input-rounded text-md"
-                    variant="outlined"
-                    error={errors.phone}
-                    helperText={errors.phone && `El campo no es valido`}
-                  />
-                </FormControl>
-                <FormControl className="w-full">
-                  <TextField
-                    {...register("addresses[0].address", { required: true })}
-                    id="outlined-adornment-phone"
-                    label="Direccion 1"
-                    size="medium"
-                    className="input-rounded text-md"
-                    variant="outlined"
-                    error={errors.phone}
-                    helperText={errors.phone && `El campo no es valido`}
-                  />
-                </FormControl>
-              </div>
-              <div className="flex space-x-4">
-                <FormControl className="w-full">
-                  <TextField
-                    {...register("addresses[0].country", { required: true })}
-                    id="outlined-adornment-phone"
-                    label="Pais"
-                    size="medium"
-                    className="input-rounded text-md"
-                    variant="outlined"
-                    // InputProps={{
-                    //   startAdornment: (
-                    //     <InputAdornment position="start">
-                    //       <RouteRounded
-                    //         className={`${errors.phone && "text-red-500"} `}
-                    //       />
-                    //     </InputAdornment>
-                    //   ),
-                    // }}
-                  />
-                </FormControl>
-                <FormControl className="w-full">
-                  <TextField
-                    {...register("addresses[0].postalCode", {
-                      required: true,
-                    })}
-                    id="outlined-adornment-phone"
-                    label="Codigo postal"
-                    size="medium"
-                    className="input-rounded text-md"
-                    variant="outlined"
-                    // InputProps={{
-                    //   startAdornment: (
-                    //     <InputAdornment position="start">
-                    //       <RouteRounded
-                    //         className={`${errors.phone && "text-red-500"} `}
-                    //       />
-                    //     </InputAdornment>
-                    //   ),
-                    // }}
-                  />
-                </FormControl>
-              </div>
+            <div className="col-span-12 m-2  space-y-4 shadow-md border p-6 rounded-xl ">
+              {/* Address info supplier */}
+              <FormControl className="w-full">
+                <TextField
+                  {...register("addresses[0].name", { required: true })}
+                  id="outlined-adornment-phone"
+                  label="Nombre de telefono"
+                  size="medium"
+                  className="input-rounded text-md"
+                  variant="outlined"
+                  error={errors.phone}
+                  helperText={errors.phone && `El campo no es valido`}
+                />
+              </FormControl>
+              <FormControl className="w-full">
+                <TextField
+                  {...register("addresses[0].address", { required: true })}
+                  id="outlined-adornment-phone"
+                  label="Telefono 2"
+                  size="medium"
+                  className="input-rounded text-md"
+                  variant="outlined"
+                  error={errors.phone}
+                  helperText={errors.phone && `El campo no es valido`}
+                />
+              </FormControl>
+            </div>
+            <div className="flex w-full justify-end space-x-4 col-span-12 p-4  ">
+              <Button
+                variant="contained"
+                size="medium"
+                className="  w-28 shadow-xl bg-neutral-200 rounded-2xl hover:bg-neutral-400 hover:text-white"
+                onClick={() => router.push("../suplidores")}
+              >
+                Cancelar
+              </Button>
+              <Button
+                variant="contained"
+                type="submit"
+                color="secondary"
+                size="medium"
+                className="font-semibold w-28 shadow-xl bg-green-600 text-white rounded-2xl"
+              >
+                Guardar
+              </Button>
             </div>
           </TabPanel>
         </form>
