@@ -26,6 +26,9 @@ import {
   FormControl,
   Box,
   Tab,
+  FormGroup,
+  FormControlLabel,
+  Switch,
   InputLabel,
   Select,
   MenuItem,
@@ -216,7 +219,7 @@ export default function SuplierForm({ suplier }) {
           <TabPanel value={content} index={0}>
             {/* Image handeler */}
             <div className="flex w-full justify-center col-span-12 lg:col-span-4">
-              <div className="rounded-2xl lg:shadow-md  px-8 py-12 flex flex-col items-center lg:border mb-10">
+              <div className="rounded-2xl shadow-md  px-8 py-12 flex flex-col items-center border mb-10">
                 <figure className=" relative w-40 h-40 outline-dashed outline-2 outline-neutral-200  p-2 rounded-full">
                   <Button
                     component="label"
@@ -249,19 +252,36 @@ export default function SuplierForm({ suplier }) {
                     className=" w-36 h-36 rounded-full transition-all  "
                   />
                 </figure>
-                <span className="text-xs px-8 m-4 text-center max-w-sm  text-neutral-500">
+                <span className="text-xs px-8 m-5 text-center max-w-sm  text-neutral-500">
                   Allowed *.jpeg, *.jpg, *.png, *.gif max size of 3.1 MB
                 </span>
+                <FormGroup>
+                  <FormControlLabel
+                    control={<Switch defaultChecked />}
+                    className="text-xs text-neutral-500"
+                    label="Descuento"
+                    labelPlacement="start"
+                  />
+                  <FormControlLabel
+                    control={<Switch defaultChecked />}
+                    className="text-xs text-neutral-500"
+                    labelPlacement="start"
+                    label="Permitir Credito"
+                  />
+                </FormGroup>
               </div>
             </div>
+
             {/* Personal info client */}
-            <div className="flex flex-col mx-2 space-y-3 col-span-12 lg:col-span-8 lg:shadow-md lg:border p-6 rounded-xl">
-              <span className="font-bold tracking-wider">
-                Informacion de suplidor
-              </span>
-              <span className="text-sm text-neutral-500">
-                Ingresa datos especificos del suplidor.
-              </span>
+            <div className="flex flex-col justify-around lg:mx-5 space-y-3 col-span-12 lg:col-span-8 shadow-md border p-6 rounded-xl">
+              <div className="flex flex-col mx-2 py-2">
+                <span className="font-bold tracking-wider">
+                  Informacion de suplidor
+                </span>
+                <span className="text-sm text-neutral-500">
+                  Ingresa datos especificos del suplidor.
+                </span>
+              </div>
               <div className="lg:flex w-full space-y-3 lg:space-y-0 lg:space-x-4">
                 <FormControl className="w-full">
                   <TextField
@@ -315,128 +335,48 @@ export default function SuplierForm({ suplier }) {
                 </FormControl>
               </div>
 
-              <FormControl className="w-full">
-                <TextField
-                  {...register("website", {
-                    required: true,
-                  })}
-                  id="outlined-adornment-name"
-                  label="Sitio web"
-                  size="large"
-                  error={errors.website && "value"}
-                  className="input-rounded"
-                  helperText={errors.website && `El campo no es valido`}
-                  variant="outlined"
-                  // InputProps={{
-                  //   startAdornment: (
-                  //     <InputAdornment position="start">
-                  //       <EmailOutlined
-                  //         className={`${errors.website && "text-red-500"} `}
-                  //       />
-                  //     </InputAdornment>
-                  //   ),
-                  // }}
-                  fullWidth
-                />
-              </FormControl>
               {/* Credit field */}
-              <div className=" flex flex-col space-y-3 ">
-                <div className="flex space-x-4">
-                  <FormControl className="w-full">
-                    <InputLabel id="select-type-identification">
-                      Permitir credito?
-                    </InputLabel>
-                    <Select
-                      {...register("allowCredit")}
-                      className="rounded-xl text-md"
-                      label="Permitir credito?"
-                      value={allowCredit}
-                    >
-                      <MenuItem
-                        value={true}
-                        onClick={() => setAllowCredit(true)}
-                      >
-                        Permitir
-                      </MenuItem>
-                      <MenuItem
-                        value={false}
-                        onClick={() => {
-                          setAllowCredit(false), setCredit(0);
-                        }}
-                      >
-                        No Permitir
-                      </MenuItem>
-                    </Select>
-                  </FormControl>
-                  <FormControl className="w-full">
-                    <TextField
-                      {...register("creditdays")}
-                      id="outlined-adornment-phone"
-                      label="Dias de credito"
-                      size="medium"
-                      type="number"
-                      className="input-rounded text-md"
-                      variant="outlined"
-                      value={credit}
-                      disabled={!allowCredit}
-                      InputProps={{
-                        startAdornment: (
-                          <InputAdornment position="start">
-                            <CalendarMonth />
-                          </InputAdornment>
-                        ),
-                      }}
-                    />
-                  </FormControl>
-                </div>
-                <div className="flex space-x-4">
-                  <FormControl className="w-full">
-                    <InputLabel id="select-type-identification">
-                      Permitir descuento?
-                    </InputLabel>
-                    <Select
-                      {...register("allowdiscount")}
-                      className="rounded-xl text-md"
-                      label="Permitir descuento?"
-                      value={allowDiscount}
-                    >
-                      <MenuItem
-                        value={true}
-                        onClick={() => setAllowDiscount(true)}
-                      >
-                        Permitir
-                      </MenuItem>
-                      <MenuItem
-                        value={false}
-                        onClick={() => {
-                          setAllowDiscount(false), setDiscount(0);
-                        }}
-                      >
-                        No Permitir
-                      </MenuItem>
-                    </Select>
-                  </FormControl>
-                  <FormControl className="w-full">
-                    <TextField
-                      {...register("discount")}
-                      id="outlined-adornment-phone"
-                      label="Descuento"
-                      size="medium"
-                      type="number"
-                      className="input-rounded text-md"
-                      variant="outlined"
-                      value={discount}
-                      disabled={!allowDiscount}
-                      InputProps={{
-                        startAdornment: (
-                          <InputAdornment position="start">
-                            <AttachMoney />
-                          </InputAdornment>
-                        ),
-                      }}
-                    />
-                  </FormControl>
-                </div>
+              <div className="flex space-x-4">
+                <FormControl className="w-full">
+                  <TextField
+                    {...register("creditdays")}
+                    id="outlined-adornment-phone"
+                    label="Dias de credito"
+                    size="medium"
+                    type="number"
+                    className="input-rounded text-md"
+                    variant="outlined"
+                    value={credit}
+                    disabled={!allowCredit}
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <CalendarMonth />
+                        </InputAdornment>
+                      ),
+                    }}
+                  />
+                </FormControl>
+                <FormControl className="w-full">
+                  <TextField
+                    {...register("discount")}
+                    id="outlined-adornment-phone"
+                    label="Descuento"
+                    size="medium"
+                    type="number"
+                    className="input-rounded text-md"
+                    variant="outlined"
+                    value={discount}
+                    disabled={!allowDiscount}
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <AttachMoney />
+                        </InputAdornment>
+                      ),
+                    }}
+                  />
+                </FormControl>
               </div>
               <FormControl className="w-full">
                 <TextField
@@ -480,6 +420,14 @@ export default function SuplierForm({ suplier }) {
           <TabPanel value={content} index={1}>
             <div className=" col-span-12 m-2 space-y-4 shadow-md rounded-xl border p-6 ">
               {/* Address info supplier */}
+              <div className="flex flex-col mx-2 py-2">
+                <span className="font-bold tracking-wider">
+                  Direcciones del suplidor
+                </span>
+                <span className="text-sm text-neutral-500">
+                  Ingresa datos especificos a las direcciones del suplidor.
+                </span>
+              </div>
               <FormControl className="w-full">
                 <TextField
                   {...register("addresses[0].name", { required: true })}
@@ -616,6 +564,12 @@ export default function SuplierForm({ suplier }) {
           </TabPanel>
           <TabPanel value={content} index={2}>
             <div className=" col-span-12 m-2 space-y-4 shadow-md rounded-xl lg:border p-6 ">
+              <div className="flex flex-col mx-2 py-2">
+                <span className="font-bold tracking-wider">Contacto</span>
+                <span className="text-sm text-neutral-500">
+                  Ingresa datos especificos al contacto del suplidor.
+                </span>
+              </div>
               {/* Address info supplier */}
               <FormControl className="w-full">
                 <TextField
