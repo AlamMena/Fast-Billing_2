@@ -29,8 +29,9 @@ export default function PrivateRouter({ children }) {
   if (user) {
     if (pathname === "/login") {
       return <Login />;
+    } else {
+      return children;
     }
-    return children;
   } else if (!user && !isLoading) {
     return <Login />;
   }

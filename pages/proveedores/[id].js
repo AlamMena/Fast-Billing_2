@@ -55,12 +55,12 @@ export default function UpsertSuplier({ id }) {
       link: "/",
     },
     {
-      text: "Suplidores",
-      link: "/suplidores",
+      text: "Proveedores",
+      link: "/proveedores",
     },
     {
       text: "crear",
-      link: "/suplidores/crear",
+      link: "/proveedores/crear",
     },
   ];
 
