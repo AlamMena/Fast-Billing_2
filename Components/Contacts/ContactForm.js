@@ -147,6 +147,7 @@ export default function ContactForm({ contact, invoices }) {
           success: "Genial!, tu cliente ha sido actualizado.",
           error: "Oops, algo ha ocurrido put",
         });
+        console.log(parsedData);
       } else {
         // if the item doesnt exists
         await toast.promise(axiosInstance.post("client", parsedData), {
