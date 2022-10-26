@@ -46,7 +46,7 @@ import {
 import { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 
-import { useForm } from "react-hook-form";
+import { useForm, useFieldArray } from "react-hook-form";
 import PageHeader from "../Globals/PageHeader";
 import useAxios from "../../Axios/Axios";
 import { postImage } from "../Globals/ImageHandler";
@@ -83,6 +83,7 @@ export default function ContactForm({ contact, invoices }) {
     register,
     reset,
     setValue,
+    getValue,
     formState: { errors },
   } = useForm({
     defaultValues: contact
@@ -94,13 +95,16 @@ export default function ContactForm({ contact, invoices }) {
           discount: 0,
         },
   });
+
   const [content, setContent] = useState(0);
   // const [invoices, setInvoices] = useState(false);
 
   const [contactType, setContactType] = useState(
     contact ? parseInt(contact.type) : 1
   );
-  const [clientType, setClientType] = useState(contact ? contact.type : 1);
+  const [clientType, setClientType] = useState(
+    contact ? parseInt(contact.type) : 1
+  );
   const [fileContainer, setFileContainer] = useState();
   const [currentImage, setCurrentImage] = useState(contact && contact.imageUrl);
   const [allowCredit, setAllowCredit] = useState(false);
@@ -185,11 +189,10 @@ export default function ContactForm({ contact, invoices }) {
   };
   const onSubmit = async (data) => {
     removeEmptyFields(data);
-    const dataParsed = {
-      ...data,
-    };
-    // alert(JSON.stringify(dataParsed));
-    await upsertAsync(dataParsed);
+    data.contacts[0] = { ...data.contacts[0], name: "CASA" };
+
+    alert(JSON.stringify(data));
+    // await upsertAsync(data);
   };
 
   const handleChange = (e, newValue) => {
@@ -198,7 +201,7 @@ export default function ContactForm({ contact, invoices }) {
 
   return (
     <div>
-      <Box
+      {/* { <Box
         sx={{
           borderBottom: 1,
           borderColor: "divider",
@@ -224,7 +227,7 @@ export default function ContactForm({ contact, invoices }) {
             label="Informacion general"
             {...a11yProps(0)}
           />
-          {/* 
+          
           <Tab
             icon={<Receipt />}
             {...a11yProps(1)}
@@ -246,9 +249,9 @@ export default function ContactForm({ contact, invoices }) {
             }}
             iconPosition="start"
             label="Contacto"
-          /> */}
+          />
         </Tabs>
-      </Box>
+      </Box>} */}
 
       <div className=" md:mx-6">
         <form
@@ -434,7 +437,7 @@ export default function ContactForm({ contact, invoices }) {
               <div className="lg:flex space-y-3 lg:space-y-0 lg:space-x-4">
                 <FormControl className="w-full">
                   <TextField
-                    // {...register("addresses[0].address")}
+                    {...register("addresses.0.address1")}
                     id="outlined-adornment-phone"
                     label="Direccion"
                     size="medium"
@@ -444,7 +447,7 @@ export default function ContactForm({ contact, invoices }) {
                 </FormControl>
                 <FormControl className="w-full">
                   <TextField
-                    // {...register("contacts[0].number")}
+                    {...register("contacts.0.number1")}
                     id="outlined-adornment-phone"
                     label="Numero de Telefono"
                     size="medium"
