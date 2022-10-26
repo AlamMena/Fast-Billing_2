@@ -71,14 +71,14 @@ export default function ContactList({
 
     {
       field: "adresses[0].address",
-      width: 190,
+      width: 150,
       headerName: "Direccion",
     },
 
     {
       field: "Acciones",
       sortable: false,
-      width: 250,
+      width: 150,
       renderCell: (cells) => {
         return (
           <div className="flex space-x-4">
@@ -89,7 +89,6 @@ export default function ContactList({
               className="text-green-400 cursor-pointer"
             >
               <EditOutlined className="text-green-400 mx-2" />
-              Editar
             </a>
             <a
               onClick={() => {
@@ -98,7 +97,7 @@ export default function ContactList({
               }}
               className="text-red-500 cursor-pointer"
             >
-              <DeleteOutline className="text-red-500 mx-2" /> Eliminar
+              <DeleteOutline className="text-red-500 mx-2" />
             </a>
           </div>
         );
@@ -171,7 +170,7 @@ export default function ContactList({
           onPageChange={onDataGridPageChange}
           onPageSizeChange={onDataGridPageSizeChange}
           columns={columns}
-          rowsPerPageOptions={[5, 20, 50, 100]}
+          rowsPerPageOptions={[5, 10, 20, 50, 100]}
           experimentalFeatures={{ newEditingApi: true }}
           paginationMode="server"
           className="p-2"

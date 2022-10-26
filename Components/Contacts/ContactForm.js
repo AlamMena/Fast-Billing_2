@@ -41,6 +41,7 @@ import {
   Tab,
   Tabs,
   IconButton,
+  Menu,
 } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
@@ -99,7 +100,7 @@ export default function ContactForm({ contact, invoices }) {
   const [contactType, setContactType] = useState(
     contact ? parseInt(contact.type) : 1
   );
-  const [clientType, setClientType] = useState(1);
+  const [clientType, setClientType] = useState(contact ? contact.type : 1);
   const [fileContainer, setFileContainer] = useState();
   const [currentImage, setCurrentImage] = useState(contact && contact.imageUrl);
   const [allowCredit, setAllowCredit] = useState(false);
@@ -125,6 +126,14 @@ export default function ContactForm({ contact, invoices }) {
     setCurrentImage(URL.createObjectURL(e.target.files[0]));
     setFileContainer(e.target.files[0]);
   };
+
+  function removeEmptyFields(data) {
+    Object.keys(data).forEach((key) => {
+      if (data[key] === "" || data[key] == null) {
+        delete data[key];
+      }
+    });
+  }
 
   const upsertAsync = async (requestData) => {
     try {
@@ -169,11 +178,13 @@ export default function ContactForm({ contact, invoices }) {
     try {
       const { data } = await axiosInstance.get("clients/types");
       setClientTypes(data);
+      console.log(clientTypes);
     } catch (error) {
       console.log(error);
     }
   };
   const onSubmit = async (data) => {
+    removeEmptyFields(data);
     const dataParsed = {
       ...data,
     };
@@ -213,7 +224,7 @@ export default function ContactForm({ contact, invoices }) {
             label="Informacion general"
             {...a11yProps(0)}
           />
-
+          {/* 
           <Tab
             icon={<Receipt />}
             {...a11yProps(1)}
@@ -235,7 +246,7 @@ export default function ContactForm({ contact, invoices }) {
             }}
             iconPosition="start"
             label="Contacto"
-          />
+          /> */}
         </Tabs>
       </Box>
 
@@ -384,22 +395,64 @@ export default function ContactForm({ contact, invoices }) {
                   />
                 </FormControl>
               </div>
-
+              <FormControl className="w-full">
+                <InputLabel id="select-type-identification">
+                  Tipo de Cliente
+                </InputLabel>
+                <Select
+                  {...register("typeId")}
+                  labelId="select-type-identification"
+                  id="select-type-identificationr"
+                  value={clientType}
+                  onChange={(params) => setClientType(params.target.value)}
+                  size="large"
+                  className="rounded-xl text-md"
+                  label="Tipo de cliente"
+                >
+                  {clientTypes &&
+                    clientTypes.map((type, index) => {
+                      return (
+                        <MenuItem value={type.id} key={index}>
+                          <div className="flex items-center">
+                            <span className="mx-2">{type.name}</span>
+                          </div>
+                        </MenuItem>
+                      );
+                    })}
+                </Select>
+              </FormControl>
               <FormControl className="w-full">
                 <TextField
-                  {...register("email", {
-                    required: true,
-                  })}
+                  {...register("email")}
+                  id="outlined-adornment-phone"
                   label="E-mail"
-                  variant="outlined"
-                  multiline
                   size="medium"
-                  error={errors.email && "value"}
-                  className="input-rounded"
-                  helperText={errors.email && `El campo no es valido`}
-                  fullWidth
+                  className="input-rounded text-md"
+                  variant="outlined"
                 />
               </FormControl>
+              <div className="lg:flex space-y-3 lg:space-y-0 lg:space-x-4">
+                <FormControl className="w-full">
+                  <TextField
+                    // {...register("addresses[0].address")}
+                    id="outlined-adornment-phone"
+                    label="Direccion"
+                    size="medium"
+                    className="input-rounded text-md"
+                    variant="outlined"
+                  />
+                </FormControl>
+                <FormControl className="w-full">
+                  <TextField
+                    // {...register("contacts[0].number")}
+                    id="outlined-adornment-phone"
+                    label="Numero de Telefono"
+                    size="medium"
+                    className="input-rounded text-md"
+                    variant="outlined"
+                  />
+                </FormControl>
+              </div>
 
               {/* Credit field */}
               <div className="flex space-x-4">
@@ -467,9 +520,11 @@ export default function ContactForm({ contact, invoices }) {
               </div>
             </div>
           </TabPanel>
+
+          {/*  
           <TabPanel value={content} index={1}>
             <div className=" col-span-12 m-2 space-y-4 shadow-md rounded-xl border p-6 ">
-              {/* Address info supplier */}
+              
               <div className="flex flex-col mx-2 py-2">
                 <span className="font-bold tracking-wider">
                   Direcciones del contacto
@@ -520,7 +575,7 @@ export default function ContactForm({ contact, invoices }) {
               </FormControl>
             </div>
             <div className="col-span-12 m-2  space-y-4 shadow-md border p-6 rounded-xl ">
-              {/* Address info supplier */}
+              
               <FormControl className="w-full">
                 <TextField
                   {...register("addresses[1].name")}
@@ -533,7 +588,7 @@ export default function ContactForm({ contact, invoices }) {
               </FormControl>
               <FormControl className="w-full">
                 <TextField
-                  {...register("addresses[1].address")}
+                  {...register("addresses[1].address1")}
                   id="outlined-adornment-phone"
                   label="Direccion 2"
                   size="medium"
@@ -570,7 +625,7 @@ export default function ContactForm({ contact, invoices }) {
                   onClick={() => router.push("../suplidores")}
                 >
                   Cancelar
-                </Button> */}
+                </Button> *
                 <Button
                   variant="contained"
                   type="submit"
@@ -591,10 +646,10 @@ export default function ContactForm({ contact, invoices }) {
                   Ingresa datos especificos al contacto.
                 </span>
               </div>
-              {/* Address info supplier */}
+              {/* Address info supplier *
               <FormControl className="w-full">
                 <TextField
-                  {...register("contacts[0].name")}
+                  {...register("contacts[0].name", { required: false })}
                   id="outlined-adornment-phone"
                   label="Nombre del telefono"
                   size="medium"
@@ -614,10 +669,10 @@ export default function ContactForm({ contact, invoices }) {
               </FormControl>
             </div>
             <div className="col-span-12 m-2  space-y-4 shadow-md border p-6 rounded-xl ">
-              {/* Address info supplier */}
+              {/* Address info supplier 
               <FormControl className="w-full">
                 <TextField
-                  {...register("contacts[1].name")}
+                  {...register("Contacts[1].Name")}
                   id="outlined-adornment-phone"
                   label="Nombre de telefono"
                   size="medium"
@@ -643,7 +698,7 @@ export default function ContactForm({ contact, invoices }) {
                   onClick={() => router.push("../suplidores")}
                 >
                   Cancelar
-                </Button> */}
+                </Button> *
                 <Button
                   variant="contained"
                   type="submit"
@@ -654,8 +709,8 @@ export default function ContactForm({ contact, invoices }) {
                   Guardar
                 </Button>
               </div>
-            </div>
-          </TabPanel>
+            </div> 
+          </TabPanel>*/}
         </form>
       </div>
     </div>

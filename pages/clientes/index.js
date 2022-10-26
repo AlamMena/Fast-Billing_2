@@ -124,6 +124,7 @@ export default function Contacts() {
         onConfirm={() => {
           deleteAsync(itemToDelete);
         }}
+        message="este cliente"
       />
     </div>
   );

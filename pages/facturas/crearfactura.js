@@ -1,5 +1,5 @@
 import React from "react";
-import PageHeader from "../Components/Globals/PageHeader";
+import PageHeader from "../../Components/Globals/PageHeader";
 import dayjs from "dayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -19,14 +19,14 @@ import { useState, useEffect } from "react";
 import { Add, DateRangeRounded, Edit } from "@mui/icons-material";
 import { MobileDatePicker } from "@mui/x-date-pickers";
 import { useForm } from "react-hook-form";
-import InvoiceDetail from "../Components/CreateInvoice/InvoiceDetails";
+import InvoiceDetail from "../../Components/CreateInvoice/InvoiceDetails";
 import { toast } from "react-toastify";
-import useAxios from "../Axios/Axios";
+import useAxios from "../../Axios/Axios";
 import {
   InvoiceRecipient,
   InvoiceBeneficiary,
-} from "../Components/CreateInvoice/InvoiceContact";
-import SelectPopUp from "../Components/CreateInvoice/SelectPopUp";
+} from "../../Components/CreateInvoice/InvoiceContact";
+import SelectPopUp from "../../Components/CreateInvoice/SelectPopUp";
 import { useDispatch } from "react-redux";
 import {
   updateDiscount,
@@ -36,10 +36,10 @@ import {
   updateCreationDate,
   resetState,
   updateDueDate,
-} from "../Store/InvoiceSlice";
+} from "../../Store/InvoiceSlice";
 import { useSelector } from "react-redux";
-import SelectProducts from "../Components/CreateInvoice/SelectProducts";
-import ConfirmationForm from "../Components/Globals/ConfirmationForm";
+import SelectProducts from "../../Components/CreateInvoice/SelectProducts";
+import ConfirmationForm from "../../Components/Globals/ConfirmationForm";
 import Router from "next/router";
 
 export default function CreateInvoice() {
@@ -114,7 +114,7 @@ export default function CreateInvoice() {
 
   const locationRoutes = [
     {
-      text: "Dashboard",
+      text: "Inicio",
       link: "/",
     },
     {
@@ -123,7 +123,7 @@ export default function CreateInvoice() {
     },
     {
       text: "Nueva Factura",
-      link: "/User/list",
+      link: "/facturas/crearfactura",
     },
   ];
 

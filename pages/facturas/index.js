@@ -1,10 +1,10 @@
 import React from "react";
-import PageHeader from "../Components/Globals/PageHeader";
+import PageHeader from "../../Components/Globals/PageHeader";
 import { Button } from "@mui/material";
 import { Add } from "@mui/icons-material";
 import Router from "next/router";
-import InvoiceList from "../Components/CreateInvoice/InvoiceList";
-import useAxios from "../Axios/Axios";
+import InvoiceList from "../../Components/CreateInvoice/InvoiceList";
+import useAxios from "../../Axios/Axios";
 import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 
@@ -33,7 +33,7 @@ export default function Invoices() {
     },
     {
       text: "Facturas",
-      link: "/",
+      link: "/facturas",
     },
   ];
 
@@ -52,7 +52,7 @@ export default function Invoices() {
             <Button
               className=" z-auto rounded-xl py-2 bg-green-600 hover:bg-green-800"
               variant="contained"
-              onClick={() => Router.push("./crearfactura")}
+              onClick={() => Router.push("./facturas/crearfactura")}
               startIcon={<Add className="text-white" />}
             >
               <span className="text-sm whitespace-nowrap text-neutral-50 capitalize font-bold">
