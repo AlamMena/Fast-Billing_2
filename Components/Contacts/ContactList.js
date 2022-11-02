@@ -64,7 +64,7 @@ export default function ContactList({
       headerName: "Correo electronico",
     },
     {
-      field: "contacts[0].number",
+      field: "contacts.0.Number",
       width: 190,
       headerName: "Telefono",
     },

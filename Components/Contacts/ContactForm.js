@@ -46,7 +46,7 @@ import {
 import { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 
-import { useForm, useFieldArray } from "react-hook-form";
+import { useForm, Controller, FormProvider } from "react-hook-form";
 import PageHeader from "../Globals/PageHeader";
 import useAxios from "../../Axios/Axios";
 import { postImage } from "../Globals/ImageHandler";
@@ -83,6 +83,7 @@ export default function ContactForm({ contact, invoices }) {
     register,
     reset,
     setValue,
+    control,
     getValue,
     formState: { errors },
   } = useForm({
@@ -190,9 +191,14 @@ export default function ContactForm({ contact, invoices }) {
   const onSubmit = async (data) => {
     removeEmptyFields(data);
     data.contacts[0] = { ...data.contacts[0], name: "CASA" };
+    data.addresses[0] = {
+      ...data.addresses[0],
+      country: "RD",
+      name: "default",
+    };
 
-    alert(JSON.stringify(data));
-    // await upsertAsync(data);
+    // alert(JSON.stringify(data));
+    await upsertAsync(data);
   };
 
   const handleChange = (e, newValue) => {
@@ -309,7 +315,9 @@ export default function ContactForm({ contact, invoices }) {
                       control={
                         <Switch
                           checked={allowDiscount}
-                          onClick={() => setAllowDiscount(!allowDiscount)}
+                          onClick={() => {
+                            setAllowDiscount(!allowDiscount);
+                          }}
                         />
                       }
                       size="small"
@@ -326,7 +334,9 @@ export default function ContactForm({ contact, invoices }) {
                       control={
                         <Switch
                           checked={allowCredit}
-                          onClick={() => setAllowCredit(!allowCredit)}
+                          onClick={() => {
+                            setAllowCredit(!allowCredit);
+                          }}
                         />
                       }
                       size="small"
@@ -352,6 +362,7 @@ export default function ContactForm({ contact, invoices }) {
                     {...register("name", {
                       required: true,
                     })}
+                    InputLabelProps={{ shrink: true }}
                     id="outlined-adornment-name"
                     label="Nombre"
                     size="medium"
@@ -385,6 +396,7 @@ export default function ContactForm({ contact, invoices }) {
                       errors.noIdentification && `El campo no es valido`
                     }
                     variant="outlined"
+                    InputLabelProps={{ shrink: true }}
                     // InputProps={{
                     //   startAdornment: (
                     //     <InputAdornment position="start">
@@ -424,35 +436,39 @@ export default function ContactForm({ contact, invoices }) {
                     })}
                 </Select>
               </FormControl>
+
               <FormControl className="w-full">
                 <TextField
                   {...register("email")}
-                  id="outlined-adornment-phone"
+                  id="outlined-adornment-email"
                   label="E-mail"
                   size="medium"
                   className="input-rounded text-md"
                   variant="outlined"
+                  InputLabelProps={{ shrink: true }}
                 />
               </FormControl>
               <div className="lg:flex space-y-3 lg:space-y-0 lg:space-x-4">
                 <FormControl className="w-full">
                   <TextField
                     {...register("addresses.0.address1")}
-                    id="outlined-adornment-phone"
+                    id="outlined-adornment-address"
                     label="Direccion"
                     size="medium"
                     className="input-rounded text-md"
                     variant="outlined"
+                    InputLabelProps={{ shrink: true }}
                   />
                 </FormControl>
                 <FormControl className="w-full">
                   <TextField
-                    {...register("contacts.0.number1")}
+                    {...register("contacts.0.number")}
                     id="outlined-adornment-phone"
                     label="Numero de Telefono"
                     size="medium"
                     className="input-rounded text-md"
                     variant="outlined"
+                    InputLabelProps={{ shrink: true }}
                   />
                 </FormControl>
               </div>
