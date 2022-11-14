@@ -10,8 +10,13 @@ import {
   InputAdornment,
   FormControl,
   InputLabel,
+  Divider,
 } from "@mui/material";
-import { AddLocationAlt, PhoneOutlined } from "@mui/icons-material";
+import {
+  AddLocationAlt,
+  ApartmentRounded,
+  PhoneOutlined,
+} from "@mui/icons-material";
 import PhotoCamera from "@mui/icons-material/PhotoCamera";
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 import ImagePoster from "../Globals/ImageHandler";
@@ -19,7 +24,7 @@ import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import Alert from "../Globals/Alert";
 
-export default function BranchForm({ onSave, open, setOpen, data, setFile }) {
+export default function BranchForm({ onSave, open, setOpen, data }) {
   const {
     handleSubmit,
     register,
@@ -29,32 +34,13 @@ export default function BranchForm({ onSave, open, setOpen, data, setFile }) {
     defaultValues: data,
   });
 
-  const [images, setImages] = useState([]);
-
-  const [suplierValue, setSuplierValue] = useState();
-
-  //   const handleSuplier = () => {
-  //     register("suplier", { value: suplierValue });
-  //   };
-
-  //   const chip = [
-  //     { name: "Ana", src: "/static/images/avatar/1.jpg" },
-  //     { name: "Pibull", src: "/static/images/avatar/1.jpg" },
-  //     { name: "Junior", src: "/static/images/avatar/1.jpg" },
-  //   ];
-
   const onSubmit = async (data) => {
-    const dataParsed = {
-      IsDeleted: false,
-      ...data,
-    };
-    await onSave(dataParsed);
+    await onSave(data);
     setOpen(false);
   };
 
   useEffect(() => {
     reset(data);
-    setImages([data && data.imageUrl]);
   }, [data]);
 
   return (
@@ -63,129 +49,87 @@ export default function BranchForm({ onSave, open, setOpen, data, setFile }) {
         <Dialog
           open={open}
           onClose={() => setOpen(false)}
-          fullWidth
-          maxWidth={"sm"}
+          PaperProps={{
+            style: { borderRadius: 15 },
+          }}
+          maxWidth="sm"
         >
           <form
             onSubmit={handleSubmit(onSubmit)}
             className="flex flex-col p-8 space-y-6 px-10"
           >
-            <h2 className="text-xl font-bold">Formulario de Sucursal </h2>
-            <FormControl>
-              <InputLabel size="normal" htmlFor="outlined-adornment-name">
-                Nombre de la sucursal
-              </InputLabel>
-              <OutlinedInput
-                {...register("name", {
-                  required: true,
-                })}
-                id="outlined-adornment-name"
-                label="Nombre de la sucursal"
-                size="small"
-                className="rounded-xl"
-                error={errors.name && "value"}
-                helpertext={errors.name && `El campo 'nombre' es requerido`}
-                variant="outlined"
-                startAdornment={
-                  <InputAdornment position="start">
-                    <FactCheckIcon />
-                  </InputAdornment>
-                }
-              />
-            </FormControl>
-            <FormControl>
-              <InputLabel size="small" htmlFor="outlined-adornment-phone">
-                Description de la marca
-              </InputLabel>
-              <OutlinedInput
-                {...register("description")}
-                id="outlined-adornment-address"
-                label="Descripcion de la marca"
-                multiline
-                size="normal"
-                className="rounded-xl text-md"
-                variant="outlined"
-                startAdornment={
-                  <InputAdornment position="start">
-                    <DescriptionIcon />
-                  </InputAdornment>
-                }
-              />
-            </FormControl>
-            <div className="flex space-x-4">
-              <FormControl className="w-full">
-                <TextField
-                  {...register("phoneNumber", { required: true })}
-                  id="outlined-adornment-phone"
-                  label="Numero de telefono"
-                  size="medium"
-                  className="input-rounded text-md"
-                  variant="outlined"
-                  error={errors.phone}
-                  helperText={errors.phone && `El campo no es valido`}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <PhoneOutlined
-                          className={`${errors.phone && "text-red-500"} `}
-                        />
-                      </InputAdornment>
-                    ),
-                  }}
-                />
-              </FormControl>
-              <FormControl className="w-full">
-                <TextField
-                  {...register("location", { required: true })}
-                  id="outlined-adornment-phone"
-                  label="Ubicacion"
-                  size="medium"
-                  className="input-rounded text-md"
-                  variant="outlined"
-                  error={errors.location}
-                  helperText={errors.location && `El campo no es valido`}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <AddLocationAlt
-                          className={`${errors.phone && "text-red-500"} `}
-                        />
-                      </InputAdornment>
-                    ),
-                  }}
-                />
-              </FormControl>
+            <div className="">
+              <div className="flex items-center mb-2">
+                <div className="bg-neutral-100 rounded-full p-2">
+                  <ApartmentRounded className="text-green-400" />
+                </div>
+                <h2 className="text-xl font-bold ml-2">Sucursales </h2>
+              </div>
+              <span className="text-sm text-black text-opacity-50">
+                Crea o edita tus sucursales y manten tu empresa organizada.
+              </span>
+              <Divider className="mt-4" />
             </div>
-            {/* <FormControl className="w-full">
-              <Autocomplete
-                onChange={(event, newValue) => {
-                  setSuplierValue(newValue);
-                  handleSuplier();
-                }}
-                ref={ref}
-                multiple
-                options={chip}
-                freeSolo
-                getOptionLabel={(chip) => chip.name}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    variant="standard"
-                    label="Proveedores"
-                  />
-                )}
-              />
 
-              {/* <FormHelperText>With label + helper text</FormHelperText> </FormControl>  */}
-
-            {/* <FormControl>
-              <ImagePoster
-                images={images}
-                setImages={setImages}
-                setFile={setFile}
+            <FormControl fullWidth>
+              <TextField
+                {...register("name", { required: true })}
+                id="outlined-adornment-phone"
+                label="Nombre"
+                size="small"
+                InputLabelProps={{ shrink: true }}
+                placeholder="Sucursal 001-000"
+                className="input-rounded"
+                variant="outlined"
+                error={errors.name}
+                helperText={errors.name && `El campo no es valido`}
               />
-            </FormControl> */}
-            <div className="flex w-full justify-end space-x-4">
+            </FormControl>
+            <FormControl fullWidth>
+              <TextField
+                {...register("phoneNumber", { required: true })}
+                id="outlined-adornment-phone"
+                label="Phone"
+                size="small"
+                InputLabelProps={{ shrink: true }}
+                placeholder="(809)-000-0000"
+                className="input-rounded"
+                variant="outlined"
+                error={errors.phone}
+                helperText={errors.phone && `El campo no es valido`}
+              />
+            </FormControl>
+            <FormControl fullWidth>
+              <TextField
+                {...register("location", { required: true })}
+                id="outlined-adornment-phone"
+                label="Ubicacion"
+                size="small"
+                InputLabelProps={{ shrink: true }}
+                placeholder="St Nw 001-2220"
+                className="input-rounded"
+                variant="outlined"
+                error={errors.location}
+                helperText={errors.location && `El campo no es valido`}
+              />
+            </FormControl>
+            <FormControl fullWidth>
+              <TextField
+                {...register("description", { required: true })}
+                multiline
+                minRows={4}
+                id="outlined-adornment-phone"
+                label="Descripcion"
+                InputLabelProps={{ shrink: true }}
+                placeholder="Sucursal administrativa"
+                size="small"
+                className="input-rounded"
+                variant="outlined"
+                error={errors.description}
+                helperText={errors.description && `El campo no es valido`}
+              />
+            </FormControl>
+            <div className="flex w-full justify-end">
               <Button
                 variant="contained"
                 type="button"
@@ -203,7 +147,7 @@ export default function BranchForm({ onSave, open, setOpen, data, setFile }) {
                 size="medium"
                 className=" w-28 bg-green-500 text-white rounded-2xl"
               >
-                Salvar
+                Guardar
               </Button>
             </div>
           </form>

@@ -21,9 +21,9 @@ export default function PrivateRouter({ children }) {
     Auth.onAuthStateChanged(function (userCredential) {
       if (userCredential) {
         setUser(userCredential);
+        setIsLoading(false);
       }
     });
-    setIsLoading(false);
   }, [user]);
 
   if (user) {

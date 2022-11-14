@@ -1,10 +1,17 @@
 import { Breadcrumbs, Link, Typography } from "@mui/material";
-import CircleIcon from "@mui/icons-material/Circle";
+import { useEffect } from "react";
 
-export default function PageHeader({ header, locationRoutes }) {
+export default function PageHeader({ header, locationRoutes, Icon }) {
   return (
     <div className="flex flex-col my-2 p-4 space-y-4">
-      <h1 className="font-semibold text-2xl ">{header}</h1>
+      <div className="flex items-center">
+        <div className="bg-neutral-100 rounded-full p-2">
+          {/* <Icon className="text-green-400" /> */}
+          {Icon}
+        </div>
+        <h1 className="text-xl font-bold ml-2">{header}</h1>
+      </div>
+
       <div role="presentation">
         <Breadcrumbs
           aria-label="breadcrumb"

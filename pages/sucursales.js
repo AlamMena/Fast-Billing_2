@@ -1,5 +1,5 @@
 import React from "react";
-import { Add } from "@mui/icons-material";
+import { Add, ApartmentRounded } from "@mui/icons-material";
 import useAxios from "../Axios/Axios";
 import { Button } from "@mui/material";
 import { useEffect, useState, useRef } from "react";
@@ -139,7 +139,11 @@ export default function Brand() {
       <div className="w-full md:px-0 px-4 md:pr-8 flex flex-col">
         <div className="flex w-full justify-between items-center pr-8">
           <div>
-            <PageHeader header="Sucursales" locationRoutes={locationRoutes} />
+            <PageHeader
+              header="Sucursales"
+              locationRoutes={locationRoutes}
+              Icon={<ApartmentRounded />}
+            />
           </div>
           <div className="flex">
             <Button

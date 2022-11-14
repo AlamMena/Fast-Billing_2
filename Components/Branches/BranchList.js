@@ -33,15 +33,16 @@ export default function BranchList({
 
   const columns = [
     {
+      field: "id",
+      width: 120,
+      headerName: "Id",
+    },
+    {
       field: "name",
       width: 220,
       headerName: "Nombre",
     },
-    {
-      field: "description",
-      width: 270,
-      headerName: "Descripcion",
-    },
+
     {
       field: "location",
       width: 270,
@@ -168,6 +169,7 @@ export default function BranchList({
             localeText={{
               noRowsLabel: "No hay datos",
             }}
+            hideFooterSelectedRowCount
             autoHeight
             pagination
             disableColumnFilter

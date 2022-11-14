@@ -1,4 +1,9 @@
-import { Add } from "@mui/icons-material";
+import {
+  Add,
+  ApartmentRounded,
+  Inventory2Rounded,
+  InventoryRounded,
+} from "@mui/icons-material";
 import useAxios from "../../Axios/Axios";
 import { Button, debounce, Tab, Tabs } from "@mui/material";
 import { useRef, useState } from "react";
@@ -7,6 +12,7 @@ import { toast } from "react-toastify";
 import ConfirmationForm from "../../Components/Globals/ConfirmationForm";
 import { useRouter } from "next/router";
 import ProductList from "../../Components/Products/ProductsList";
+import { FaProductHunt } from "react-icons/fa";
 
 export default function Products() {
   // confirmation form states
@@ -53,7 +59,11 @@ export default function Products() {
     <div className="w-full md:px-0 px-4 md:pr-8 flex flex-col">
       <div className="flex w-full justify-between items-center pr-8">
         <div>
-          <PageHeader header="Productos" locationRoutes={locationRoutes} />
+          <PageHeader
+            header="Productos"
+            locationRoutes={locationRoutes}
+            Icon={<Inventory2Rounded className="text-green-400" />}
+          />
         </div>
         <div className="flex">
           <Button
