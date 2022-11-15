@@ -1,28 +1,7 @@
-import FactCheckIcon from "@mui/icons-material/FactCheck";
-import DescriptionIcon from "@mui/icons-material/Description";
-import {
-  Button,
-  Dialog,
-  Input,
-  TextField,
-  InputOutlined,
-  OutlinedInput,
-  InputAdornment,
-  FormControl,
-  InputLabel,
-  Divider,
-} from "@mui/material";
-import {
-  AddLocationAlt,
-  ApartmentRounded,
-  PhoneOutlined,
-} from "@mui/icons-material";
-import PhotoCamera from "@mui/icons-material/PhotoCamera";
-import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
-import ImagePoster from "../Globals/ImageHandler";
-import { useEffect, useRef, useState } from "react";
+import { ApartmentRounded } from "@mui/icons-material";
+import { useEffect } from "react";
+import { Dialog, Divider, FormControl, TextField, Button } from "@mui/material";
 import { useForm } from "react-hook-form";
-import Alert from "../Globals/Alert";
 
 export default function BranchForm({ onSave, open, setOpen, data }) {
   const {
@@ -36,7 +15,6 @@ export default function BranchForm({ onSave, open, setOpen, data }) {
 
   const onSubmit = async (data) => {
     await onSave(data);
-    setOpen(false);
   };
 
   useEffect(() => {
@@ -58,7 +36,7 @@ export default function BranchForm({ onSave, open, setOpen, data }) {
             onSubmit={handleSubmit(onSubmit)}
             className="flex flex-col p-8 space-y-6 px-10"
           >
-            <div className="">
+            <div>
               <div className="flex items-center mb-2">
                 <div className="bg-neutral-100 rounded-full p-2">
                   <ApartmentRounded className="text-green-400" />
@@ -76,7 +54,6 @@ export default function BranchForm({ onSave, open, setOpen, data }) {
                 {...register("name", { required: true })}
                 id="outlined-adornment-phone"
                 label="Nombre"
-                size="small"
                 InputLabelProps={{ shrink: true }}
                 placeholder="Sucursal 001-000"
                 className="input-rounded"
@@ -90,7 +67,6 @@ export default function BranchForm({ onSave, open, setOpen, data }) {
                 {...register("phoneNumber", { required: true })}
                 id="outlined-adornment-phone"
                 label="Phone"
-                size="small"
                 InputLabelProps={{ shrink: true }}
                 placeholder="(809)-000-0000"
                 className="input-rounded"
@@ -104,7 +80,6 @@ export default function BranchForm({ onSave, open, setOpen, data }) {
                 {...register("location", { required: true })}
                 id="outlined-adornment-phone"
                 label="Ubicacion"
-                size="small"
                 InputLabelProps={{ shrink: true }}
                 placeholder="St Nw 001-2220"
                 className="input-rounded"
@@ -122,7 +97,6 @@ export default function BranchForm({ onSave, open, setOpen, data }) {
                 label="Descripcion"
                 InputLabelProps={{ shrink: true }}
                 placeholder="Sucursal administrativa"
-                size="small"
                 className="input-rounded"
                 variant="outlined"
                 error={errors.description}
@@ -145,7 +119,7 @@ export default function BranchForm({ onSave, open, setOpen, data }) {
                 type="submit"
                 color="secondary"
                 size="medium"
-                className=" w-28 bg-green-500 text-white rounded-2xl"
+                className=" w-28 bg-green-600 text-white rounded-2xl"
               >
                 Guardar
               </Button>

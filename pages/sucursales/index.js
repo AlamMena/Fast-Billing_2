@@ -1,14 +1,16 @@
 import React from "react";
-import { Add } from "@mui/icons-material";
-import useAxios from "../Axios/Axios";
+import { Add, ApartmentRounded } from "@mui/icons-material";
+import useAxios from "../../Axios/Axios";
 import { Button } from "@mui/material";
 import { useEffect, useState, useRef } from "react";
-import PageHeader from "../Components/Globals/PageHeader";
+import PageHeader from "../../Components/Globals/PageHeader";
 import { toast } from "react-toastify";
-import BrandList from "../Components/Brands/BrandList";
-import BrandForm from "../Components/Brands/BrandForm";
-import { postImage } from "../Components/Globals/ImageHandler";
-import ConfirmationForm from "../Components/Globals/ConfirmationForm";
+import BrandList from "../../Components/Brands/BrandList";
+import BrandForm from "../../Components/Brands/BrandForm";
+import BranchList from "../../Components/Branches/BranchList";
+import { postImage } from "../../Components/Globals/ImageHandler";
+import ConfirmationForm from "../../Components/Globals/ConfirmationForm";
+import BranchForm from "../../Components/Branches/BranchForm";
 
 export default function Brand() {
   const [pageState, setPageState] = useState({
@@ -40,23 +42,19 @@ export default function Brand() {
       link: "/",
     },
     {
-      text: "Marcas",
-      link: "/Marcas",
+      text: "Sucursales",
+      link: "/",
     },
-    // {
-    //   text: "Lista",
-    //   link: "/",
-    // },
   ];
 
-  const setBrandsAsync = async () => {
+  const setBranchesAsync = async () => {
     try {
       setPageState({ ...pageState, isLoading: true });
 
       const queryFilters = `page=${pageState.page}&limit=${pageState.pageSize}&value=${filter}`;
 
       const { data: apiResponse } = await axiosInstance.get(
-        `brands?${queryFilters}`
+        `branches?${queryFilters}`
       );
 
       setPageState({
@@ -88,14 +86,14 @@ export default function Brand() {
       // logic
       if (data.id !== undefined) {
         // if the item exists
-        await axiosInstance.put("brand", parsedData);
+        await axiosInstance.put("branch", parsedData);
       } else {
         // if the item doesnt exists
-        await axiosInstance.post("brand", parsedData);
+        await axiosInstance.post("branch", parsedData);
       }
 
       // getting data back
-      await setBrandsAsync();
+      await setBranchesAsync();
 
       // success toast
       toast.update(toastId.current, {
@@ -103,12 +101,10 @@ export default function Brand() {
         autoClose: 5000,
         render: "Success",
       });
-    } catch (error) {
-      // error toast
-      toast.error(`Opps!, something went wrong${error}`);
 
-      // removing data from page
-      // setBrands({ isLoading: false, data: [] });
+      setFormOpen(false);
+    } catch (error) {
+      toast.error(`Opps!, something went wrong${error}`);
     }
   };
 
@@ -117,23 +113,22 @@ export default function Brand() {
       toastId.current = toast("Please wait...", {
         type: toast.TYPE.LOADING,
       });
-      await axiosInstance.delete(`brand/${itemToDelete.id}`);
+      await axiosInstance.delete(`branch/${itemToDelete.id}`);
       toast.update(toastId.current, {
         type: toast.TYPE.SUCCESS,
         autoClose: 5000,
         render: "Success",
       });
       setConfirmOpen(false);
-      await setBrandsAsync();
+      await setBranchesAsync();
     } catch (error) {
       toast.error(`Opps!, something went wrong${error}`);
-      // setBrands({ isLoading: false, data: [] });
       console.log(error);
     }
   };
 
   useEffect(() => {
-    setBrandsAsync();
+    setBranchesAsync();
   }, [pageState.page, pageState.pageSize, filter]);
 
   return (
@@ -141,11 +136,15 @@ export default function Brand() {
       <div className="w-full md:px-0 px-4 md:pr-8 flex flex-col">
         <div className="flex w-full justify-between items-center pr-8">
           <div>
-            <PageHeader header="Marcas" locationRoutes={locationRoutes} />
+            <PageHeader
+              header="Sucursales"
+              locationRoutes={locationRoutes}
+              Icon={<ApartmentRounded className="" />}
+            />
           </div>
           <div className="flex">
             <Button
-              className=" z-auto rounded-xl py-2 bg-green-600 hover:bg-green-800"
+              className=" z-auto rounded-xl py-2 bg-green-600 "
               variant="contained"
               onClick={() => {
                 setFormOpen(true);
@@ -154,15 +153,13 @@ export default function Brand() {
               startIcon={<Add className="text-white" />}
             >
               <span className="text-sm whitespace-nowrap text-neutral-50 capitalize font-bold">
-                Nueva marca
+                Nueva sucursal
               </span>
             </Button>
           </div>
         </div>
-        <BrandList
+        <BranchList
           pageState={pageState}
-          setBrandStatus={setBrandStatus}
-          brandStatus={brandStatus}
           setFilter={setFilter}
           setPageState={setPageState}
           setFormOpen={setFormOpen}
@@ -170,7 +167,7 @@ export default function Brand() {
           setItemToDelete={setItemToDelete}
           setConfirmOpen={setConfirmOpen}
         />
-        <BrandForm
+        <BranchForm
           open={formOpen}
           setOpen={setFormOpen}
           data={formData}
@@ -182,7 +179,7 @@ export default function Brand() {
           open={confirmOpen}
           setOpen={setConfirmOpen}
           onConfirm={deleteAsync}
-          message={"esta marca"}
+          message={"¿Estas seguro que deseas eliminar esta sucursal?"}
         />
       </div>
     </>

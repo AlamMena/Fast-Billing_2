@@ -7,11 +7,17 @@ export default function ConfirmationForm({
   message,
 }) {
   return (
-    <Dialog open={open} onClose={() => setOpen(false)}>
+    <Dialog
+      open={open}
+      PaperProps={{
+        style: { borderRadius: 15 },
+      }}
+      onClose={() => setOpen(false)}
+    >
       <div className="w-96 p-8">
-        <h2>Estas seguro que deseas {message} ?</h2>
+        <h2>{message} </h2>
         <div className="flex space-x-4 justify-end w-full mt-7">
-          <Button className="text-red-500" onClick={() => setOpen(false)}>
+          <Button className="text-green-600" onClick={() => setOpen(false)}>
             Cancel
           </Button>
           <Button

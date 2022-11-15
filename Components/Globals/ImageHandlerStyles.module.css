@@ -4,7 +4,7 @@
 }
 
 .content {
-  @apply relative cursor-pointer outline outline-1 outline-neutral-300 shadow-sm px-4 py-2 rounded-lg;
+  @apply relative cursor-pointer outline outline-1 outline-neutral-300 shadow-sm px-4 py-4 rounded-lg;
 }
 
 .image_input {

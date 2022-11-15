@@ -5,7 +5,7 @@ export default function PageHeader({ header, locationRoutes, Icon }) {
   return (
     <div className="flex flex-col my-2 p-4 space-y-4">
       <div className="flex items-center">
-        <div className="bg-neutral-100 rounded-full p-2">
+        <div className="bg-neutral-100 rounded-full p-2 text-green-400">
           {/* <Icon className="text-green-400" /> */}
           {Icon}
         </div>

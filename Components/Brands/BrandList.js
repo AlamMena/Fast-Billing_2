@@ -5,19 +5,13 @@ import {
   SearchRounded,
 } from "@mui/icons-material";
 import {
-  Autocomplete,
   AvatarGroup,
   InputAdornment,
   OutlinedInput,
   Avatar,
-  Tab,
-  Tabs,
-  TextField,
 } from "@mui/material";
-import { useState, useEffect } from "react";
-import { DataGrid, GridToolBar } from "@mui/x-data-grid";
-import Alert from "../Globals/Alert";
-import StatusRow from "../Globals/StatusRow";
+import { useState } from "react";
+import { DataGrid } from "@mui/x-data-grid";
 import { debounce } from "../../utils/methods";
 
 export default function BrandList({
@@ -26,13 +20,9 @@ export default function BrandList({
   pageState,
   setPageState,
   setFilter,
-  setBrandStatus,
-  brandStatus,
   setItemToDelete,
   setConfirmOpen,
 }) {
-  const [statusTab, setStatusTab] = useState("All");
-
   const chip = [
     { name: "Ana", src: "/static/images/avatar/1.jpg" },
     { name: "TrapKing", src: "/static/images/avatar/1.jpg" },
@@ -44,25 +34,37 @@ export default function BrandList({
 
   const columns = [
     {
+      field: "id",
+      width: 120,
+      headerName: "Id",
+    },
+    {
       field: "name",
-      width: 220,
+      minWidth: 220,
+      flex: 1,
       headerName: "Nombre",
     },
     {
-      field: "description",
-      width: 270,
-      headerName: "Descripcion",
-    },
-
-    {
       field: "supliers",
-      width: 190,
+      minWidth: 190,
+      flex: 1,
       headerName: "Proveedores",
       renderCell: (cell) => {
         return (
-          <AvatarGroup max={4}>
+          <AvatarGroup
+            max={4}
+            sx={{
+              "& .MuiAvatar-root": { width: 32, height: 32, fontSize: 15 },
+            }}
+          >
             {chip.map((item, index) => {
-              return <Avatar key={index} alt={item.name} />;
+              return (
+                <Avatar
+                  key={index}
+                  alt={item.name}
+                  src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
+                />
+              );
             })}
           </AvatarGroup>
         );
@@ -72,7 +74,8 @@ export default function BrandList({
     {
       field: "Acciones",
       sortable: false,
-      width: 190,
+      minWidth: 190,
+      flex: 1,
       renderCell: (cells) => {
         return (
           <div className="flex space-x-4">
@@ -83,8 +86,8 @@ export default function BrandList({
               }}
               className="text-green-400 cursor-pointer"
             >
-              <EditOutlined className="text-green-400 mx-2" />
-              Edit
+              <EditOutlined className="text-green-400 mx-1" />
+              Editar
             </a>
             <a
               onClick={() => {
@@ -93,15 +96,13 @@ export default function BrandList({
               }}
               className="text-red-500 cursor-pointer"
             >
-              <DeleteOutline className="text-red-500 mx-2" /> Delete
+              <DeleteOutline className="text-red-500" /> Eliminar
             </a>
           </div>
         );
       },
     },
   ];
-
-  // const onTabStatusChange = debounce((e, newValue) => setBrandStatus(newValue));
 
   const onInputFilterChange = debounce((e) => setFilter(e.target.value));
 
@@ -113,45 +114,9 @@ export default function BrandList({
     setPageState({ ...pageState, pageSize: newPageSize });
   };
 
-  // const handleTabChange = (e, value) => {
-  //   setStatusTab(value);
-  //   const newData = getDataFilterdByTab(value);
-  //   setDataFiltered(newData);
-  // };
-
-  // const getDataFilterdByTab = (value) => {
-  //   let newData = { isLoading: true, data: [] };
-
-  //   if (value === "All") {
-  //     newData = data;
-  //   } else if (value === "Active") {
-  //     newData = {
-  //       isLoading: false,
-  //       data: data.data.filter((item) => !item.IsDeleted),
-  //     };
-  //   } else if (value === "Disable") {
-  //     newData = {
-  //       isLoading: false,
-  //       data: data.data.filter((item) => item.IsDeleted),
-  //     };
-  //   }
-  //   return newData;
-  // };
-
   return (
     <>
       <div className="flex flex-col h-full  w-full shadow-lg rounded-xl">
-        {/* <div className=" bg-slate-200 rounded-t-lg">
-          <Tabs
-            className="text-neutral-500"
-            TabIndicatorProps={{
-              style: {
-                backgroundColor: "rgb(22 163 74 / var(--tw-text-opacity))",
-              },
-            }}
-            aria-label="secondary tabs example"
-          ></Tabs>
-        </div> */}
         <div className="flex items-center space-x-4 px-4 my-2">
           <OutlinedInput
             id="input-with-icon-adornment"
@@ -180,6 +145,7 @@ export default function BrandList({
             onPageSizeChange={onDataGridPageSizeChange}
             loading={pageState.isLoading}
             rowsPerPageOptions={[5, 20, 50, 100]}
+            hideFooterSelectedRowCount
             paginationMode="server"
             localeText={{
               noRowsLabel: "No hay datos",

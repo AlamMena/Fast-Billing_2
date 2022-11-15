@@ -1,16 +1,14 @@
 import React from "react";
-import { Add, ApartmentRounded } from "@mui/icons-material";
-import useAxios from "../Axios/Axios";
+import { Add, MuseumRounded } from "@mui/icons-material";
+import useAxios from "../../Axios/Axios";
 import { Button } from "@mui/material";
 import { useEffect, useState, useRef } from "react";
-import PageHeader from "../Components/Globals/PageHeader";
+import PageHeader from "../../Components/Globals/PageHeader";
 import { toast } from "react-toastify";
-import BrandList from "../Components/Brands/BrandList";
-import BrandForm from "../Components/Brands/BrandForm";
-import BranchList from "../Components/Branches/BranchList";
-import { postImage } from "../Components/Globals/ImageHandler";
-import ConfirmationForm from "../Components/Globals/ConfirmationForm";
-import BranchForm from "../Components/Branches/BranchForm";
+import BrandList from "../../Components/Brands/BrandList";
+import BrandForm from "../../Components/Brands/BrandForm";
+import { postImage } from "../../Components/Globals/ImageHandler";
+import ConfirmationForm from "../../Components/Globals/ConfirmationForm";
 
 export default function Brand() {
   const [pageState, setPageState] = useState({
@@ -42,19 +40,23 @@ export default function Brand() {
       link: "/",
     },
     {
-      text: "Sucursales",
-      link: "/",
+      text: "Marcas",
+      link: "/Marcas",
     },
+    // {
+    //   text: "Lista",
+    //   link: "/",
+    // },
   ];
 
-  const setBranchesAsync = async () => {
+  const setBrandsAsync = async () => {
     try {
       setPageState({ ...pageState, isLoading: true });
 
       const queryFilters = `page=${pageState.page}&limit=${pageState.pageSize}&value=${filter}`;
 
       const { data: apiResponse } = await axiosInstance.get(
-        `branches?${queryFilters}`
+        `brands?${queryFilters}`
       );
 
       setPageState({
@@ -64,7 +66,7 @@ export default function Brand() {
         totalData: apiResponse.dataQuantity,
       });
     } catch (error) {
-      toast.error(`Opps!, algo ha ocurrido ${error}`);
+      toast.error(`Opps!, algo ha ocurrido `);
       setPageState({ ...pageState, isLoading: false });
     }
   };
@@ -72,7 +74,7 @@ export default function Brand() {
   const upsertAsync = async (data) => {
     try {
       // loading toast
-      toastId.current = toast("Please wait...", {
+      toastId.current = toast("Guardando marca...", {
         type: toast.TYPE.LOADING,
       });
 
@@ -86,43 +88,40 @@ export default function Brand() {
       // logic
       if (data.id !== undefined) {
         // if the item exists
-        await axiosInstance.put("branch", parsedData);
+        await axiosInstance.put("brand", parsedData);
       } else {
         // if the item doesnt exists
-        await axiosInstance.post("branch", parsedData);
+        await axiosInstance.post("brand", parsedData);
       }
 
       // getting data back
-      await setBranchesAsync();
+      await setBrandsAsync();
 
       // success toast
       toast.update(toastId.current, {
         type: toast.TYPE.SUCCESS,
         autoClose: 5000,
-        render: "Success",
+        render: "Marca guardada exitosamente",
       });
     } catch (error) {
       // error toast
-      toast.error(`Opps!, something went wrong${error}`);
-
-      // removing data from page
-      // setBrands({ isLoading: false, data: [] });
+      toast.error(`Opps!, algo ha ocurrido`);
     }
   };
 
   const deleteAsync = async () => {
     try {
-      toastId.current = toast("Please wait...", {
+      toastId.current = toast("Cargando ...", {
         type: toast.TYPE.LOADING,
       });
-      await axiosInstance.delete(`branch/${itemToDelete.id}`);
+      await axiosInstance.delete(`brand/${itemToDelete.id}`);
       toast.update(toastId.current, {
         type: toast.TYPE.SUCCESS,
         autoClose: 5000,
-        render: "Success",
+        render: "Marca eliminada exitosamente",
       });
       setConfirmOpen(false);
-      await setBranchesAsync();
+      await setBrandsAsync();
     } catch (error) {
       toast.error(`Opps!, something went wrong${error}`);
       // setBrands({ isLoading: false, data: [] });
@@ -131,20 +130,18 @@ export default function Brand() {
   };
 
   useEffect(() => {
-    setBranchesAsync();
+    setBrandsAsync();
   }, [pageState.page, pageState.pageSize, filter]);
 
   return (
     <>
       <div className="w-full md:px-0 px-4 md:pr-8 flex flex-col">
         <div className="flex w-full justify-between items-center pr-8">
-          <div>
-            <PageHeader
-              header="Sucursales"
-              locationRoutes={locationRoutes}
-              Icon={<ApartmentRounded />}
-            />
-          </div>
+          <PageHeader
+            header="Marcas"
+            locationRoutes={locationRoutes}
+            Icon={<MuseumRounded />}
+          />
           <div className="flex">
             <Button
               className=" z-auto rounded-xl py-2 bg-green-600 hover:bg-green-800"
@@ -156,13 +153,15 @@ export default function Brand() {
               startIcon={<Add className="text-white" />}
             >
               <span className="text-sm whitespace-nowrap text-neutral-50 capitalize font-bold">
-                Nueva sucursal
+                Nueva marca
               </span>
             </Button>
           </div>
         </div>
-        <BranchList
+        <BrandList
           pageState={pageState}
+          setBrandStatus={setBrandStatus}
+          brandStatus={brandStatus}
           setFilter={setFilter}
           setPageState={setPageState}
           setFormOpen={setFormOpen}
@@ -170,7 +169,7 @@ export default function Brand() {
           setItemToDelete={setItemToDelete}
           setConfirmOpen={setConfirmOpen}
         />
-        <BranchForm
+        <BrandForm
           open={formOpen}
           setOpen={setFormOpen}
           data={formData}
@@ -178,12 +177,12 @@ export default function Brand() {
           setFile={setImageFile}
           file={imageFile}
         />
-        {/* <ConfirmationForm
+        <ConfirmationForm
           open={confirmOpen}
           setOpen={setConfirmOpen}
           onConfirm={deleteAsync}
-          message={"esta marca"}
-        />  */}
+          message={"¿Esta seguro que deseas eliminar esta marca?"}
+        />
       </div>
     </>
   );

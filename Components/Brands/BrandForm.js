@@ -18,6 +18,7 @@ import {
   Avatar,
   MenuItem,
   FormHelperText,
+  Divider,
 } from "@mui/material";
 import PhotoCamera from "@mui/icons-material/PhotoCamera";
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
@@ -25,6 +26,7 @@ import ImagePoster from "../Globals/ImageHandler";
 import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import Alert from "../Globals/Alert";
+import { MuseumRounded } from "@mui/icons-material";
 
 export default function BrandForm({ onSave, open, setOpen, data, setFile }) {
   const {
@@ -70,86 +72,56 @@ export default function BrandForm({ onSave, open, setOpen, data, setFile }) {
         <Dialog
           open={open}
           onClose={() => setOpen(false)}
-          fullWidth
-          maxWidth={"sm"}
+          maxWidth="sm"
+          PaperProps={{
+            style: { borderRadius: 15 },
+          }}
         >
           <form
             onSubmit={handleSubmit(onSubmit)}
             className="flex flex-col p-8 space-y-6 px-10"
           >
-            <h2 className="text-xl font-bold">Formulario de Marca </h2>
+            <div>
+              <div className="flex items-center mb-2">
+                <div className="bg-neutral-100 rounded-full p-2">
+                  <MuseumRounded className="text-green-400" />
+                </div>
+                <h2 className="text-xl font-bold ml-2">Marcas </h2>
+              </div>
+              <span className="text-sm text-black text-opacity-50">
+                Crea o edita tus marcas y manten tus productos seccionados.
+              </span>
+              <Divider className="mt-4" />
+            </div>
 
-            <FormControl>
-              <InputLabel size="normal" htmlFor="outlined-adornment-name">
-                Nombre de la marca
-              </InputLabel>
-              <OutlinedInput
-                {...register("name", {
-                  required: true,
-                })}
-                id="outlined-adornment-name"
-                label="Nombre de la marca"
-                size="small"
-                className="rounded-xl"
-                error={errors.name && "value"}
-                helpertext={errors.name && `El campo 'nombre' es requerido`}
+            <FormControl fullWidth>
+              <TextField
+                {...register("name", { required: true })}
+                label="Nombre"
+                InputLabelProps={{ shrink: true }}
+                placeholder="Marca para productos"
+                className="input-rounded"
                 variant="outlined"
-                startAdornment={
-                  <InputAdornment position="start">
-                    <FactCheckIcon />
-                  </InputAdornment>
-                }
+                error={errors.name}
+                helperText={errors.name && `El campo no es valido`}
               />
             </FormControl>
             <FormControl>
-              <InputLabel size="small" htmlFor="outlined-adornment-phone">
-                Description de la marca
-              </InputLabel>
-              <OutlinedInput
-                {...register("description")}
-                id="outlined-adornment-address"
-                label="Descripcion de la marca"
+              <TextField
+                {...register("description", { required: true })}
+                label="Descripcion"
+                placeholder="marca principal de mis productos ..."
+                InputLabelProps={{ shrink: true }}
+                minRows={3}
                 multiline
-                size="normal"
-                className="rounded-xl text-md"
+                className="input-rounded"
                 variant="outlined"
-                startAdornment={
-                  <InputAdornment position="start">
-                    <DescriptionIcon />
-                  </InputAdornment>
-                }
+                error={errors.description}
+                helperText={errors.description && `El campo no es valido`}
               />
             </FormControl>
-            <FormControl className="w-full">
-              <Autocomplete
-                onChange={(event, newValue) => {
-                  setSuplierValue(newValue);
-                  handleSuplier();
-                }}
-                ref={ref}
-                multiple
-                options={chip}
-                freeSolo
-                getOptionLabel={(chip) => chip.name}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    variant="standard"
-                    label="Proveedores"
-                  />
-                )}
-              />
 
-              {/* <FormHelperText>With label + helper text</FormHelperText> */}
-            </FormControl>
-            <FormControl>
-              <ImagePoster
-                images={images}
-                setImages={setImages}
-                setFile={setFile}
-              />
-            </FormControl>
-            <div className="flex w-full justify-end space-x-4">
+            <div className="flex w-full justify-end">
               <Button
                 variant="contained"
                 type="button"
@@ -165,9 +137,9 @@ export default function BrandForm({ onSave, open, setOpen, data, setFile }) {
                 type="submit"
                 color="secondary"
                 size="medium"
-                className=" w-28 bg-green-500 text-white rounded-2xl"
+                className=" w-28 bg-green-600 text-white rounded-2xl"
               >
-                Salvar
+                Guardar
               </Button>
             </div>
           </form>

@@ -270,8 +270,6 @@ export default function ProductList({
           className={`p-2 h-96 ${maxRow && `h-${80}`}`}
           rowHeight={60}
           pagination
-          // autoPageSize={maxRow}
-          // autoHeight={!maxRow}
           autoPageSize={maxRow}
           autoHeight={maxRow ? false : true}
           disableColumnFilter
