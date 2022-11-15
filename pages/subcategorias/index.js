@@ -1,18 +1,17 @@
 import React from "react";
-import { Add, ApartmentRounded } from "@mui/icons-material";
+import { Add, CategoryRounded } from "@mui/icons-material";
 import useAxios from "../../Axios/Axios";
-import { Button } from "@mui/material";
+import { Button, Tabs, Box, Tab, Typography } from "@mui/material";
 import { useEffect, useState, useRef } from "react";
 import PageHeader from "../../Components/Globals/PageHeader";
 import { toast } from "react-toastify";
-import BrandList from "../../Components/Brands/BrandList";
-import BrandForm from "../../Components/Brands/BrandForm";
-import BranchList from "../../Components/Branches/BranchList";
 import { postImage } from "../../Components/Globals/ImageHandler";
-import ConfirmationForm from "../../Components/Globals/ConfirmationForm";
-import BranchForm from "../../Components/Branches/BranchForm";
 
-export default function Brand() {
+import ConfirmationForm from "../../Components/Globals/ConfirmationForm";
+import SubCategoryList from "../../Components/SubCategories/SubCategoriesList";
+import SubCategoryForm from "../../Components/SubCategories/SubCategoryForm";
+
+export default function Subcategories() {
   const [pageState, setPageState] = useState({
     isLoading: true,
     data: [],
@@ -20,11 +19,13 @@ export default function Brand() {
     page: 1,
     totalData: 0,
   });
-  const [brandStatus, setBrandStatus] = useState("all");
+  // const [categoryStatus, setCategoryStatus] = useState("all");
   const [filter, setFilter] = useState("");
-  const [imageFile, setImageFile] = useState();
+  const [subcategories, setSubcategories] = useState({
+    isLoading: true,
+    data: [],
+  });
 
-  // upsert states
   const [formOpen, setFormOpen] = useState(false);
   const [formData, setFormData] = useState();
 
@@ -42,19 +43,19 @@ export default function Brand() {
       link: "/",
     },
     {
-      text: "Sucursales",
-      link: "/",
+      text: "Categorias",
+      link: "/categorias",
     },
   ];
 
-  const setBranchesAsync = async () => {
+  const setSubcategoriesAsync = async () => {
     try {
       setPageState({ ...pageState, isLoading: true });
 
       const queryFilters = `page=${pageState.page}&limit=${pageState.pageSize}&value=${filter}`;
 
       const { data: apiResponse } = await axiosInstance.get(
-        `branches?${queryFilters}`
+        `subcategories?${queryFilters}`
       );
 
       setPageState({
@@ -64,7 +65,7 @@ export default function Brand() {
         totalData: apiResponse.dataQuantity,
       });
     } catch (error) {
-      toast.error(`Opps!, algo ha ocurrido ${error}`);
+      toast.error(`Opps!, algo ha ocurrido ${error} `);
       setPageState({ ...pageState, isLoading: false });
     }
   };
@@ -72,80 +73,72 @@ export default function Brand() {
   const upsertAsync = async (data) => {
     try {
       // loading toast
-      toastId.current = toast("Please wait...", {
+      toastId.current = toast("Cargando ...", {
         type: toast.TYPE.LOADING,
       });
-
-      // if there is any file
-      let imageUrl = "";
-      if (imageFile) {
-        imageUrl = await postImage(imageFile);
-      }
-      const parsedData = { ...data, imageUrl };
 
       // logic
       if (data.id !== undefined) {
         // if the item exists
-        await axiosInstance.put("branch", parsedData);
+        await axiosInstance.put("/subcategory", data);
       } else {
         // if the item doesnt exists
-        await axiosInstance.post("branch", parsedData);
+        await axiosInstance.post("/subcategory", data);
       }
 
       // getting data back
-      await setBranchesAsync();
+      await setSubcategoriesAsync();
 
       // success toast
       toast.update(toastId.current, {
         type: toast.TYPE.SUCCESS,
-        autoClose: 5000,
-        render: "Sucursal guardada exitosamente!",
+        autoClose: 3000,
+        render: "Subcategoria guardada exitosamente!",
       });
-
-      setFormOpen(false);
     } catch (error) {
+      // error toast
       toast.error(`Opps!, Algo salio mal${error}`);
+
+      // removing data from page
+      setSubcategories({ isLoading: false, data: [] });
     }
   };
 
   const deleteAsync = async () => {
     try {
-      toastId.current = toast("Cargando ...", {
+      toastId.current = toast("Please wait...", {
         type: toast.TYPE.LOADING,
       });
-      await axiosInstance.delete(`branch/${itemToDelete.id}`);
+      await axiosInstance.delete(`/Subcategory/ ${itemToDelete.id}`);
       toast.update(toastId.current, {
         type: toast.TYPE.SUCCESS,
         autoClose: 5000,
-        render: "Sucursal eliminada exitosamente!",
+        render: "Subcategoria eliminada exitosamente",
       });
       setConfirmOpen(false);
-      await setBranchesAsync();
+      await setSubcategoriesAsync();
     } catch (error) {
-      toast.error(`Opps!, algo salio mal${error}`);
-      console.log(error);
+      toast.error(`Opps!, Algo salio mal${error}`);
     }
   };
 
   useEffect(() => {
-    setBranchesAsync();
+    setSubcategoriesAsync();
   }, [pageState.page, pageState.pageSize, filter]);
 
   return (
     <>
       <div className="w-full md:px-0 px-4 md:pr-8 flex flex-col">
         <div className="flex w-full justify-between items-center pr-8">
-          <div>
+          <div className="flex items-center justify-between w-full">
             <PageHeader
-              header="Sucursales"
+              header="Subcategorias"
               locationRoutes={locationRoutes}
-              text="Cada vez que un negocio se expande trae mayores desafíos para todos los niveles de operación. Maneja tus sucursales y cada uno de sus niveles operativos."
-              Icon={<ApartmentRounded className="" />}
+              Icon={<CategoryRounded />}
             />
-          </div>
-          <div className="flex">
+            {/* Category Button */}
             <Button
-              className=" z-auto rounded-xl py-2 bg-green-600 "
+              className=" z-auto rounded-xl py-2 bg-green-600 hover:bg-green-800"
               variant="contained"
               onClick={() => {
                 setFormOpen(true);
@@ -154,12 +147,14 @@ export default function Brand() {
               startIcon={<Add className="text-white" />}
             >
               <span className="text-sm whitespace-nowrap text-neutral-50 capitalize font-bold">
-                Nueva sucursal
+                Crear Subcategoria
               </span>
             </Button>
           </div>
         </div>
-        <BranchList
+
+        {/* <TabPanel value={value} index={0}> */}
+        <SubCategoryList
           pageState={pageState}
           setFilter={setFilter}
           setPageState={setPageState}
@@ -168,19 +163,18 @@ export default function Brand() {
           setItemToDelete={setItemToDelete}
           setConfirmOpen={setConfirmOpen}
         />
-        <BranchForm
-          open={formOpen}
-          setOpen={setFormOpen}
-          data={formData}
-          onSave={upsertAsync}
-          setFile={setImageFile}
-          file={imageFile}
-        />
+
         <ConfirmationForm
           open={confirmOpen}
           setOpen={setConfirmOpen}
           onConfirm={deleteAsync}
-          message={"¿Estas seguro que deseas eliminar esta sucursal?"}
+          message={"¿Estas seguro que deseas eliminar esta subcategoria?"}
+        />
+        <SubCategoryForm
+          open={formOpen}
+          setOpen={setFormOpen}
+          data={formData}
+          onSave={upsertAsync}
         />
       </div>
     </>

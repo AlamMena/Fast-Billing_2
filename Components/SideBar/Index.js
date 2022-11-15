@@ -23,6 +23,9 @@ import {
   SearchRounded,
   Settings,
   SellOutlined,
+  AccountTreeRounded,
+  CategoryRounded,
+  MuseumRounded,
 } from "@mui/icons-material";
 import { Menu, MenuItem, Popover, Slide, Typography } from "@mui/material";
 import { useState } from "react";
@@ -69,12 +72,17 @@ const routes = [
       {
         text: "Categorias",
         path: "/categorias",
-        Icon: <ReceiptOutlined />,
+        Icon: <CategoryRounded />,
+      },
+      {
+        text: "Subcategorias",
+        path: "/subcategorias",
+        Icon: <AccountTreeRounded />,
       },
       {
         text: "Marcas",
         path: "/marcas",
-        Icon: <AssessmentOutlined />,
+        Icon: <MuseumRounded />,
       },
 
       {

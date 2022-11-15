@@ -1,5 +1,11 @@
 import React from "react";
-import { Add, Receipt, Category, Class } from "@mui/icons-material";
+import {
+  Add,
+  Receipt,
+  Category,
+  Class,
+  CategoryRounded,
+} from "@mui/icons-material";
 import useAxios from "../../Axios/Axios";
 import { Button, Tabs, Box, Tab, Typography } from "@mui/material";
 import { useEffect, useState, useRef } from "react";
@@ -146,7 +152,7 @@ export default function Categories() {
   const upsertAsync = async (data) => {
     try {
       // loading toast
-      toastId.current = toast("Please wait...", {
+      toastId.current = toast("Cargando ...", {
         type: toast.TYPE.LOADING,
       });
 
@@ -173,7 +179,7 @@ export default function Categories() {
       toast.update(toastId.current, {
         type: toast.TYPE.SUCCESS,
         autoClose: 3000,
-        render: "Exito",
+        render: "Categoria guardada exitosamente",
       });
     } catch (error) {
       // error toast
@@ -282,25 +288,26 @@ export default function Categories() {
       <div className="w-full md:px-0 px-4 md:pr-8 flex flex-col">
         <div className="flex w-full justify-between items-center pr-8">
           <div>
-            <PageHeader header="Categorias" locationRoutes={locationRoutes} />
+            <PageHeader
+              header="Categorias"
+              locationRoutes={locationRoutes}
+              Icon={<CategoryRounded />}
+            />
           </div>
           <div className="flex">
-            {/* Category Button */}
-            <div className={`${value && "hidden"} flex `}>
-              <Button
-                className=" z-auto rounded-xl py-2 bg-green-600 hover:bg-green-800"
-                variant="contained"
-                onClick={() => {
-                  setFormOpen(true);
-                  setFormData({});
-                }}
-                startIcon={<Add className="text-white" />}
-              >
-                <span className="text-sm whitespace-nowrap text-neutral-50 capitalize font-bold">
-                  {title}
-                </span>
-              </Button>
-            </div>
+            <Button
+              className=" z-auto rounded-xl py-2 bg-green-600 hover:bg-green-800"
+              variant="contained"
+              onClick={() => {
+                setFormOpen(true);
+                setFormData({});
+              }}
+              startIcon={<Add className="text-white" />}
+            >
+              <span className="text-sm whitespace-nowrap text-neutral-50 capitalize font-bold">
+                {title}
+              </span>
+            </Button>
             {/* SubCategory Button */}
             <div className={`${!value && "hidden"} flex `}>
               <Button
@@ -319,69 +326,16 @@ export default function Categories() {
             </div>
           </div>
         </div>
-        <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-          <Tabs
-            aria-label="basic tabs example"
-            value={value}
-            onChange={handleChange}
-          >
-            <Tab
-              icon={<Category />}
-              style={{
-                minHeight: "10px",
-                fontSize: "14px",
-                textTransform: "none",
-              }}
-              iconPosition="start"
-              label="Categorias"
-              {...a11yProps(0)}
-            />
-            <Tab
-              icon={<Class />}
-              style={{
-                minHeight: "10px",
-                fontSize: "14px",
-                textTransform: "none",
-              }}
-              iconPosition="start"
-              label="SubCategorias"
-              {...a11yProps(1)}
-            />
-          </Tabs>
-        </Box>
-        <TabPanel value={value} index={0}>
-          <CategoryList
-            pageState={pageState}
-            // setCategoryStatus={setCategoryStatus}
-            // setCategoryType={setCategoryType}
-            // categoryStatus={categoryStatus}
-            // categoryType={categoryType}
-            setFilter={setFilter}
-            setPageState={setPageState}
-            setFormOpen={setFormOpen}
-            setFormData={setFormData}
-            setItemToDelete={setItemToDelete}
-            setConfirmOpen={setConfirmOpen}
-          />
-        </TabPanel>
-        <TabPanel value={value} index={1}>
-          <SubCategoryList
-            pageState={SubCatpageState}
-            setPageState={setSubCatPageState}
-            setItemToDelete={setSubCatToDelete}
-            setConfirmOpen={setSubCatConfirmOpen}
-            setFormOpen={setSubCatFormOpen}
-            setFormData={setSubCatFormData}
-            setFilter={setSubCatFilter}
-          />
-        </TabPanel>
 
-        {/* Category Form */}
-        <ConfirmationForm
-          open={confirmOpen}
-          setOpen={setConfirmOpen}
-          onConfirm={deleteAsync}
-          message={"eliminar esta categoria"}
+        {/* <TabPanel value={value} index={0}> */}
+        <CategoryList
+          pageState={pageState}
+          setFilter={setFilter}
+          setPageState={setPageState}
+          setFormOpen={setFormOpen}
+          setFormData={setFormData}
+          setItemToDelete={setItemToDelete}
+          setConfirmOpen={setConfirmOpen}
         />
         <CategoryForm
           open={formOpen}
@@ -391,20 +345,11 @@ export default function Categories() {
           setFile={setImageFile}
           file={imageFile}
         />
-        {/* SubCategory Form */}
         <ConfirmationForm
           open={subCatConfirmOpen}
           setOpen={setSubCatConfirmOpen}
           onConfirm={subCatdeleteAsync}
           message={"eliminar esta subcategoria"}
-        />
-        <SubCategoryForm
-          open={subCatformOpen}
-          setOpen={setSubCatFormOpen}
-          data={subCatformData}
-          onSave={subCatupsertAsync}
-          setFile={setsubCatImageFile}
-          file={subCatimageFile}
         />
       </div>
     </>

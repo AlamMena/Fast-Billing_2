@@ -31,28 +31,42 @@ export default function CategoryList({
 
   const columns = [
     {
+      field: "id",
+      width: 70,
+      headerName: "Id",
+    },
+    {
       field: "name",
-      width: 460,
-      headerName: "Nombre",
+      minWidth: 220,
+      flex: 1,
+      headerName: "Categoria",
+      renderCell: (cells) => {
+        return (
+          <div className="flex space-x-4 items-center ">
+            <img
+              className=" rounded-lg w-10 h-10"
+              src={
+                cells.row.imageUrl
+                  ? cells.row.imageUrl
+                  : "https://cdn-icons-png.flaticon.com/512/1670/1670443.png"
+              }
+            />
+            <span className="font-semibold ">{cells.row.name}</span>
+          </div>
+        );
+      },
     },
     {
       field: "description",
-      width: 260,
+      width: 220,
+      flex: 1,
       headerName: "Descripcion",
     },
-    // {
-    //   field: "IsDeleted",
-    //   width: "150",
-    //   headerName: "Estatus",
-    //   renderCell: (cells) => {
-    //     return <StatusRow active={!cells.row.IsDeleted} />;
-    //   },
-    // },
-
     {
       field: "Acciones",
       sortable: false,
-      width: 190,
+      width: 220,
+      flex: 1,
       renderCell: (cells) => {
         return (
           <div className="flex space-x-4">
@@ -63,8 +77,8 @@ export default function CategoryList({
               }}
               className="text-green-400 cursor-pointer"
             >
-              <EditOutlined className="text-green-400 mx-2" />
-              Edit
+              <EditOutlined className="text-green-400 mx-1" />
+              Editar
             </a>
             <a
               onClick={() => {
@@ -73,7 +87,7 @@ export default function CategoryList({
               }}
               className="text-red-500 cursor-pointer"
             >
-              <DeleteOutline className="text-red-500 mx-2" /> Delete
+              <DeleteOutline className="text-red-500" /> Eliminar
             </a>
           </div>
         );

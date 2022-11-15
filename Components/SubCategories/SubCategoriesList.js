@@ -29,28 +29,42 @@ export default function SubCategoryList({
 }) {
   const columns = [
     {
+      field: "id",
+      width: 70,
+      headerName: "Id",
+    },
+    {
       field: "name",
-      width: 460,
-      headerName: "Nombre",
+      minWidth: 220,
+      flex: 1,
+      headerName: "Subcategoria",
+      renderCell: (cells) => {
+        return (
+          <div className="flex space-x-4 items-center ">
+            <img
+              className=" w-10 h-10"
+              src={
+                cells.row.imageUrl
+                  ? cells.row.imageUrl
+                  : "https://cdn-icons-png.flaticon.com/512/8921/8921361.png"
+              }
+            />
+            <span className="font-semibold ">{cells.row.name}</span>
+          </div>
+        );
+      },
     },
     {
       field: "description",
-      width: 260,
+      minWidth: 260,
+      flex: 1,
       headerName: "Descripcion",
     },
-    // {
-    //   field: "IsDeleted",
-    //   width: "150",
-    //   headerName: "Estatus",
-    //   renderCell: (cells) => {
-    //     return <StatusRow active={!cells.row.IsDeleted} />;
-    //   },
-    // },
-
     {
       field: "Acciones",
       sortable: false,
-      width: 190,
+      flex: 1,
+      minWidth: 220,
       renderCell: (cells) => {
         return (
           <div className="flex space-x-4">
@@ -61,8 +75,8 @@ export default function SubCategoryList({
               }}
               className="text-green-400 cursor-pointer"
             >
-              <EditOutlined className="text-green-400 mx-2" />
-              Edit
+              <EditOutlined className="text-green-400 mx-1" />
+              Editar
             </a>
             <a
               onClick={() => {
@@ -71,17 +85,13 @@ export default function SubCategoryList({
               }}
               className="text-red-500 cursor-pointer"
             >
-              <DeleteOutline className="text-red-500 mx-2" /> Delete
+              <DeleteOutline className="text-red-500" /> Eliminar
             </a>
           </div>
         );
       },
     },
   ];
-
-  //   const onTabStatusChange = debounce((e, newValue) =>
-  //     setCategoryStatus(newValue)
-  //   );
 
   const onInputFilterChange = debounce((e) => setFilter(e.target.value));
 
@@ -92,31 +102,6 @@ export default function SubCategoryList({
   const onDataGridPageSizeChange = (newPageSize) => {
     setPageState({ ...pageState, pageSize: newPageSize });
   };
-
-  //   const handleTabChange = (e, value) => {
-  //     setStatusTab(value);
-  //     const newData = getDataFilterdByTab(value);
-  //     setDataFiltered(newData);
-  //   };
-
-  //   const getDataFilterdByTab = (value) => {
-  //     let newData = { isLoading: true, data: [] };
-
-  //     if (value === "All") {
-  //       newData = data;
-  //     } else if (value === "Active") {
-  //       newData = {
-  //         isLoading: false,
-  //         data: data.data.filter((item) => !item.IsDeleted),
-  //       };
-  //     } else if (value === "Disable") {
-  //       newData = {
-  //         isLoading: false,
-  //         data: data.data.filter((item) => item.IsDeleted),
-  //       };
-  //     }
-  //     return newData;
-  //   };
 
   return (
     <>
@@ -145,6 +130,7 @@ export default function SubCategoryList({
             rows={pageState.data}
             columns={columns}
             className="p-2"
+            hideFooterSelectedRowCount
             onPageChange={onDataGridPageChange}
             onPageSizeChange={onDataGridPageSizeChange}
             loading={pageState.isLoading}

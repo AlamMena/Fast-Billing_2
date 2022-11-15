@@ -20,15 +20,30 @@ export default function BranchList({
   const columns = [
     {
       field: "id",
-      width: 120,
+      width: 90,
       headerName: "Id",
     },
     {
       field: "name",
-      width: 220,
-      headerName: "Nombre",
+      minWidth: 220,
+      flex: 1,
+      headerName: "Sucursal",
+      renderCell: (cells) => {
+        return (
+          <div className="flex space-x-4 items-center ">
+            <img
+              className=" w-10 h-10"
+              src={
+                cells.row.imageUrl
+                  ? cells.row.imageUrl
+                  : "https://cdn-icons-png.flaticon.com/128/3188/3188580.png"
+              }
+            />
+            <span className="font-semibold ">{cells.row.name}</span>
+          </div>
+        );
+      },
     },
-
     {
       field: "location",
       width: 270,
@@ -43,7 +58,7 @@ export default function BranchList({
     {
       field: "Acciones",
       sortable: false,
-      width: 190,
+      width: 220,
       renderCell: (cells) => {
         return (
           <div className="flex space-x-4">

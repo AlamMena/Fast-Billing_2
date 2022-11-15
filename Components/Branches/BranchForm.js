@@ -52,7 +52,6 @@ export default function BranchForm({ onSave, open, setOpen, data }) {
             <FormControl fullWidth>
               <TextField
                 {...register("name", { required: true })}
-                id="outlined-adornment-phone"
                 label="Nombre"
                 InputLabelProps={{ shrink: true }}
                 placeholder="Sucursal 001-000"

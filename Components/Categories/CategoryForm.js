@@ -13,6 +13,7 @@ import {
   Autocomplete,
   MenuItem,
   FormHelperText,
+  Divider,
 } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
 import IconButton from "@mui/material/IconButton";
@@ -22,6 +23,7 @@ import PhotoCamera from "@mui/icons-material/PhotoCamera";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import Alert from "../Globals/Alert";
+import { CategoryRounded } from "@mui/icons-material";
 
 export default function CategoryForm({ open, setOpen, data, onSave, setFile }) {
   const {
@@ -64,77 +66,54 @@ export default function CategoryForm({ open, setOpen, data, onSave, setFile }) {
           <Dialog
             open={open}
             onClose={() => setOpen(false)}
-            fullWidth
-            maxWidth={"sm"}
+            PaperProps={{
+              style: { borderRadius: 15 },
+            }}
+            maxWidth="sm"
           >
             <form
               onSubmit={handleSubmit(onSubmit)}
-              className="flex flex-col p-8 space-y-5 px-10"
+              className="flex flex-col p-8 space-y-6 px-10"
             >
-              <h2 className="text-xl font-bold">Formulario de Categoria </h2>
-
-              <FormControl>
-                <InputLabel size="small" htmlFor="outlined-adornment-name">
-                  Nombre de la categoria
-                </InputLabel>
-                <OutlinedInput
-                  {...register("name", {
-                    required: true,
-                  })}
-                  id="outlined-adornment-name"
-                  label="Nombre de la categoria"
-                  size="small"
-                  error={errors.name && "value"}
-                  helpertext={errors.name && `El campo 'nombre' es requerido`}
-                  className="rounded-xl"
+              <div>
+                <div className="flex items-center mb-2">
+                  <div className="bg-neutral-100 rounded-full p-2">
+                    <CategoryRounded className="text-green-400" />
+                  </div>
+                  <h2 className="text-xl font-bold ml-2">Categorias </h2>
+                </div>
+                <span className="text-sm text-black text-opacity-50">
+                  Crea o edita tus categorias y manten tus productos
+                  seccionados.
+                </span>
+                <Divider className="mt-4" />
+              </div>
+              <FormControl fullWidth>
+                <TextField
+                  {...register("name", { required: true })}
+                  label="Nombre"
+                  placeholder="categoria - 001"
+                  InputLabelProps={{ shrink: true }}
+                  className="input-rounded"
                   variant="outlined"
-                  startAdornment={
-                    <InputAdornment position="start">
-                      <CategoryIcon />
-                    </InputAdornment>
-                  }
+                  error={errors.name}
+                  helperText={errors.name && `El campo no es valido`}
                 />
               </FormControl>
               <TextField
                 {...register("description")}
                 className="input-rounded w-full outline-2 outline-slate-500"
                 minRows={4}
-                placeholder="Descripcion detallada del tipo de categoria..."
+                placeholder="categoria para mis los productos de clase a..."
                 multiline
                 label="Descripcion"
                 InputLabelProps={{
                   shrink: true,
                 }}
-                // error={errors.description}
-                // helpertext={errors.description && "La descripcion es requerida"}
                 fullWidth
               />
-              {/* Supliers */}
-              <FormControl>
-                <Autocomplete
-                  {...register("supliers")}
-                  multiple
-                  options={chip}
-                  freeSolo
-                  getOptionLabel={(chip) => chip.name}
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      variant="standard"
-                      label="Proveedores"
-                    />
-                  )}
-                />
-              </FormControl>
-              {/* Image Handeler */}
-              <FormControl>
-                <ImagePoster
-                  images={images}
-                  setImages={setImages}
-                  setFile={setFile}
-                />
-              </FormControl>
-              <div className="flex w-full justify-end space-x-4">
+
+              <div className="flex w-full justify-end">
                 <Button
                   variant="contained"
                   type="button"
@@ -152,7 +131,7 @@ export default function CategoryForm({ open, setOpen, data, onSave, setFile }) {
                   size="medium"
                   className=" w-28 bg-green-600 text-white rounded-2xl"
                 >
-                  Salvar
+                  Guardar
                 </Button>
               </div>
             </form>

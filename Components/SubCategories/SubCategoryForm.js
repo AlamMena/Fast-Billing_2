@@ -13,6 +13,7 @@ import {
   Autocomplete,
   MenuItem,
   FormHelperText,
+  Divider,
 } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
 import IconButton from "@mui/material/IconButton";
@@ -23,6 +24,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import Alert from "../Globals/Alert";
 import useAxios from "../../Axios/Axios";
+import { CategoryRounded } from "@mui/icons-material";
 
 export default function SubCategoryForm({
   open,
@@ -68,7 +70,6 @@ export default function SubCategoryForm({
 
   useEffect(() => {
     reset(data);
-    setImages([data && data.imageUrl]);
   }, [data]);
 
   return (
@@ -78,66 +79,65 @@ export default function SubCategoryForm({
           <Dialog
             open={open}
             onClose={() => setOpen(false)}
-            fullWidth
-            maxWidth={"sm"}
+            PaperProps={{
+              style: { borderRadius: 15 },
+            }}
+            maxWidth="sm"
           >
             <form
               onSubmit={handleSubmit(onSubmit)}
               className="flex flex-col p-8 space-y-5 px-10"
             >
-              <h2 className="text-xl font-bold">Formulario de SubCategoria </h2>
-              <div className="flex w-full space-x-4">
-                <FormControl className="w-full">
-                  <InputLabel size="small" htmlFor="outlined-adornment-name">
-                    Nombre de la subcategoria
-                  </InputLabel>
-                  <OutlinedInput
-                    {...register("name", {
-                      required: true,
-                    })}
-                    id="outlined-adornment-name"
-                    label="Nombre de la subcategoria"
-                    size="small"
-                    error={errors.name && "value"}
-                    helpertext={errors.name && `El campo 'nombre' es requerido`}
-                    className="rounded-xl"
-                    variant="outlined"
-                    startAdornment={
-                      <InputAdornment position="start">
-                        <CategoryIcon />
-                      </InputAdornment>
-                    }
-                  />
-                </FormControl>
-
-                <FormControl className="w-full">
-                  <TextField
-                    select
-                    label="Tipo de categoria"
-                    id="trinity"
-                    size="small"
-                    {...register("categoryId", { required: true })}
-                    error={errors.categoryId && "value"}
-                    helpertext={
-                      errors.categoryId &&
-                      `El campo 'Tipo de categoria' es requerido`
-                    }
-                  >
-                    {categories.map((item, index) => (
-                      <MenuItem key={index} value={item.id}>
-                        {item.name}
-                      </MenuItem>
-                    ))}
-                  </TextField>
-                </FormControl>
+              <div>
+                <div className="flex items-center mb-2">
+                  <div className="bg-neutral-100 rounded-full p-2">
+                    <CategoryRounded className="text-green-400" />
+                  </div>
+                  <h2 className="text-xl font-bold ml-2">Subcategorias </h2>
+                </div>
+                <span className="text-sm text-black text-opacity-50">
+                  Crea o edita tus subcategorias y manten tu empresa organizada.
+                </span>
+                <Divider className="mt-4" />
               </div>
+              <FormControl fullWidth>
+                <TextField
+                  {...register("name", { required: true })}
+                  label="Nombre"
+                  InputLabelProps={{ shrink: true }}
+                  placeholder="subcategoria"
+                  className="input-rounded"
+                  variant="outlined"
+                  error={errors.name}
+                  helperText={errors.name && `El campo no es valido`}
+                />
+              </FormControl>
+
+              <FormControl fullWidth>
+                <TextField
+                  select
+                  {...register("categoryId", { required: true })}
+                  label="Categoria"
+                  placeholder="selecciona una categoria ..."
+                  className="input-rounded"
+                  variant="outlined"
+                  error={errors.categoryId}
+                  helperText={errors.categoryId && `El campo no es valido`}
+                >
+                  {categories.map((item, index) => (
+                    <MenuItem key={index} value={item.id}>
+                      {item.name}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              </FormControl>
               <TextField
                 {...register("description")}
-                className="input-rounded w-full outline-2 outline-slate-500"
+                className="input-rounded"
                 minRows={4}
-                placeholder="Descripcion detallada del tipo de subcategoria..."
                 multiline
                 label="Descripcion"
+                placeholder="subcategoria con una nueva descripcion"
                 InputLabelProps={{
                   shrink: true,
                 }}
@@ -145,14 +145,7 @@ export default function SubCategoryForm({
                 helpertext={errors.description && "La descripcion es requerida"}
                 fullWidth
               />
-              <FormControl>
-                <ImagePoster
-                  images={images}
-                  setImages={setImages}
-                  setFile={setFile}
-                />
-              </FormControl>
-              <div className="flex w-full justify-end space-x-4">
+              <div className="flex w-full justify-end">
                 <Button
                   variant="contained"
                   type="button"
