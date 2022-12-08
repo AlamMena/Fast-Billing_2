@@ -26,6 +26,9 @@ import {
   AccountTreeRounded,
   CategoryRounded,
   MuseumRounded,
+  AccountTreeOutlined,
+  MuseumOutlined,
+  SettingsOutlined,
 } from "@mui/icons-material";
 import { Menu, MenuItem, Popover, Slide, Typography } from "@mui/material";
 import { useState } from "react";
@@ -50,7 +53,7 @@ const routes = [
       {
         text: "Ajustes",
         path: "./ajustes",
-        Icon: <Settings />,
+        Icon: <SettingsOutlined />,
       },
       {
         text: "Sucursales",
@@ -72,17 +75,17 @@ const routes = [
       {
         text: "Categorias",
         path: "/categorias",
-        Icon: <CategoryRounded />,
+        Icon: <CategoryOutlined />,
       },
       {
         text: "Subcategorias",
         path: "/subcategorias",
-        Icon: <AccountTreeRounded />,
+        Icon: <AccountTreeOutlined />,
       },
       {
         text: "Marcas",
         path: "/marcas",
-        Icon: <MuseumRounded />,
+        Icon: <MuseumOutlined />,
       },
 
       {

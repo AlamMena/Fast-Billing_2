@@ -1,41 +1,7 @@
 import React from "react";
-import { Add, ApartmentRounded } from "@mui/icons-material";
-import useAxios from "../../Axios/Axios";
-import { Button } from "@mui/material";
-import { useEffect, useState, useRef } from "react";
-import PageHeader from "../../Components/Globals/PageHeader";
-import { toast } from "react-toastify";
-import BrandList from "../../Components/Brands/BrandList";
-import BrandForm from "../../Components/Brands/BrandForm";
-import BranchList from "../../Components/Branches/BranchList";
-import { postImage } from "../../Components/Globals/ImageHandler";
-import ConfirmationForm from "../../Components/Globals/ConfirmationForm";
-import BranchForm from "../../Components/Branches/BranchForm";
+import CPage from "../../components/CRUD/CPage";
 
-export default function Brand() {
-  const [pageState, setPageState] = useState({
-    isLoading: true,
-    data: [],
-    pageSize: 5,
-    page: 1,
-    totalData: 0,
-  });
-  const [brandStatus, setBrandStatus] = useState("all");
-  const [filter, setFilter] = useState("");
-  const [imageFile, setImageFile] = useState();
-
-  // upsert states
-  const [formOpen, setFormOpen] = useState(false);
-  const [formData, setFormData] = useState();
-
-  const { axiosInstance } = useAxios();
-
-  // confirmation form states
-  const [confirmOpen, setConfirmOpen] = useState(false);
-  const [itemToDelete, setItemToDelete] = useState();
-
-  const toastId = useRef(null);
-
+export default function Branch() {
   const locationRoutes = [
     {
       text: "Inicio",
@@ -43,146 +9,81 @@ export default function Brand() {
     },
     {
       text: "Sucursales",
-      link: "/",
+      link: "/sucursales",
+    },
+  ];
+  const cols = [
+    {
+      field: "name",
+      headerName: "Sucursal",
+      minWidth: 270,
+      flex: 1,
+    },
+    {
+      field: "location",
+      headerName: "Ubicacion",
+      minWidth: 270,
+      flex: 1,
+    },
+    {
+      field: "phoneNumber",
+      headerName: "Numero de Telefono",
+      minWidth: 270,
+      flex: 1,
     },
   ];
 
-  const setBranchesAsync = async () => {
-    try {
-      setPageState({ ...pageState, isLoading: true });
-
-      const queryFilters = `page=${pageState.page}&limit=${pageState.pageSize}&value=${filter}`;
-
-      const { data: apiResponse } = await axiosInstance.get(
-        `branches?${queryFilters}`
-      );
-
-      setPageState({
-        ...pageState,
-        isLoading: false,
-        data: apiResponse.data,
-        totalData: apiResponse.dataQuantity,
-      });
-    } catch (error) {
-      toast.error(`Opps!, algo ha ocurrido ${error}`);
-      setPageState({ ...pageState, isLoading: false });
-    }
-  };
-
-  const upsertAsync = async (data) => {
-    try {
-      // loading toast
-      toastId.current = toast("Please wait...", {
-        type: toast.TYPE.LOADING,
-      });
-
-      // if there is any file
-      let imageUrl = "";
-      if (imageFile) {
-        imageUrl = await postImage(imageFile);
-      }
-      const parsedData = { ...data, imageUrl };
-
-      // logic
-      if (data.id !== undefined) {
-        // if the item exists
-        await axiosInstance.put("branch", parsedData);
-      } else {
-        // if the item doesnt exists
-        await axiosInstance.post("branch", parsedData);
-      }
-
-      // getting data back
-      await setBranchesAsync();
-
-      // success toast
-      toast.update(toastId.current, {
-        type: toast.TYPE.SUCCESS,
-        autoClose: 5000,
-        render: "Sucursal guardada exitosamente!",
-      });
-
-      setFormOpen(false);
-    } catch (error) {
-      toast.error(`Opps!, Algo salio mal${error}`);
-    }
-  };
-
-  const deleteAsync = async () => {
-    try {
-      toastId.current = toast("Cargando ...", {
-        type: toast.TYPE.LOADING,
-      });
-      await axiosInstance.delete(`branch/${itemToDelete.id}`);
-      toast.update(toastId.current, {
-        type: toast.TYPE.SUCCESS,
-        autoClose: 5000,
-        render: "Sucursal eliminada exitosamente!",
-      });
-      setConfirmOpen(false);
-      await setBranchesAsync();
-    } catch (error) {
-      toast.error(`Opps!, algo salio mal${error}`);
-      console.log(error);
-    }
-  };
-
-  useEffect(() => {
-    setBranchesAsync();
-  }, [pageState.page, pageState.pageSize, filter]);
-
+  const fields = [
+    {
+      name: "name",
+      placeholder: "sucursal - 001",
+      label: "Nombre",
+      validation: {
+        required: true,
+      },
+      fullWidth: false,
+    },
+    {
+      name: "location",
+      placeholder: "Santo Domingo #0001",
+      label: "Ubicacion",
+      validation: {
+        required: true,
+      },
+      fullWidth: false,
+    },
+    {
+      name: "phoneNumber",
+      placeholder: "809-001-01111",
+      validation: {
+        required: true,
+      },
+      label: "Telefono",
+      fullWidth: false,
+    },
+    {
+      name: "description",
+      placeholder: "sucursal para manejar empleados ...",
+      label: "Descripcion",
+      multiline: true,
+      fullWidth: false,
+    },
+  ];
   return (
-    <>
-      <div className="w-full md:px-0 px-4 md:pr-8 flex flex-col">
-        <div className="flex w-full justify-between items-center pr-8">
-          <div>
-            <PageHeader
-              header="Sucursales"
-              locationRoutes={locationRoutes}
-              text="Cada vez que un negocio se expande trae mayores desafíos para todos los niveles de operación. Maneja tus sucursales y cada uno de sus niveles operativos."
-              Icon={<ApartmentRounded className="" />}
-            />
-          </div>
-          <div className="flex">
-            <Button
-              className=" z-auto rounded-xl py-2 bg-green-600 "
-              variant="contained"
-              onClick={() => {
-                setFormOpen(true);
-                setFormData({});
-              }}
-              startIcon={<Add className="text-white" />}
-            >
-              <span className="text-sm whitespace-nowrap text-neutral-50 capitalize font-bold">
-                Nueva sucursal
-              </span>
-            </Button>
-          </div>
-        </div>
-        <BranchList
-          pageState={pageState}
-          setFilter={setFilter}
-          setPageState={setPageState}
-          setFormOpen={setFormOpen}
-          setFormData={setFormData}
-          setItemToDelete={setItemToDelete}
-          setConfirmOpen={setConfirmOpen}
-        />
-        <BranchForm
-          open={formOpen}
-          setOpen={setFormOpen}
-          data={formData}
-          onSave={upsertAsync}
-          setFile={setImageFile}
-          file={imageFile}
-        />
-        <ConfirmationForm
-          open={confirmOpen}
-          setOpen={setConfirmOpen}
-          onConfirm={deleteAsync}
-          message={"¿Estas seguro que deseas eliminar esta sucursal?"}
-        />
-      </div>
-    </>
+    <CPage
+      cols={cols}
+      fields={fields}
+      getUrl={"branches"}
+      updateUrl={"branch"}
+      postUrl={"branch"}
+      deleteUrl={"branch"}
+      createButtonMessage={"Nueva sucursal"}
+      deleteConfirmMessage="¿Estas seguro que deseas eliminar esta sucursal?"
+      headerMessage="Cada vez que un negocio se expande trae mayores desafíos para todos los niveles de operación. Maneja tus sucursales y cada uno de sus niveles operativos."
+      succesUpsertMessage={"Sucursal guardada exitosamente!"}
+      successDeleteMessage={"Sucursal eliminada exitosamente!"}
+      headerText={"Sucursales"}
+      locationRoutes={locationRoutes}
+    />
   );
 }
