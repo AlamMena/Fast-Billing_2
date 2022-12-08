@@ -1,99 +1,7 @@
 import React from "react";
-import {
-  Add,
-  Receipt,
-  Category,
-  Class,
-  CategoryRounded,
-} from "@mui/icons-material";
-import useAxios from "../../Axios/Axios";
-import { Button, Tabs, Box, Tab, Typography } from "@mui/material";
-import { useEffect, useState, useRef } from "react";
-import PageHeader from "../../Components/Globals/PageHeader";
-import { toast } from "react-toastify";
-import { postImage } from "../../Components/Globals/ImageHandler";
+import CPage from "../../components/CRUD/CPage";
 
-import CategoryList from "../../Components/Categories/CategoryList";
-import CategoryForm from "../../Components/Categories/CategoryForm";
-import ConfirmationForm from "../../Components/Globals/ConfirmationForm";
-import SubCategoryList from "../../Components/SubCategories/SubCategoriesList";
-import { set } from "date-fns";
-import SubCategoryForm from "../../Components/SubCategories/SubCategoryForm";
-
-function TabPanel(props) {
-  const { children, value, index, ...other } = props;
-
-  return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`simple-tabpanel-${index}`}
-      aria-labelledby={`simple-tab-${index}`}
-      {...other}
-    >
-      {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
-    </div>
-  );
-}
-function a11yProps(index) {
-  return {
-    id: `simple-tab-${index}`,
-    "aria-controls": `simple-tabpanel-${index}`,
-  };
-}
-
-export default function Categories() {
-  const [pageState, setPageState] = useState({
-    isLoading: true,
-    data: [],
-    pageSize: 20,
-    page: 1,
-    totalData: 0,
-  });
-  const [SubCatpageState, setSubCatPageState] = useState({
-    isLoading: true,
-    data: [],
-    pageSize: 20,
-    page: 1,
-    totalData: 0,
-  });
-  // const [categoryStatus, setCategoryStatus] = useState("all");
-  // const [categoryType, setCategoryType] = useState("all");
-  const [title, setTitle] = useState("Nueva Categoria");
-  const [filter, setFilter] = useState("");
-  const [subCatfilter, setSubCatFilter] = useState("");
-
-  const [value, setValue] = useState(0);
-
-  const [categories, setCategories] = useState({ isLoading: true, data: [] });
-  const [imageFile, setImageFile] = useState();
-  const [subCatimageFile, setsubCatImageFile] = useState();
-
-  const [formOpen, setFormOpen] = useState(false);
-  const [formData, setFormData] = useState();
-
-  const [subCatformOpen, setSubCatFormOpen] = useState(false);
-  const [subCatformData, setSubCatFormData] = useState();
-
-  const { axiosInstance } = useAxios();
-
-  // confirmation form states
-  const [confirmOpen, setConfirmOpen] = useState(false);
-  const [itemToDelete, setItemToDelete] = useState();
-  const [subcatDelete, setSubCatToDelete] = useState();
-  const [subCatConfirmOpen, setSubCatConfirmOpen] = useState(false);
-
-  const toastId = useRef(null);
-
-  const handleChange = (e, newValue) => {
-    if (value === 0) {
-      setTitle("Nueva subcategoria");
-    } else if (value === 1) {
-      setTitle("Nueva categoria");
-    }
-    setValue(newValue);
-  };
-
+export default function Branch() {
   const locationRoutes = [
     {
       text: "Inicio",
@@ -104,254 +12,54 @@ export default function Categories() {
       link: "/categorias",
     },
   ];
+  const cols = [
+    {
+      field: "name",
+      headerName: "Categoria",
+      minWidth: 270,
+      flex: 1,
+    },
+    {
+      field: "description",
+      headerName: "Descripcion",
+      minWidth: 270,
+      flex: 1,
+    },
+  ];
 
-  const setCategoriesAsync = async () => {
-    try {
-      setPageState({ ...pageState, isLoading: true });
-
-      const queryFilters = `page=${pageState.page}&limit=${pageState.pageSize}&value=${filter}`;
-
-      const { data: apiResponse } = await axiosInstance.get(
-        `categories?${queryFilters}`
-      );
-
-      setPageState({
-        ...pageState,
-        isLoading: false,
-        data: apiResponse.data,
-        totalData: apiResponse.dataQuantity,
-      });
-    } catch (error) {
-      toast.error(`Opps!, algo ha ocurrido ${error} `);
-      setPageState({ ...pageState, isLoading: false });
-    }
-  };
-
-  const setSubCategoriesAsync = async () => {
-    try {
-      setSubCatPageState({ ...SubCatpageState, isLoading: true });
-
-      const queryFilters = `page=${SubCatpageState.page}&limit=${SubCatpageState.pageSize}&value=${subCatfilter}`;
-
-      const { data: apiResponse } = await axiosInstance.get(
-        `subcategories?${queryFilters}`
-      );
-
-      setSubCatPageState({
-        ...SubCatpageState,
-        isLoading: false,
-        data: apiResponse.data,
-        totalData: apiResponse.dataQuantity,
-      });
-    } catch (error) {
-      toast.error(`Opps!, algo ha ocurrido ${error} `);
-      setSubCatPageState({ ...SubCatpageState, isLoading: false });
-    }
-  };
-
-  const upsertAsync = async (data) => {
-    try {
-      // loading toast
-      toastId.current = toast("Cargando ...", {
-        type: toast.TYPE.LOADING,
-      });
-
-      // if there is any file
-      let imageUrl = "";
-      if (imageFile) {
-        imageUrl = await postImage(imageFile);
-      }
-      const parsedData = { ...data, imageUrl };
-
-      // logic
-      if (data.id !== undefined) {
-        // if the item exists
-        await axiosInstance.put("/category", parsedData);
-      } else {
-        // if the item doesnt exists
-        await axiosInstance.post("/category", parsedData);
-      }
-
-      // getting data back
-      await setCategoriesAsync();
-
-      // success toast
-      toast.update(toastId.current, {
-        type: toast.TYPE.SUCCESS,
-        autoClose: 3000,
-        render: "Categoria guardada exitosamente",
-      });
-    } catch (error) {
-      // error toast
-      toast.error(`Opps!, something went wrong${error}`);
-
-      // removing data from page
-      setCategories({ isLoading: false, data: [] });
-    }
-  };
-
-  const subCatupsertAsync = async (data) => {
-    try {
-      // loading toast
-      toastId.current = toast("Please wait...", {
-        type: toast.TYPE.LOADING,
-      });
-
-      // if there is any file
-      let imageUrl = "";
-      if (subCatimageFile) {
-        imageUrl = await postImage(subCatimageFile);
-      }
-      const parsedData = { ...data, imageUrl };
-
-      // logic
-      if (data.id !== undefined) {
-        // if the item exists
-        await axiosInstance.put("/subcategory", parsedData);
-      } else {
-        // if the item doesnt exists
-        await axiosInstance.post("/subcategory", parsedData);
-      }
-
-      // getting data back
-      await setSubCategoriesAsync();
-
-      // success toast
-      toast.update(toastId.current, {
-        type: toast.TYPE.SUCCESS,
-        autoClose: 3000,
-        render: "Exito",
-      });
-    } catch (error) {
-      // error toast
-      toast.error(`Opps!, something went wrong${error}`);
-
-      // removing data from page
-      //  setCategories({ isLoading: false, data: [] });
-    }
-  };
-
-  const deleteAsync = async () => {
-    try {
-      toastId.current = toast("Please wait...", {
-        type: toast.TYPE.LOADING,
-      });
-      await axiosInstance.delete(`/category/ ${itemToDelete.id}`);
-      toast.update(toastId.current, {
-        type: toast.TYPE.SUCCESS,
-        autoClose: 5000,
-        render: "Exito",
-      });
-      setConfirmOpen(false);
-      await setCategoriesAsync();
-    } catch (error) {
-      toast.error(`Opps!, something went wrong${error}`);
-      // setCategories({ isLoading: false, data: [] });
-      console.log(error);
-    }
-  };
-
-  const subCatdeleteAsync = async () => {
-    try {
-      toastId.current = toast("Please wait...", {
-        type: toast.TYPE.LOADING,
-      });
-      await axiosInstance.delete(`/subcategory/ ${subcatDelete.id}`);
-      toast.update(toastId.current, {
-        type: toast.TYPE.SUCCESS,
-        autoClose: 5000,
-        render: "Exito",
-      });
-      setSubCatConfirmOpen(false);
-      await setSubCategoriesAsync();
-    } catch (error) {
-      toast.error(`Opps!, something went wrong${error}`);
-      // setSubCategories({ isLoading: false, data: [] });
-      console.log(error);
-    }
-  };
-
-  useEffect(() => {
-    setCategoriesAsync();
-    setSubCategoriesAsync();
-  }, [
-    pageState.page,
-    pageState.pageSize,
-    filter,
-    SubCatpageState.page,
-    SubCatpageState.pageSize,
-    subCatfilter,
-  ]);
-
+  const fields = [
+    {
+      name: "name",
+      placeholder: "Categoria - 001",
+      label: "Nombre",
+      validation: {
+        required: true,
+      },
+      fullWidth: false,
+    },
+    {
+      name: "description",
+      placeholder: "Categorias para productos x ...",
+      label: "Descripcion",
+      multiline: true,
+      fullWidth: false,
+    },
+  ];
   return (
-    <>
-      <div className="w-full md:px-0 px-4 md:pr-8 flex flex-col">
-        <div className="flex w-full justify-between items-center pr-8">
-          <div>
-            <PageHeader
-              header="Categorias"
-              locationRoutes={locationRoutes}
-              Icon={<CategoryRounded />}
-            />
-          </div>
-          <div className="flex">
-            <Button
-              className=" z-auto rounded-xl py-2 bg-green-600 hover:bg-green-800"
-              variant="contained"
-              onClick={() => {
-                setFormOpen(true);
-                setFormData({});
-              }}
-              startIcon={<Add className="text-white" />}
-            >
-              <span className="text-sm whitespace-nowrap text-neutral-50 capitalize font-bold">
-                {title}
-              </span>
-            </Button>
-            {/* SubCategory Button */}
-            <div className={`${!value && "hidden"} flex `}>
-              <Button
-                className=" z-auto rounded-xl py-2 bg-green-600 hover:bg-green-800"
-                variant="contained"
-                onClick={() => {
-                  setSubCatFormOpen(true);
-                  setSubCatFormData({});
-                }}
-                startIcon={<Add className="text-white" />}
-              >
-                <span className="text-sm whitespace-nowrap text-neutral-50 capitalize font-bold">
-                  {title}
-                </span>
-              </Button>
-            </div>
-          </div>
-        </div>
-
-        {/* <TabPanel value={value} index={0}> */}
-        <CategoryList
-          pageState={pageState}
-          setFilter={setFilter}
-          setPageState={setPageState}
-          setFormOpen={setFormOpen}
-          setFormData={setFormData}
-          setItemToDelete={setItemToDelete}
-          setConfirmOpen={setConfirmOpen}
-        />
-        <CategoryForm
-          open={formOpen}
-          setOpen={setFormOpen}
-          data={formData}
-          onSave={upsertAsync}
-          setFile={setImageFile}
-          file={imageFile}
-        />
-        <ConfirmationForm
-          open={subCatConfirmOpen}
-          setOpen={setSubCatConfirmOpen}
-          onConfirm={subCatdeleteAsync}
-          message={"eliminar esta subcategoria"}
-        />
-      </div>
-    </>
+    <CPage
+      cols={cols}
+      fields={fields}
+      getUrl={"categories"}
+      updateUrl={"category"}
+      postUrl={"category"}
+      deleteUrl={"category"}
+      createButtonMessage={"Nueva categoria"}
+      deleteConfirmMessage="¿Estas seguro que deseas eliminar esta categoria?"
+      headerMessage="Cada vez que un negocio se expande trae mayores desafíos para todos los niveles de operación. Maneja tus categorias y cada uno de sus niveles operativos."
+      succesUpsertMessage={"Categoria guardada exitosamente!"}
+      successDeleteMessage={"Categoria eliminada exitosamente!"}
+      headerText={"Categorias"}
+      locationRoutes={locationRoutes}
+    />
   );
 }

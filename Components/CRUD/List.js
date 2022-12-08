@@ -4,72 +4,35 @@ import {
   EditOutlined,
   SearchRounded,
 } from "@mui/icons-material";
-import {
-  Autocomplete,
-  InputAdornment,
-  OutlinedInput,
-  Tab,
-  Tabs,
-  TextField,
-} from "@mui/material";
-import { useState, useEffect } from "react";
+import { InputAdornment, OutlinedInput } from "@mui/material";
 import { DataGrid, GridToolBar } from "@mui/x-data-grid";
-import Alert from "../Globals/Alert";
 import { debounce } from "../../utils/methods";
-import StatusRow from "../Globals/StatusRow.js";
 
-export default function CategoryList({
+export default function GList({
+  setFormOpen,
+  setFormData,
   pageState,
   setPageState,
   setFilter,
   setItemToDelete,
-  setFormData,
-  setFormOpen,
   setConfirmOpen,
+  cols,
+  searchText,
 }) {
-  const [statusTab, setStatusTab] = useState("All");
-
   const columns = [
     {
       field: "id",
-      width: 70,
+      width: 90,
       headerName: "Id",
     },
-    {
-      field: "name",
-      minWidth: 220,
-      flex: 1,
-      headerName: "Categoria",
-      renderCell: (cells) => {
-        return (
-          <div className="flex space-x-4 items-center ">
-            <img
-              className=" rounded-lg w-10 h-10"
-              src={
-                cells.row.imageUrl
-                  ? cells.row.imageUrl
-                  : "https://cdn-icons-png.flaticon.com/512/1670/1670443.png"
-              }
-            />
-            <span className="font-semibold ">{cells.row.name}</span>
-          </div>
-        );
-      },
-    },
-    {
-      field: "description",
-      width: 220,
-      flex: 1,
-      headerName: "Descripcion",
-    },
+    ...cols,
     {
       field: "Acciones",
       sortable: false,
       width: 220,
-      flex: 1,
       renderCell: (cells) => {
         return (
-          <div className="flex space-x-4">
+          <div className="flex">
             <a
               onClick={() => {
                 setFormData(cells.row);
@@ -78,7 +41,6 @@ export default function CategoryList({
               className="text-green-400 cursor-pointer"
             >
               <EditOutlined className="text-green-400 mx-1" />
-              Editar
             </a>
             <a
               onClick={() => {
@@ -87,17 +49,13 @@ export default function CategoryList({
               }}
               className="text-red-500 cursor-pointer"
             >
-              <DeleteOutline className="text-red-500" /> Eliminar
+              <DeleteOutline className="text-red-500" />
             </a>
           </div>
         );
       },
     },
   ];
-
-  // const onTabStatusChange = debounce((e, newValue) =>
-  //   setCategoryStatus(newValue)
-  // );
 
   const onInputFilterChange = debounce((e) => setFilter(e.target.value));
 
@@ -109,52 +67,16 @@ export default function CategoryList({
     setPageState({ ...pageState, pageSize: newPageSize });
   };
 
-  // const handleTabChange = (e, value) => {
-  //   setStatusTab(value);
-  //   const newData = getDataFilterdByTab(value);
-  //   setDataFiltered(newData);
-  // };
-
-  // const getDataFilterdByTab = (value) => {
-  //   let newData = { isLoading: true, data: [] };
-
-  //   if (value === "All") {
-  //     newData = data;
-  //   } else if (value === "Active") {
-  //     newData = {
-  //       isLoading: false,
-  //       data: data.data.filter((item) => !item.IsDeleted),
-  //     };
-  //   } else if (value === "Disable") {
-  //     newData = {
-  //       isLoading: false,
-  //       data: data.data.filter((item) => item.IsDeleted),
-  //     };
-  //   }
-  //   return newData;
-  // };
-
   return (
     <>
-      <div className="flex flex-col h-full  w-full shadow-lg rounded-xl my-3">
-        {/* <div className=" bg-slate-200 rounded-t-lg">
-          <Tabs
-            className="text-neutral-500"
-            TabIndicatorProps={{
-              style: {
-                backgroundColor: "rgb(22 163 74 / var(--tw-text-opacity))",
-              },
-            }}
-            aria-label="secondary tabs example"
-          ></Tabs>
-        </div> */}
+      <div className="flex flex-col h-full  w-full shadow-lg rounded-xl">
         <div className="flex items-center space-x-4 px-4 my-2">
           <OutlinedInput
             id="input-with-icon-adornment"
             className="input-rounded rounded-xl"
             fullWidth
             onChange={onInputFilterChange}
-            placeholder="Buscar categorias..."
+            placeholder={searchText}
             startAdornment={
               <InputAdornment position="start">
                 <SearchRounded className="text-slate-400" />
@@ -180,6 +102,7 @@ export default function CategoryList({
             localeText={{
               noRowsLabel: "No hay datos",
             }}
+            hideFooterSelectedRowCount
             autoHeight
             pagination
             disableColumnFilter

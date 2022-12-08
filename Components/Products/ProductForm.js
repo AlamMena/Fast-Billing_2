@@ -25,7 +25,7 @@ import {
 import PhotoCamera from "@mui/icons-material/PhotoCamera";
 import ImagePoster, { postImage } from "../Globals/ImageHandler";
 import { useEffect, useRef, useState } from "react";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import Alert from "../Globals/Alert";
 import {
@@ -44,17 +44,20 @@ export default function ProductsForm({ product }) {
     register,
     reset,
     getValues,
+    control,
     formState: { errors },
   } = useForm({
     defaultValues: product,
   });
 
   const [isLoading, setIsLoading] = useState(false);
-  const [categories, setCategories] = useState();
-  const [category, setCategory] = useState();
+  const [categories, setCategories] = useState([]);
+  const [subCategories, setSubcategories] = useState([]);
+  const [brands, setBrands] = useState([]);
   const [images, setImages] = useState([]);
 
   const { axiosInstance } = useAxios();
+  const toastId = useRef(null);
 
   const router = useRouter();
 
@@ -91,55 +94,42 @@ export default function ProductsForm({ product }) {
 
   const onSubmit = async (data) => {
     setIsLoading(true);
-
+    alert(JSON.stringify(data));
     try {
-      if (images.length > 0) {
-        for (let i = 0; images.length > i; i++) {
-          let currentImage = images[i];
-          if (currentImage.imageUrl === null) {
-            currentImage.imageUrl = await postImage(
-              images[i].file,
-              `products/${data.name}/${currentImage.name}`
-            );
-          }
-        }
-      }
-      if (data.id) {
-        await toast.promise(
-          axiosInstance.put("/product", {
+      toastId.current = toast("Cargando ...", {
+        type: toast.TYPE.LOADING,
+      });
+
+      data.id
+        ? await axiosInstance.put("/product", {
             ...data,
-            images: images.map((item) => item.imageUrl),
-          }),
-          {
-            pending: "creando tu producto...",
-            success: "Genial!, tu producto ha sido creado",
-            error: "Oops!, algo ha ocurrido",
-          },
-          {
-            onOpen: (props) => console.log(props),
-          }
-        );
-      } else {
-        await toast.promise(
-          axiosInstance.post("/product", {
+            images: [],
+            abName: "",
+          })
+        : await axiosInstance.post("/product", {
             ...data,
-            images: productImages,
-            IsDeleted: false,
-          }),
-          {
-            pending: "Creando tu producto...",
-            success: "Proucto actualizado",
-            error: "Oops!, algo ha ocurrido",
-          }
-        );
-      }
+            images: [],
+            abName: "",
+          });
+
+      toast.update(toastId.current, {
+        type: toast.TYPE.SUCCESS,
+        autoClose: 5000,
+        render: "Producto creado exitosamente!",
+      });
 
       router.push("/productos");
     } catch (error) {
-      console.log(error);
-    } finally {
-      setIsLoading(false);
+      toast.update(toastId.current, {
+        type: toast.TYPE.ERROR,
+        autoClose: 5000,
+        render:
+          error.response.data.status === 400
+            ? error.response.data.message
+            : "Opps, Ha ocurrido un error!",
+      });
     }
+    setIsLoading(false);
   };
 
   useEffect(() => {
@@ -152,12 +142,32 @@ export default function ProductsForm({ product }) {
     );
   }, [product]);
 
+  const getCategoriesAsync = async () => {
+    const queryFilters = `page=${1}&limit=${100}&value=${""}`;
+    const { data: apiResponse } = await axiosInstance.get(
+      `categories?${queryFilters}`
+    );
+    setCategories(apiResponse.data);
+  };
+  const getBrandsAsync = async () => {
+    const queryFilters = `page=${1}&limit=${100}&value=${""}`;
+    const { data: apiResponse } = await axiosInstance.get(
+      `brands?${queryFilters}`
+    );
+    setBrands(apiResponse.data);
+  };
+  const getSubcategoriesAsync = async () => {
+    const queryFilters = `page=${1}&limit=${100}&value=${""}`;
+    const { data: apiResponse } = await axiosInstance.get(
+      `subcategories?${queryFilters}`
+    );
+    setSubcategories(apiResponse.data);
+  };
+
   useEffect(() => {
-    setCategories([
-      { name: "Food", src: "/static/images/avatar/1.jpg" },
-      { name: "Games", src: "/static/images/avatar/1.jpg" },
-      { name: "Electronics", src: "/static/images/avatar/1.jpg" },
-    ]);
+    getCategoriesAsync();
+    getSubcategoriesAsync();
+    getBrandsAsync();
   }, []);
 
   return (
@@ -176,7 +186,7 @@ export default function ProductsForm({ product }) {
             {...register("name", { required: true })}
             className="input-rounded"
             label="Nombre *"
-            placeholder="my product name"
+            placeholder="Producto - 001"
             fullWidth
             error={errors.name}
             InputLabelProps={{
@@ -188,7 +198,7 @@ export default function ProductsForm({ product }) {
             {...register("description")}
             className="input-rounded w-full outline-2 outline-slate-500"
             minRows={4}
-            placeholder="describiendo mi producto"
+            placeholder="Descripcion producto 001"
             multiline
             label="Descripcion"
             InputLabelProps={{
@@ -282,13 +292,78 @@ export default function ProductsForm({ product }) {
               label="disponible"
             />
             <TextField
-              {...register("code")}
+              {...register("barCode")}
               className="input-rounded"
               label="Codigo"
               placeholder="P001-C001"
               fullWidth
             />
-            <FormControl className="w-full">
+            <Controller
+              control={control}
+              name="categoryId"
+              render={({ field }) => (
+                <FormControl fullWidth>
+                  <InputLabel id="categories-label-id">Categorias</InputLabel>
+                  <Select
+                    {...field}
+                    fullWidth
+                    className="rounded-xl text-md"
+                    labelId="categories-label-id"
+                    label="Categorias"
+                  >
+                    {categories.length > 0 &&
+                      categories.map((cat) => {
+                        return <MenuItem value={cat.id}>{cat.name}</MenuItem>;
+                      })}
+                  </Select>
+                </FormControl>
+              )}
+            />
+            <Controller
+              control={control}
+              name="subCategoryId"
+              render={({ field }) => (
+                <FormControl fullWidth>
+                  <InputLabel id="subcategories-label-id">
+                    Subcategorias
+                  </InputLabel>
+                  <Select
+                    {...field}
+                    fullWidth
+                    className="rounded-xl text-md"
+                    labelId="subcategories-label-id"
+                    label="Subcategorias"
+                  >
+                    {subCategories.length > 0 &&
+                      subCategories.map((sub) => {
+                        return <MenuItem value={sub.id}>{sub.name}</MenuItem>;
+                      })}
+                  </Select>
+                </FormControl>
+              )}
+            />
+            <Controller
+              control={control}
+              name="brandId"
+              render={({ field }) => (
+                <FormControl fullWidth>
+                  <InputLabel id="brands-label-id">Marcas</InputLabel>
+                  <Select
+                    {...field}
+                    labelId="brands-label-id"
+                    label="Marcas"
+                    fullWidth
+                    className="rounded-xl text-md"
+                  >
+                    {brands.length > 0 &&
+                      brands.map((bra) => {
+                        return <MenuItem value={bra.id}>{bra.name}</MenuItem>;
+                      })}
+                  </Select>
+                </FormControl>
+              )}
+            />
+            {/* <FormControl className="w-full">
               <InputLabel id="select-brand">Marcas</InputLabel>
               <Select
                 labelId="select-brand"
@@ -309,8 +384,8 @@ export default function ProductsForm({ product }) {
                   </div>
                 </MenuItem>
               </Select>
-            </FormControl>
-            <Autocomplete
+            </FormControl> */}
+            {/* <Autocomplete
               multiple
               options={categories}
               freeSolo
@@ -323,7 +398,7 @@ export default function ProductsForm({ product }) {
                   label="Categorias"
                 />
               )}
-            />
+            /> */}
           </div>
 
           <div className=" p-8 space-y-6 shadow-md rounded-xl h-min">
