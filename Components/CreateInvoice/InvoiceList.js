@@ -70,9 +70,9 @@ export default function InvoiceList({ data }) {
     //   //   },
     // },
   ];
-  useEffect(() => {
-    console.log(data);
-  }, []);
+  // useEffect(() => {
+  //   console.log(data);
+  // }, []);
 
   return (
     <>

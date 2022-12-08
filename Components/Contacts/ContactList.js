@@ -86,7 +86,7 @@ export default function ContactList({
               onClick={() => {
                 router.push(`/clientes/${cells.row.id}`);
               }}
-              className="text-green-400 cursor-pointer"
+              className="text-green-400 cursor-pointer``"
             >
               <EditOutlined className="text-green-400 mx-2" />
             </a>

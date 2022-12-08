@@ -96,7 +96,7 @@ export default function InvoiceDetail({ products }) {
                     onChange={(e) =>
                       handleQuantity({
                         quantity: e.target.value,
-                        _id: item._id,
+                        id: item.productId,
                       })
                     }
                     value={item.quantity}
@@ -118,7 +118,10 @@ export default function InvoiceDetail({ products }) {
                     label="Precio"
                     type="number"
                     onChange={(e) =>
-                      handlePrice({ value: e.target.value, _id: item._id })
+                      handlePrice({
+                        value: e.target.value,
+                        id: item.productId,
+                      })
                     }
                     value={item.price}
                     size="small"
@@ -150,7 +153,7 @@ export default function InvoiceDetail({ products }) {
                   size="small"
                   className=" text-red-600 hover:bg-red-100"
                   onClick={() => {
-                    dispatch(removeItem(item._id));
+                    dispatch(removeItem(item.productId));
                   }}
                 >
                   <Delete />

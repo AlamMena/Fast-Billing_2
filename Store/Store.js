@@ -7,6 +7,6 @@ export const store = configureStore({
   reducer: {
     invoice: invoiceReducer,
     user: userReducer,
-    goodinvoice: goodInvoiceReducer,
+    // goodinvoice: goodInvoiceReducer,
   },
 });
