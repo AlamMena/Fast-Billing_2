@@ -18,7 +18,7 @@ export default function Invoices() {
 
   const setInvoicesAsync = async () => {
     try {
-      const response = await axiosInstance.get("v1/invoices?limit=200&page=1");
+      const response = await axiosInstance.get("/invoices?limit=200&page=1");
       setInvoices({ isLoading: false, data: response.data.data });
       console.log(response);
     } catch (error) {

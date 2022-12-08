@@ -7,6 +7,8 @@ const initialState = {
   branchId: 1,
   invoiceNo: "F00000",
   invoiceTypeId: 1,
+  typeId: 1,
+  clientId: 1,
   beneficiary: {
     imageUrl: "https://cdn-icons-png.flaticon.com/128/3321/3321752.png",
     name: "Alex",
@@ -55,6 +57,8 @@ const invoiceSlice = createSlice({
       state.invoiceDueDate = actions.payload;
     },
     updateRecipient: (state, { payload }) => {
+      state.clientId = payload.id;
+      state.typeId = payload.typeId;
       state.recipient.name = payload.name;
       state.recipient.address = payload.address;
       state.recipient.phone = payload.phone;
@@ -62,7 +66,7 @@ const invoiceSlice = createSlice({
     },
     updateItemPrice: (state, actions) => {
       const itemPrice = state.details.find(
-        (item) => item._id === actions.payload._id
+        (item) => item.productId === actions.payload.id
       );
       if (actions.payload.value <= -1) {
         itemPrice.price = 1;
@@ -72,7 +76,7 @@ const invoiceSlice = createSlice({
     },
     updateItemQuantity: (state, actions) => {
       const itemQuantity = state.details.find(
-        (item) => item._id === actions.payload._id
+        (item) => item.productId === actions.payload.id
       );
       if (actions.payload.quantity <= -1) {
         itemQuantity.quantity = 1;
@@ -89,13 +93,15 @@ const invoiceSlice = createSlice({
       state.taxesAmount = num;
     },
     addItem: (state, { payload }) => {
-      let newProduct = state.details.find((item) => item._id === payload._id);
+      let newProduct = state.details.find(
+        (item) => item.productId === payload.id
+      );
 
       if (newProduct) {
         newProduct.quantity++;
       } else {
         const newDetail = {
-          _id: payload._id,
+          productId: payload.id,
           name: payload.name,
           quantity: 1,
           price: payload.price,
@@ -107,9 +113,9 @@ const invoiceSlice = createSlice({
     },
     removeItem: (state, actions) => {
       state.details = state.details.filter(
-        (item, i) => item._id !== actions.payload
+        (item, i) => item.productId !== actions.payload
       );
-      // alert(JSON.stringify(state.details));
+      // alert(JSON.stringify(actions.payload));
     },
     calculateSubTotal: (state) => {
       let quantity = 0;

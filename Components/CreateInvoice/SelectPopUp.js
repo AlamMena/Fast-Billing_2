@@ -22,7 +22,7 @@ export default function SelectPopUp({ open, setOpenSelect, type }) {
 
   const setDataAsync = async () => {
     try {
-      const response = await axiosInstance.get("v1/contacts?page=1&limit=200");
+      const response = await axiosInstance.get("clients?page=1&limit=200");
       setContacts({ isLoading: false, data: response.data.data });
     } catch (error) {
       toast.error(`Opps!, something went wrong${error}`);

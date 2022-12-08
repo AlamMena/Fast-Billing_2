@@ -41,12 +41,15 @@ import { useSelector } from "react-redux";
 import SelectProducts from "../../Components/CreateInvoice/SelectProducts";
 import ConfirmationForm from "../../Components/Globals/ConfirmationForm";
 import Router from "next/router";
+import PaymentPopUp from "../../Components/CreateInvoice/PaymentPopUp";
 
 export default function CreateInvoice() {
   const [creationDate, setCreationDate] = useState(dayjs());
   const [dueDate, setDueDate] = useState(dayjs().add(1, "day"));
   const [openSelect, setOpenSelect] = useState(false);
   const [openProductPop, setProductPopUp] = useState(false);
+  const [paymentPopUpOpen, setPaymentPopUp] = useState(false);
+
   const [type, setType] = useState("");
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [data, setData] = useState({ isLoading: true, data: [] });
@@ -145,23 +148,26 @@ export default function CreateInvoice() {
         }
       } else {
         console.log("enviado");
-        // if (invoice._id !== undefined) {
-        //   // logic
-        //   // if the item exists
-        //   await toast.promise(axiosInstance.put("v1/invoice", invoice), {
-        //     pending: "Creando factura",
-        //     success: "Genial!, tu factura ha sido actualizada.",
-        //     error: "Oops, algo ha ocurrido",
-        //   });
-        // } else {
-        //   // if the item doesnt exists
-        //   await toast.promise(axiosInstance.post("v1/invoice", invoice), {
-        //     pending: "Actualizando factura",
-        //     success: "Genial!, tu factura ha sido creada.",
-        //     error: "Oops, algo ha ocurrido",
-        //   });
-        // }
+        if (invoice._id !== undefined) {
+          // logic
+          // if the item exists
+          await toast.promise(axiosInstance.put("/invoice", invoice), {
+            pending: "Creando factura",
+            success: "Genial!, tu factura ha sido actualizada.",
+            error: "Oops, algo ha ocurrido",
+          });
+          router.push("/facturas");
+        } else {
+          // if the item doesnt exists
+          await toast.promise(axiosInstance.post("/invoice", invoice), {
+            pending: "Actualizando factura",
+            success: "Genial!, tu factura ha sido creada.",
+            error: "Oops, algo ha ocurrido",
+          });
+          router.push("/facturas");
+        }
         dispatch(resetState());
+        console.log(invoice);
       }
 
       setConfirmOpen(false);
@@ -191,8 +197,9 @@ export default function CreateInvoice() {
         open={confirmOpen}
         setOpen={setConfirmOpen}
         onConfirm={upserAsyncInvoice}
-        message="crear la factura"
+        message="Estas seguro que quieres crear la factura?"
       />
+      <PaymentPopUp open={paymentPopUpOpen} setPaymentPopUp={setPaymentPopUp} />
       {/* Invoice  */}
       <div className="flex flex-col h-full w-full shadow-lg rounded-xl my-3">
         {/* Sender and Receiver */}
@@ -378,6 +385,14 @@ export default function CreateInvoice() {
         <Divider orientation="horizontal" variant="middle" flexItem></Divider>
         {/* Discount and Taxes */}
         <div className="p-2 pt-4 md:flex-row flex md:justify-between w-full flex-col-reverse ">
+          <Button
+            startIcon={<Add />}
+            className="h-12 font-bold text-xs justify-start items-center "
+            size="small"
+            onClick={() => setPaymentPopUp(true)}
+          >
+            Anadir Metodo de pago
+          </Button>
           <Button
             startIcon={<Add />}
             className="h-12 font-bold text-xs justify-start items-center "
