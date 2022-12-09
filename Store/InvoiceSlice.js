@@ -7,6 +7,8 @@ const initialState = {
   branchId: 1,
   invoiceNo: "F00000",
   invoiceTypeId: 1,
+  ncfTypeId: 1,
+  warehouseId: 1,
   typeId: 1,
   clientId: 1,
   beneficiary: {
