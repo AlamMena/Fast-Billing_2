@@ -12,20 +12,30 @@ import {
   MenuItem,
   OutlinedInput,
 } from "@mui/material";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { updatePayment } from "../../Store/InvoiceSlice";
+import { useDispatch } from "react-redux";
 
 export default function PaymentPopUp({ open, setPaymentPopUp }) {
-  const [status, setStatus] = useState("cash");
+  const [method, setMethod] = useState("cash");
+  const [paymentQuantity, setPaymentQuantity] = useState();
+  const dispatch = useDispatch();
 
-  const handleStatus = (value) => {
-    setStatus(value);
+  const handleMethod = (value) => {
+    setMethod(value);
     // dispatch(updateStatus(value));
+  };
+
+  const upsertPaymentMethod = () => {
+    let obj = { method, paymentQuantity };
+    dispatch(updatePayment(obj));
+    setPaymentPopUp(false);
   };
 
   return (
     <>
       <Dialog open={open} fullWidth={true} maxWidth={"sm"}>
-        <DialogTitle>Selecciona un metodo de pago</DialogTitle>
+        <DialogTitle>Informacion de pago</DialogTitle>
         <DialogContent dividers={true}>
           <FormControl className="flex space-y-3 md:space-y-0  md:flex-row items-center md:space-x-2">
             <FormControl className="w-full">
@@ -37,7 +47,7 @@ export default function PaymentPopUp({ open, setPaymentPopUp }) {
                 label="Metodo de pago"
                 size="normal"
                 type="number"
-                value={status}
+                value={method}
                 className="rounded-xl"
                 variant="outlined"
                 startAdornment={
@@ -46,16 +56,16 @@ export default function PaymentPopUp({ open, setPaymentPopUp }) {
                   </InputAdornment>
                 }
               >
-                <MenuItem value={"debit"} onClick={() => handleStatus("debit")}>
+                <MenuItem value={"debit"} onClick={() => handleMethod("debit")}>
                   Tarjeta Debito
                 </MenuItem>
                 <MenuItem
                   value={"credit"}
-                  onClick={() => handleStatus("credit")}
+                  onClick={() => handleMethod("credit")}
                 >
                   Tarjeta Credito
                 </MenuItem>
-                <MenuItem value={"cash"} onClick={() => handleStatus("cash")}>
+                <MenuItem value={"cash"} onClick={() => handleMethod("cash")}>
                   Efectivo
                 </MenuItem>
               </Select>
@@ -67,6 +77,7 @@ export default function PaymentPopUp({ open, setPaymentPopUp }) {
               <OutlinedInput
                 type="number"
                 id="outlined-adornment-name"
+                onChange={(e) => setPaymentQuantity(e.target.value)}
                 label="Monto a pagar"
                 size="large"
                 className="rounded-xl"
@@ -82,7 +93,7 @@ export default function PaymentPopUp({ open, setPaymentPopUp }) {
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setPaymentPopUp(false)}>Cerrar</Button>
-          <Button onClick={() => setPaymentPopUp(false)}>Aceptar</Button>
+          <Button onClick={() => upsertPaymentMethod()}>Aceptar</Button>
         </DialogActions>
       </Dialog>
     </>

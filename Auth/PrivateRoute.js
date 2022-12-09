@@ -34,5 +34,5 @@ export default function PrivateRouter({ children }) {
   } else if (!user && !isLoading) {
     return <Login />;
   }
-  return <Loading />;
+  return <Login />;
 }

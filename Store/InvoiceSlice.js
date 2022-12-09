@@ -18,10 +18,7 @@ const initialState = {
   },
   recipient: {},
   status: "Pagado",
-  payment: {
-    total: 0,
-    type: "",
-  },
+  payments: [{ typeId: 1 }],
   invoiceCreationDate: "",
   invoiceDueDate: "",
   subTotal: 0,
@@ -92,6 +89,10 @@ const invoiceSlice = createSlice({
       let num = Math.abs(actions.payload);
       state.taxesAmount = num;
     },
+    updatePayment: (state, { payload }) => {
+      state.payments[0].amount = payload.paymentQuantity;
+      // state.payments.paymentTypeId = 1;
+    },
     addItem: (state, { payload }) => {
       let newProduct = state.details.find(
         (item) => item.productId === payload.id
@@ -151,6 +152,7 @@ export const {
   updateDueDate,
   updateTaxes,
   updateStatus,
+  updatePayment,
   addItem,
   removeItem,
   calculateTotal,
