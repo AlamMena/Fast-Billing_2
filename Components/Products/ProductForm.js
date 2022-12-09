@@ -53,6 +53,7 @@ export default function ProductsForm({ product }) {
   const [isLoading, setIsLoading] = useState(false);
   const [categories, setCategories] = useState([]);
   const [subCategories, setSubcategories] = useState([]);
+  const [warehouses, setWarehouses] = useState([]);
   const [brands, setBrands] = useState([]);
   const [images, setImages] = useState([]);
 
@@ -163,11 +164,19 @@ export default function ProductsForm({ product }) {
     );
     setSubcategories(apiResponse.data);
   };
+  const getWarehousesAsync = async () => {
+    const queryFilters = `page=${1}&limit=${100}&value=${""}`;
+    const { data: apiResponse } = await axiosInstance.get(
+      `warehouses?${queryFilters}`
+    );
+    setWarehouses(apiResponse.data);
+  };
 
   useEffect(() => {
     getCategoriesAsync();
     getSubcategoriesAsync();
     getBrandsAsync();
+    getWarehousesAsync();
   }, []);
 
   return (
@@ -209,70 +218,81 @@ export default function ProductsForm({ product }) {
             fullWidth
           />
           {/* image list */}
-          <div className="w-full relative h-full outline-dashed outline-1 outline-neutral-300 rounded-xl bg-neutral-50 flex justify-center flex-wrap items-center space-x-4 p-8">
-            <Button className="absolute inset-0 z-50" component="label">
-              <input
-                onChange={handleImageChange}
-                hidden
-                accept="image/*"
-                multiple
-                type="file"
-              ></input>
-            </Button>
-            <div className="z-0">
-              <video className=" w-48 h-48 rounded-3xl" loop autoPlay>
-                <source
-                  src="https://cdn.dribbble.com/users/7831180/screenshots/15661340/media/84484ce85971eb2efad0f36deeae6020.mp4"
-                  type="video/mp4"
-                />
-                Your browser does not support the video tag.
-              </video>
-            </div>
-            <div className="flex flex-col mx-2">
+          <div className="space-y-6 rounded-xl h-min">
+            <div className="flex flex-col mx-2 space-y-1">
               <span className="font-bold tracking-wider">
-                Drop or Select file
+                Informacion monetaria
               </span>
               <span className="text-sm text-neutral-500">
-                Drop files here or click browse thorough your machine
+                Ingresa los datos monetarios y los beneficios que desea para su
+                producto.
               </span>
             </div>
-          </div>
-          <div className="flex">
-            <TransitionGroup className="flex">
-              {images &&
-                images.map((item, index) => (
-                  <Fade key={index}>
-                    <div className="transition-all opacity-40 relative my-4 mx-2">
-                      <RemoveCircleOutline
-                        onClick={(e) => {
-                          setImages(images.filter((url) => url !== item));
-                        }}
-                        className="absolute right-0 text-neutral-300 text-md hover:text-neutral-500 transition-all duration-200 cursor-pointer"
-                      />
-                      <img
-                        src={item.imageUrl || item.previewUrl}
-                        className=" w-20 h-20 rounded-2xl"
-                      />
-                    </div>
-                  </Fade>
-                ))}
-            </TransitionGroup>
-          </div>
-          <div className="flex justify-end space-x-4">
-            <Button
-              onClick={() => setImagesPreview([])}
-              className=" z-auto rounded-xl py-2 capitalize "
-              size="small"
-            >
-              remove all
-            </Button>
-            <Button
-              className=" shadow-lg text-white z-auto rounded-xl py-2 bg-green-600 hover:bg-green-800 capitalize"
-              variant="contained"
-              size="small"
-            >
-              Upload files
-            </Button>
+
+            <TextField
+              {...register("cost", { required: true })}
+              className="input-rounded"
+              type="number"
+              id="input-cost"
+              error={errors.cost}
+              helperText={errors.cost && "El costo no es valido"}
+              onChange={handlePriceChange}
+              InputLabelProps={{
+                shrink: true,
+              }}
+              label="Costo *"
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <AttachMoneyRounded
+                      className={`${errors.cost && "text-red-500"} `}
+                    />
+                  </InputAdornment>
+                ),
+              }}
+              placeholder="0.00"
+              fullWidth
+            />
+            <TextField
+              {...register("price", { required: true })}
+              className="input-rounded"
+              type="number"
+              id="input-price"
+              label="Precio *"
+              error={errors.price}
+              helperText={errors.price && "El precio no es valido"}
+              InputLabelProps={{
+                shrink: true,
+              }}
+              onChange={handlePriceChange}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <AttachMoneyRounded
+                      className={`${errors.price && "text-red-500"} `}
+                    />
+                  </InputAdornment>
+                ),
+              }}
+              placeholder="0.00"
+              fullWidth
+            />
+            <TextField
+              {...register("benefit")}
+              className="input-rounded"
+              type="number"
+              disabled
+              label="Margen de beneficio"
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <PercentOutlined />
+                  </InputAdornment>
+                ),
+              }}
+              placeholder="0.00"
+              fullWidth
+            />
           </div>
         </div>
 
@@ -283,7 +303,7 @@ export default function ProductsForm({ product }) {
                 Informacion detallada
               </span>
               <span className="text-sm text-neutral-500">
-                Ingresa datos especificos de tus productos.
+                Ingresa datos especificos de almacen.
               </span>
             </div>
             <FormControlLabel
@@ -400,83 +420,86 @@ export default function ProductsForm({ product }) {
               )}
             /> */}
           </div>
-
           <div className=" p-8 space-y-6 shadow-md rounded-xl h-min">
             <div className="flex flex-col mx-2 space-y-1">
               <span className="font-bold tracking-wider">
-                Informacion monetaria
+                Informacion detallada
               </span>
               <span className="text-sm text-neutral-500">
-                Ingresa los datos monetarios y los beneficios que desea para su
-                producto.
+                Ingresa datos especificos de tus productos.
               </span>
             </div>
 
+            <Controller
+              control={control}
+              name="warehouseId"
+              render={({ field }) => (
+                <FormControl fullWidth>
+                  <InputLabel id="warehouse-label-id">Almacenes</InputLabel>
+                  <Select
+                    {...field}
+                    fullWidth
+                    className="rounded-xl text-md"
+                    labelId="warehouse-label-id"
+                    label="Almacenes"
+                  >
+                    {warehouses.length > 0 &&
+                      warehouses.map((war) => {
+                        return <MenuItem value={war.id}>{war.name}</MenuItem>;
+                      })}
+                  </Select>
+                </FormControl>
+              )}
+            />
+
             <TextField
-              {...register("cost", { required: true })}
+              {...register("stock")}
               className="input-rounded"
-              type="number"
-              id="input-cost"
-              error={errors.cost}
-              helperText={errors.cost && "El costo no es valido"}
-              onChange={handlePriceChange}
+              label="Cantidad de productos"
+              placeholder="120"
               InputLabelProps={{
                 shrink: true,
               }}
-              label="Costo *"
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <AttachMoneyRounded
-                      className={`${errors.cost && "text-red-500"} `}
-                    />
-                  </InputAdornment>
-                ),
-              }}
-              placeholder="0.00"
               fullWidth
             />
-            <TextField
-              {...register("price", { required: true })}
-              className="input-rounded"
-              type="number"
-              id="input-price"
-              label="Precio *"
-              error={errors.price}
-              helperText={errors.price && "El precio no es valido"}
-              InputLabelProps={{
-                shrink: true,
-              }}
-              onChange={handlePriceChange}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <AttachMoneyRounded
-                      className={`${errors.price && "text-red-500"} `}
-                    />
-                  </InputAdornment>
-                ),
-              }}
-              placeholder="0.00"
-              fullWidth
-            />
-            <TextField
-              {...register("benefit")}
-              className="input-rounded"
-              type="number"
-              disabled
-              label="Margen de beneficio"
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <PercentOutlined />
-                  </InputAdornment>
-                ),
-              }}
-              placeholder="0.00"
-              fullWidth
-            />
+            {/* <FormControl className="w-full">
+              <InputLabel id="select-brand">Marcas</InputLabel>
+              <Select
+                labelId="select-brand"
+                id="select-brand"
+                value={1}
+                // onChange={(params) => setIdentificationType(params.target.value)}
+                size="medium"
+                className="rounded-xl text-md"
+                label="Marcas"
+              >
+                <MenuItem value={1}>
+                  <div className="flex items-center">
+                    <img
+                      src="https://cdn-icons-png.flaticon.com/128/7080/7080979.png"
+                      className="w-8 h-8"
+                    ></img>
+                    <span className="mx-2">Tesla</span>
+                  </div>
+                </MenuItem>
+              </Select>
+            </FormControl> */}
+            {/* <Autocomplete
+              multiple
+              options={categories}
+              freeSolo
+              getOptionLabel={(chip) => chip.name}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  helperText="Busca las categorias que mas se asemjan a tus productos."
+                  className="input-rounded"
+                  label="Categorias"
+                />
+              )}
+            /> */}
           </div>
+
           <div className="flex justify-center">
             <Button
               className=" w-full max-w-xl shadow-lg text-white z-auto rounded-xl py-2 bg-green-600 hover:bg-green-700"
