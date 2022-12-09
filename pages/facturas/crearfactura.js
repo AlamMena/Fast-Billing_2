@@ -54,6 +54,14 @@ export default function CreateInvoice() {
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [data, setData] = useState({ isLoading: true, data: [] });
   const [status, setStatus] = useState("Pagado");
+  const [ncfstypes, setNCFstypes] = useState([]);
+  const [ncftype, setNCFtype] = useState();
+  const [warehouse, setWarehouse] = useState([]);
+  const [warehouseid, setWarehouseId] = useState();
+
+  const [invoicetypes, setInvoicetypes] = useState([]);
+  const [invoicetype, setInvoicetype] = useState();
+
   const [products, setProducts] = useState({ isLoading: true, data: [] });
   const invoice = useSelector((state) => state.invoice);
   const {
@@ -64,31 +72,56 @@ export default function CreateInvoice() {
     invoiceNo,
     details,
     recipient,
+    totalPayed,
   } = invoice;
 
   const { axiosInstance } = useAxios();
   const dispatch = useDispatch();
   const router = Router;
 
-  const setDataAsync = async () => {
-    try {
-      const response = await axiosInstance.get("v1/contacts?page=1&limit=200");
-      setData({ isLoading: false, data: response.data });
-    } catch (error) {
-      toast.error(`Opps!, something went wrong${error}`);
-      setData({ isLoading: false, data: [] });
-    }
+  const getNCFType = async () => {
+    const queryFilters = `page=${1}&limit=${100}&value=${""}`;
+    const { data: apiResponse } = await axiosInstance.get(
+      `ncf/types?${queryFilters}`
+    );
+    setNCFstypes(apiResponse);
   };
 
-  const setProductsAsync = async () => {
-    try {
-      const response = await axiosInstance.get("v1/products?limit=20&page=1");
-      setProducts({ isLoading: false, data: response.data });
-    } catch (error) {
-      toast.error(`Opps!, something went wrong${error}`);
-      setProducts({ isLoading: false, data: [] });
-    }
+  const getInvoiceType = async () => {
+    const queryFilters = `page=${1}&limit=${100}&value=${""}`;
+    const { data: apiResponse } = await axiosInstance.post(
+      `invoice/types?${queryFilters}`
+    );
+    setInvoicetypes(apiResponse);
   };
+
+  const getWarehouse = async () => {
+    const queryFilters = `page=${1}&limit=${100}&value=${""}`;
+    const { data: apiResponse } = await axiosInstance.get(
+      `warehouses?${queryFilters}`
+    );
+    setWarehouse(apiResponse.data);
+  };
+
+  // const setDataAsync = async () => {
+  //   try {
+  //     const response = await axiosInstance.get("contacts?page=1&limit=200");
+  //     setData({ isLoading: false, data: response.data });
+  //   } catch (error) {
+  //     toast.error(`Opps!, something went wrong${error}`);
+  //     setData({ isLoading: false, data: [] });
+  //   }
+  // };
+
+  // const setProductsAsync = async () => {
+  //   try {
+  //     const response = await axiosInstance.get("v1/products?limit=20&page=1");
+  //     setProducts({ isLoading: false, data: response.data });
+  //   } catch (error) {
+  //     toast.error(`Opps!, something went wrong${error}`);
+  //     setProducts({ isLoading: false, data: [] });
+  //   }
+  // };
 
   // handle Discount Price
 
@@ -99,6 +132,21 @@ export default function CreateInvoice() {
   const handleStatus = (value) => {
     setStatus(value);
     dispatch(updateStatus(value));
+  };
+
+  const handleNCFtype = (value, id) => {
+    setNCFtype(value);
+    // dispatch(updateStatus(value));
+  };
+
+  const handleWarehouse = (value, id) => {
+    setWarehouseId(value);
+    // dispatch(updateStatus(value));
+  };
+
+  const handleInvoicetype = (value, id) => {
+    setInvoicetype(value);
+    // dispatch(updateStatus(value));
   };
 
   // Handle Creation and Due date of Invoice
@@ -131,8 +179,11 @@ export default function CreateInvoice() {
   ];
 
   useEffect(() => {
-    setDataAsync();
-    setProductsAsync();
+    // setDataAsync();
+    // setProductsAsync();
+    getNCFType();
+    getWarehouse();
+    getInvoiceType();
     dispatch(updateCreationDate(creationDate.toString()));
     dispatch(updateDueDate(dueDate.toString()));
   }, []);
@@ -254,7 +305,7 @@ export default function CreateInvoice() {
           </Grid>
         </Grid>
         {/* Invoice settings Inputs */}
-        <div className=" w-full bg-neutral-100 flex items-center">
+        <div className=" bg-neutral-100 flex items-center overflow-auto  ">
           <Grid container spacing={{ xs: 3 }} sx={{ padding: 3 }}>
             <Grid item xs={12} md={3}>
               <FormControl className="w-full">
@@ -375,6 +426,123 @@ export default function CreateInvoice() {
                 </LocalizationProvider>
               </FormControl>
             </Grid>
+            <Grid item xs={12} md={3}>
+              <FormControl className="w-full">
+                <InputLabel size="normal" htmlFor="outlined-adornment-name">
+                  Tipo de NCF
+                </InputLabel>
+                <Select
+                  id="outlined-adornment-name"
+                  label="Tipo de NCF"
+                  size="normal"
+                  type="number"
+                  value={ncftype}
+                  className="rounded-xl"
+                  variant="outlined"
+                  startAdornment={
+                    <InputAdornment position="start">
+                      {/* <AttachMoney /> */}
+                    </InputAdornment>
+                  }
+                >
+                  {ncfstypes.length > 0 &&
+                    ncfstypes.map((item) => {
+                      return (
+                        <MenuItem
+                          value={item.id}
+                          onClick={() => handleNCFtype(item.name, item.id)}
+                        >
+                          {item.name}
+                        </MenuItem>
+                      );
+                    })}
+                  {/* <MenuItem
+                    value={"Pagado"}
+                    onClick={() => handleNCFtype("Pagado")}
+                  >
+                    Credito Fiscal
+                  </MenuItem> */}
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item xs={12} md={3}>
+              <FormControl className="w-full">
+                <InputLabel size="normal" htmlFor="outlined-adornment-name">
+                  Tipo de Factura
+                </InputLabel>
+                <Select
+                  id="outlined-adornment-name"
+                  label="Tipo de Factura"
+                  size="normal"
+                  type="number"
+                  value={invoicetype}
+                  className="rounded-xl"
+                  variant="outlined"
+                  startAdornment={
+                    <InputAdornment position="start">
+                      {/* <AttachMoney /> */}
+                    </InputAdornment>
+                  }
+                >
+                  {invoicetypes.length > 0 &&
+                    invoicetypes.map((item) => {
+                      return (
+                        <MenuItem
+                          value={item.id}
+                          onClick={() => handleInvoicetype(item.name, item.id)}
+                        >
+                          {item.name}
+                        </MenuItem>
+                      );
+                    })}
+                  {/* <MenuItem
+                    value={"Pagado"}
+                    onClick={() => handleNCFtype("Pagado")}
+                  >
+                    Credito Fiscal
+                  </MenuItem> */}
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item xs={12} md={3}>
+              <FormControl className="w-full">
+                <InputLabel size="normal" htmlFor="outlined-adornment-name">
+                  Almacen
+                </InputLabel>
+                <Select
+                  id="outlined-adornment-name"
+                  label="Almacen"
+                  size="normal"
+                  type="number"
+                  value={warehouseid}
+                  className="rounded-xl"
+                  variant="outlined"
+                  startAdornment={
+                    <InputAdornment position="start">
+                      {/* <AttachMoney /> */}
+                    </InputAdornment>
+                  }
+                >
+                  {warehouse.length > 0 &&
+                    warehouse.map((item) => {
+                      return (
+                        <MenuItem
+                          value={item.id}
+                          onClick={() => handleWarehouse(item.name, item.id)}
+                        >
+                          {item.name}
+                        </MenuItem>
+                      );
+                    })}
+                  {/* <MenuItem
+                    value={"Pagado"}
+                    onClick={() => handleNCFtype("Pagado")}
+                  >
+                    Credito Fiscal
+                  </MenuItem> */}
+                </Select>
+              </FormControl>
+            </Grid>
           </Grid>
         </div>
         {/* Details */}
@@ -389,18 +557,18 @@ export default function CreateInvoice() {
             startIcon={<Add />}
             className="h-12 font-bold text-xs justify-start items-center "
             size="small"
-            onClick={() => setPaymentPopUp(true)}
-          >
-            Anadir Metodo de pago
-          </Button>
-          <Button
-            startIcon={<Add />}
-            className="h-12 font-bold text-xs justify-start items-center "
-            size="small"
             onClick={() => setProductPopUp(true)}
           >
             Anadir nuevo detalle
           </Button>
+          <Button
+            className="h-12 font-bold text-xs justify-start items-center "
+            size="small"
+            onClick={() => setPaymentPopUp(true)}
+          >
+            Informacion de pago
+          </Button>
+
           <div className=" flex-col md:flex md:flex-row md:space-y-0 md:space-x-2 space-y-2">
             <FormControl className="w-full">
               <InputLabel size="small" htmlFor="outlined-adornment-name">
@@ -476,6 +644,19 @@ export default function CreateInvoice() {
               {total.toLocaleString("en-US", {
                 minimumFractionDigits: 2,
               })}
+            </span>
+          </div>
+          <div className="flex justify-end p-2">
+            <span className="">Monto a pagar:</span>
+            <span className=" w-32 text-right overflow-hidden">
+              {(totalPayed <= 0 && <span>-</span>) || (
+                <span>
+                  $
+                  {totalPayed.toLocaleString("en-US", {
+                    minimumFractionDigits: 2,
+                  })}
+                </span>
+              )}
             </span>
           </div>
         </div>
