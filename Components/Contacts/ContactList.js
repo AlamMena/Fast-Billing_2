@@ -64,15 +64,21 @@ export default function ContactList({
       headerName: "Correo electronico",
     },
     {
-      field: "contacts.0.Number",
+      field: "addresses[0]",
       width: 190,
-      headerName: "Telefono",
+      headerName: "Direccion",
+      renderCell: (cells) => {
+        return cells.row.addresses[0] && cells.row.addresses[0].address1;
+      },
     },
 
     {
-      field: "adresses[0].address",
+      field: "contacts[0]",
       width: 150,
-      headerName: "Direccion",
+      headerName: "Telefono",
+      renderCell: (cells) => {
+        return cells.row.contacts[0] && cells.row.contacts[0].number;
+      },
     },
 
     {
