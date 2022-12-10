@@ -28,7 +28,10 @@ export function InvoiceRecipient() {
   return (
     <div className="p-3">
       {(Object.keys(recipient).length <= 0 && <span></span>) || (
-        <div className="flex space-y-1 space-x-3 items-center">
+        <div
+          className="flex space-y-1 space-x-3 items-center"
+          onClick={() => alert(JSON.stringify(recipient))}
+        >
           <div className="h-14 w-14">
             <img src={recipient.imageUrl} className="rounded-full" />
           </div>

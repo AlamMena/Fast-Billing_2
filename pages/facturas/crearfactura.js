@@ -36,6 +36,9 @@ import {
   updateCreationDate,
   resetState,
   updateDueDate,
+  updateInvoiceType,
+  updateWarehouse,
+  updateNCFType,
 } from "../../Store/InvoiceSlice";
 import { useSelector } from "react-redux";
 import SelectProducts from "../../Components/CreateInvoice/SelectProducts";
@@ -72,6 +75,7 @@ export default function CreateInvoice() {
     invoiceNo,
     details,
     recipient,
+    typeId,
     totalPayed,
   } = invoice;
 
@@ -136,17 +140,17 @@ export default function CreateInvoice() {
 
   const handleNCFtype = (value, id) => {
     setNCFtype(value);
-    // dispatch(updateStatus(value));
+    dispatch(updateNCFType(id));
   };
 
   const handleWarehouse = (value, id) => {
     setWarehouseId(value);
-    // dispatch(updateStatus(value));
+    dispatch(updateWarehouse(id));
   };
 
   const handleInvoicetype = (value, id) => {
     setInvoicetype(value);
-    // dispatch(updateStatus(value));
+    dispatch(updateInvoiceType(id));
   };
 
   // Handle Creation and Due date of Invoice
@@ -197,6 +201,12 @@ export default function CreateInvoice() {
         if (details.length <= 0) {
           toast.error(`Porfavor agrega al menos un detalle`);
         }
+        if (typeId === 0) {
+          toast.error(`Porfavor agrega el tipo de NCF`);
+        }
+        if (details.length <= 0) {
+          toast.error(`Porfavor agrega al menos un detalle`);
+        }
       } else {
         console.log("enviado");
         if (invoice._id !== undefined) {
@@ -217,8 +227,7 @@ export default function CreateInvoice() {
           });
           router.push("/facturas");
         }
-        dispatch(resetState());
-        console.log(invoice);
+        // dispatch(resetState());
       }
 
       setConfirmOpen(false);
@@ -550,6 +559,11 @@ export default function CreateInvoice() {
           <span className=" text-xl text-neutral-400">Detalles:</span>
           <InvoiceDetail products={products} />
         </div>
+        {details.length < 1 && (
+          <span className="text-lg text-neutral-400 text-center p-2">
+            No hay detalles
+          </span>
+        )}
         <Divider orientation="horizontal" variant="middle" flexItem></Divider>
         {/* Discount and Taxes */}
         <div className="p-2 pt-4 md:flex-row flex md:justify-between w-full flex-col-reverse ">

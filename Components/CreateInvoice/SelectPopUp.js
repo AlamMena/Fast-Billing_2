@@ -31,6 +31,7 @@ export default function SelectPopUp({ open, setOpenSelect, type }) {
   };
 
   const handleContact = (item) => {
+    item.imageUrl = "https://cdn-icons-png.flaticon.com/128/3321/3321752.png";
     if (type === "beneficiente") {
       dispatch(updateBeneficiary(item));
     } else if (type === "recipiente") {
@@ -55,15 +56,20 @@ export default function SelectPopUp({ open, setOpenSelect, type }) {
               }}
             >
               <div className="h-14 w-14">
-                <img src={item.imageUrl} className="rounded-full" />
+                <img
+                  src="https://cdn-icons-png.flaticon.com/128/3321/3321752.png"
+                  className="rounded-full"
+                />
               </div>
               <div className="flex flex-col">
                 {/* Name */}
                 <span className="font-bold">{item.name}</span>
                 {/* Address */}
-                <span className="text-sm">Direccion: {item.address}</span>
+                <span className="text-sm">
+                  Direccion: {item.addresses[0].address1}
+                </span>
                 {/* Phone */}
-                <span className="text-sm">Tel: {item.phone}</span>
+                <span className="text-sm">Tel: {item.contacts[0].number}</span>
               </div>
             </div>
           );

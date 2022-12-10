@@ -15,10 +15,14 @@ import {
 import { useState, useEffect } from "react";
 import { updatePayment } from "../../Store/InvoiceSlice";
 import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 
 export default function PaymentPopUp({ open, setPaymentPopUp }) {
+  const invoice = useSelector((state) => state.invoice);
+  const { paymentQuantity } = invoice;
+
   const [method, setMethod] = useState("cash");
-  const [paymentQuantity, setPaymentQuantity] = useState();
+  const [pquantity, setPaymentQuantity] = useState();
   const dispatch = useDispatch();
 
   const handleMethod = (value) => {
@@ -27,7 +31,7 @@ export default function PaymentPopUp({ open, setPaymentPopUp }) {
   };
 
   const upsertPaymentMethod = () => {
-    let obj = { method, paymentQuantity };
+    let obj = { method, pquantity };
     dispatch(updatePayment(obj));
     setPaymentPopUp(false);
   };
@@ -80,6 +84,7 @@ export default function PaymentPopUp({ open, setPaymentPopUp }) {
                 onChange={(e) => setPaymentQuantity(e.target.value)}
                 label="Monto a pagar"
                 size="large"
+                defaultValue={pquantity}
                 className="rounded-xl"
                 variant="outlined"
                 startAdornment={

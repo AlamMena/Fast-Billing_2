@@ -6,10 +6,9 @@ const initialState = {
   companyId: 1,
   branchId: 1,
   invoiceNo: "F00000",
-  invoiceTypeId: 1,
-  ncfTypeId: 1,
   warehouseId: 1,
-  typeId: 1,
+  ncfTypeId: 1,
+  typeId: 0,
   clientId: 1,
   beneficiary: {
     imageUrl: "https://cdn-icons-png.flaticon.com/128/3321/3321752.png",
@@ -43,11 +42,20 @@ const invoiceSlice = createSlice({
   reducers: {
     updateBeneficiary: (state, { payload }) => {
       state.beneficiary.name = payload.name;
-      state.beneficiary.address = payload.address;
-      state.beneficiary.phone = payload.phone;
+      state.beneficiary.address = payload.addresses[0].address1;
+      state.beneficiary.phone = payload.contacts[0].number;
     },
     updateStatus: (state, actions) => {
       state.status = actions.payload;
+    },
+    updateNCFType: (state, actions) => {
+      state.ncfTypeId = actions.payload;
+    },
+    updateWarehouse: (state, actions) => {
+      state.warehouseId = actions.payload;
+    },
+    updateInvoiceType: (state, actions) => {
+      state.typeId = actions.payload;
     },
     updateCreationDate: (state, actions) => {
       state.invoiceCreationDate = actions.payload;
@@ -59,8 +67,8 @@ const invoiceSlice = createSlice({
       state.clientId = payload.id;
       state.typeId = payload.typeId;
       state.recipient.name = payload.name;
-      state.recipient.address = payload.address;
-      state.recipient.phone = payload.phone;
+      state.recipient.address = payload.addresses[0].address1;
+      state.recipient.phone = payload.contacts[0].number;
       state.recipient.imageUrl = payload.imageUrl;
     },
     updateItemPrice: (state, actions) => {
@@ -150,6 +158,9 @@ export const {
   updateRecipient,
   updateItemPrice,
   updateCreationDate,
+  updateInvoiceType,
+  updateNCFType,
+  updateWarehouse,
   updateDiscount,
   updateDueDate,
   updateTaxes,
