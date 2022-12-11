@@ -37,17 +37,24 @@ import {
 import { TransitionGroup } from "react-transition-group";
 import useAxios from "../../Axios/Axios";
 import { useRouter } from "next/router";
-
+import { debounce } from "../../utils/methods";
 export default function ProductsForm({ product }) {
   const {
     handleSubmit,
     register,
+    setValue,
     reset,
     getValues,
     control,
     formState: { errors },
   } = useForm({
-    defaultValues: product,
+    defaultValues: {
+      ...product,
+      category: { id: 0, name: "" },
+      subcategory: { id: 0, name: "" },
+      brand: { id: 0, name: "" },
+      warehouse: { id: 0, name: "" },
+    },
   });
 
   const [isLoading, setIsLoading] = useState(false);
@@ -57,8 +64,31 @@ export default function ProductsForm({ product }) {
   const [brands, setBrands] = useState([]);
   const [images, setImages] = useState([]);
 
+  // selected categories
+
   const { axiosInstance } = useAxios();
   const toastId = useRef(null);
+
+  useEffect(() => {
+    if (product) {
+      reset({
+        ...product,
+        category: {
+          id: product.categoryId,
+          name: product.categoryName ?? "",
+        },
+        subcategory: {
+          id: product.subcategoryId,
+          name: product.subCategoryName ?? "",
+        },
+        brand: { id: product.brandId, name: product.brandName ?? "" },
+        warehouse: {
+          id: product.warehouseId,
+          name: product.warehouseName ?? "",
+        },
+      });
+    }
+  }, [product]);
 
   const router = useRouter();
 
@@ -83,35 +113,28 @@ export default function ProductsForm({ product }) {
       });
     }
   };
-  const handleImageChange = (e) => {
-    if (e.target.files[0]) {
-      const url = URL.createObjectURL(e.target.files[0]);
-      setImages([
-        ...images,
-        { previewUrl: url, file: e.target.files[0], imageUrl: null },
-      ]);
-    }
-  };
 
+  const formatData = (data) => {
+    return {
+      ...data,
+      categoryId: data.category.id,
+      subcategoryId: data.subcategory.id,
+      warehouseId: data.warehouse.id === 0 ? 1 : data.warehouse.id,
+      brandId: data.brand.id,
+      images: [],
+      abName: "",
+    };
+  };
   const onSubmit = async (data) => {
     setIsLoading(true);
-    alert(JSON.stringify(data));
     try {
       toastId.current = toast("Cargando ...", {
         type: toast.TYPE.LOADING,
       });
-
+      const formatedData = formatData(data);
       data.id
-        ? await axiosInstance.put("/product", {
-            ...data,
-            images: [],
-            abName: "",
-          })
-        : await axiosInstance.post("/product", {
-            ...data,
-            images: [],
-            abName: "",
-          });
+        ? await axiosInstance.put("/product", formatedData)
+        : await axiosInstance.post("/product", formatedData);
 
       toast.update(toastId.current, {
         type: toast.TYPE.SUCCESS,
@@ -133,51 +156,45 @@ export default function ProductsForm({ product }) {
     setIsLoading(false);
   };
 
-  useEffect(() => {
-    reset(product);
-    setImages(
-      product &&
-        product.images.map((item) => {
-          return { imageUrl: item };
-        })
-    );
-  }, [product]);
-
-  const getCategoriesAsync = async () => {
-    const queryFilters = `page=${1}&limit=${100}&value=${""}`;
+  const getCategoriesAsync = async (filter) => {
+    const queryFilters = `page=${1}&limit=${100}&value=${filter}`;
     const { data: apiResponse } = await axiosInstance.get(
       `categories?${queryFilters}`
     );
     setCategories(apiResponse.data);
   };
-  const getBrandsAsync = async () => {
-    const queryFilters = `page=${1}&limit=${100}&value=${""}`;
+  const handleSearchCategories = debounce((e) =>
+    getCategoriesAsync(e.target.value)
+  );
+  const getBrandsAsync = async (filter) => {
+    const queryFilters = `page=${1}&limit=${100}&value=${filter}`;
     const { data: apiResponse } = await axiosInstance.get(
       `brands?${queryFilters}`
     );
     setBrands(apiResponse.data);
   };
-  const getSubcategoriesAsync = async () => {
-    const queryFilters = `page=${1}&limit=${100}&value=${""}`;
+  const handleSearchBrands = debounce((e) => getBrandsAsync(e.target.value));
+
+  const getSubcategoriesAsync = async (filter) => {
+    const queryFilters = `page=${1}&limit=${100}&value=${filter}`;
     const { data: apiResponse } = await axiosInstance.get(
       `subcategories?${queryFilters}`
     );
     setSubcategories(apiResponse.data);
   };
-  const getWarehousesAsync = async () => {
-    const queryFilters = `page=${1}&limit=${100}&value=${""}`;
+  const handleSearchSubcategories = debounce((e) =>
+    getSubcategoriesAsync(e.target.value)
+  );
+  const getWarehousesAsync = async (filter) => {
+    const queryFilters = `page=${1}&limit=${100}&value=${filter}`;
     const { data: apiResponse } = await axiosInstance.get(
       `warehouses?${queryFilters}`
     );
     setWarehouses(apiResponse.data);
   };
-
-  useEffect(() => {
-    getCategoriesAsync();
-    getSubcategoriesAsync();
-    getBrandsAsync();
-    getWarehousesAsync();
-  }, []);
+  const handleSearchWarehouses = debounce((e) =>
+    getWarehousesAsync(e.target.value)
+  );
 
   return (
     <form className="flex" onSubmit={handleSubmit(onSubmit)}>
@@ -278,7 +295,7 @@ export default function ProductsForm({ product }) {
               fullWidth
             />
             <TextField
-              {...register("benefit")}
+              {...register("marginBenefit")}
               className="input-rounded"
               type="number"
               disabled
@@ -315,110 +332,109 @@ export default function ProductsForm({ product }) {
               {...register("barCode")}
               className="input-rounded"
               label="Codigo"
+              InputLabelProps={{ shrink: true }}
               placeholder="P001-C001"
               fullWidth
             />
-            <Controller
-              control={control}
-              name="categoryId"
-              render={({ field }) => (
-                <FormControl fullWidth>
-                  <InputLabel id="categories-label-id">Categorias</InputLabel>
-                  <Select
+            <FormControl fullWidth>
+              <Controller
+                rules={{ require: true }}
+                render={({
+                  field: { ref, onChange, ...field },
+                  fieldState: { error },
+                }) => (
+                  <Autocomplete
                     {...field}
-                    fullWidth
-                    className="rounded-xl text-md"
-                    labelId="categories-label-id"
-                    label="Categorias"
-                  >
-                    {categories.length > 0 &&
-                      categories.map((cat) => {
-                        return <MenuItem value={cat.id}>{cat.name}</MenuItem>;
-                      })}
-                  </Select>
-                </FormControl>
-              )}
-            />
-            <Controller
-              control={control}
-              name="subCategoryId"
-              render={({ field }) => (
-                <FormControl fullWidth>
-                  <InputLabel id="subcategories-label-id">
-                    Subcategorias
-                  </InputLabel>
-                  <Select
+                    options={categories}
+                    disableClearable
+                    onChange={(_, data) => {
+                      onChange(data);
+                    }}
+                    getOptionLabel={(option) => option.name}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        className="input-rounded"
+                        error={error != undefined}
+                        onChange={handleSearchCategories}
+                        inputRef={ref}
+                        helperText={error && "Campo requerido"}
+                        label="Categoria"
+                        variant="outlined"
+                      />
+                    )}
+                  />
+                )}
+                name="category"
+                control={control}
+              />
+            </FormControl>
+            <FormControl fullWidth>
+              <Controller
+                rules={{ require: true }}
+                render={({
+                  field: { ref, onChange, ...field },
+                  fieldState: { error },
+                }) => (
+                  <Autocomplete
                     {...field}
-                    fullWidth
-                    className="rounded-xl text-md"
-                    labelId="subcategories-label-id"
-                    label="Subcategorias"
-                  >
-                    {subCategories.length > 0 &&
-                      subCategories.map((sub) => {
-                        return <MenuItem value={sub.id}>{sub.name}</MenuItem>;
-                      })}
-                  </Select>
-                </FormControl>
-              )}
-            />
-            <Controller
-              control={control}
-              name="brandId"
-              render={({ field }) => (
-                <FormControl fullWidth>
-                  <InputLabel id="brands-label-id">Marcas</InputLabel>
-                  <Select
+                    options={subCategories}
+                    disableClearable
+                    onChange={(_, data) => {
+                      onChange(data);
+                    }}
+                    getOptionLabel={(option) => option.name}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        className="input-rounded"
+                        error={error != undefined}
+                        onChange={handleSearchSubcategories}
+                        inputRef={ref}
+                        helperText={error && "campo requerido"}
+                        label="Subcategoria"
+                        variant="outlined"
+                      />
+                    )}
+                  />
+                )}
+                name="subcategory"
+                control={control}
+              />
+            </FormControl>{" "}
+            <FormControl fullWidth>
+              <Controller
+                rules={{ require: true }}
+                render={({
+                  field: { ref, onChange, ...field },
+                  fieldState: { error },
+                }) => (
+                  <Autocomplete
                     {...field}
-                    labelId="brands-label-id"
-                    label="Marcas"
-                    fullWidth
-                    className="rounded-xl text-md"
-                  >
-                    {brands.length > 0 &&
-                      brands.map((bra) => {
-                        return <MenuItem value={bra.id}>{bra.name}</MenuItem>;
-                      })}
-                  </Select>
-                </FormControl>
-              )}
-            />
-            {/* <FormControl className="w-full">
-              <InputLabel id="select-brand">Marcas</InputLabel>
-              <Select
-                labelId="select-brand"
-                id="select-brand"
-                value={1}
-                // onChange={(params) => setIdentificationType(params.target.value)}
-                size="medium"
-                className="rounded-xl text-md"
-                label="Marcas"
-              >
-                <MenuItem value={1}>
-                  <div className="flex items-center">
-                    <img
-                      src="https://cdn-icons-png.flaticon.com/128/7080/7080979.png"
-                      className="w-8 h-8"
-                    ></img>
-                    <span className="mx-2">Tesla</span>
-                  </div>
-                </MenuItem>
-              </Select>
-            </FormControl> */}
-            {/* <Autocomplete
-              multiple
-              options={categories}
-              freeSolo
-              getOptionLabel={(chip) => chip.name}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  helperText="Busca las categorias que mas se asemjan a tus productos."
-                  className="input-rounded"
-                  label="Categorias"
-                />
-              )}
-            /> */}
+                    options={brands}
+                    disableClearable
+                    onChange={(_, data) => {
+                      onChange(data);
+                    }}
+                    getOptionLabel={(option) => option.name}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        className="input-rounded"
+                        error={error != undefined}
+                        onChange={handleSearchBrands}
+                        inputRef={ref}
+                        helperText={error && "Campo requerido"}
+                        label="Marcas"
+                        variant="outlined"
+                      />
+                    )}
+                  />
+                )}
+                name="brand"
+                control={control}
+              />
+            </FormControl>
           </div>
           <div className=" p-8 space-y-6 shadow-md rounded-xl h-min">
             <div className="flex flex-col mx-2 space-y-1">
@@ -429,28 +445,41 @@ export default function ProductsForm({ product }) {
                 Ingresa datos especificos de tus productos.
               </span>
             </div>
-
-            <Controller
-              control={control}
-              name="warehouseId"
-              render={({ field }) => (
-                <FormControl fullWidth>
-                  <InputLabel id="warehouse-label-id">Almacenes</InputLabel>
-                  <Select
-                    {...field}
-                    fullWidth
-                    className="rounded-xl text-md"
-                    labelId="warehouse-label-id"
-                    label="Almacenes"
-                  >
-                    {warehouses.length > 0 &&
-                      warehouses.map((war) => {
-                        return <MenuItem value={war.id}>{war.name}</MenuItem>;
-                      })}
-                  </Select>
-                </FormControl>
-              )}
-            />
+            {!product && (
+              <FormControl fullWidth>
+                <Controller
+                  rules={{ require: true }}
+                  render={({
+                    field: { ref, onChange, ...field },
+                    fieldState: { error },
+                  }) => (
+                    <Autocomplete
+                      {...field}
+                      options={warehouses}
+                      disableClearable
+                      onChange={(_, data) => {
+                        onChange(data);
+                      }}
+                      getOptionLabel={(option) => option.name}
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          className="input-rounded"
+                          error={error != undefined}
+                          onChange={handleSearchWarehouses}
+                          inputRef={ref}
+                          helperText={error && "Campo requerido"}
+                          label="Almacen"
+                          variant="outlined"
+                        />
+                      )}
+                    />
+                  )}
+                  name="warehouse"
+                  control={control}
+                />
+              </FormControl>
+            )}
 
             <TextField
               {...register("stock")}
@@ -462,42 +491,6 @@ export default function ProductsForm({ product }) {
               }}
               fullWidth
             />
-            {/* <FormControl className="w-full">
-              <InputLabel id="select-brand">Marcas</InputLabel>
-              <Select
-                labelId="select-brand"
-                id="select-brand"
-                value={1}
-                // onChange={(params) => setIdentificationType(params.target.value)}
-                size="medium"
-                className="rounded-xl text-md"
-                label="Marcas"
-              >
-                <MenuItem value={1}>
-                  <div className="flex items-center">
-                    <img
-                      src="https://cdn-icons-png.flaticon.com/128/7080/7080979.png"
-                      className="w-8 h-8"
-                    ></img>
-                    <span className="mx-2">Tesla</span>
-                  </div>
-                </MenuItem>
-              </Select>
-            </FormControl> */}
-            {/* <Autocomplete
-              multiple
-              options={categories}
-              freeSolo
-              getOptionLabel={(chip) => chip.name}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  helperText="Busca las categorias que mas se asemjan a tus productos."
-                  className="input-rounded"
-                  label="Categorias"
-                />
-              )}
-            /> */}
           </div>
 
           <div className="flex justify-center">

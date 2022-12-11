@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import useAxios from "../../Axios/Axios";
 import ContactForm from "../../Components/Contacts/ContactForm";
 import PageHeader from "../../Components/Globals/PageHeader";
-import SupplierForm from "../../Components/Suppliers/SuppliersForm";
+import SuppliersForm from "../../components/Suppliers/SuppliersForm";
 
 export default function CreateSuplier() {
   const locationRoutes = [
@@ -27,7 +27,7 @@ export default function CreateSuplier() {
           <PageHeader header="Crear suplidor" locationRoutes={locationRoutes} />
         </div>
       </div>
-      <SupplierForm />
+      <SuppliersForm />
     </>
   );
 }

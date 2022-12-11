@@ -1,16 +1,4 @@
 import React from "react";
-import { Add, ApartmentRounded } from "@mui/icons-material";
-import useAxios from "../../Axios/Axios";
-import { Button } from "@mui/material";
-import { useEffect, useState, useRef } from "react";
-import PageHeader from "../../Components/Globals/PageHeader";
-import { toast } from "react-toastify";
-import BrandList from "../../Components/Brands/BrandList";
-import BrandForm from "../../Components/Brands/BrandForm";
-import BranchList from "../../Components/Branches/BranchList";
-import { postImage } from "../../Components/Globals/ImageHandler";
-import ConfirmationForm from "../../Components/Globals/ConfirmationForm";
-import BranchForm from "../../Components/Branches/BranchForm";
 import CPage from "../../components/CRUD/CPage";
 
 export default function Branch() {

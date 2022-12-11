@@ -68,7 +68,7 @@ function a11yProps(index) {
   };
 }
 
-export default function SupplierForm({ supplier }) {
+export default function SuppliersForm({ supplier }) {
   const {
     handleSubmit,
     register,

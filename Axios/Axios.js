@@ -11,11 +11,9 @@ import useAuth from "../Auth/useAuth";
 
 export default function useAxios() {
   // const { data: user } = useSelector((state) => state.user);
-  const router = Router;
-  const { LogOut } = useAuth();
 
   const axiosInstance = axios.create({
-    baseURL: "https://fastbilling.azurewebsites.net/api/",
+    baseURL: "https://localhost:7068/api",
   });
 
   axiosInstance.interceptors.request.use(
