@@ -19,7 +19,7 @@ import { useSelector } from "react-redux";
 
 export default function PaymentPopUp({ open, setPaymentPopUp }) {
   const invoice = useSelector((state) => state.invoice);
-  const { paymentQuantity } = invoice;
+  const { paymentQuantity, payments, total } = invoice;
 
   const [method, setMethod] = useState("cash");
   const [pquantity, setPaymentQuantity] = useState();

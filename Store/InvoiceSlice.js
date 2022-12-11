@@ -6,8 +6,8 @@ const initialState = {
   companyId: 1,
   branchId: 1,
   invoiceNo: "F00000",
-  warehouseId: 1,
-  ncfTypeId: 1,
+  warehouseId: 0,
+  ncfTypeId: 0,
   typeId: 0,
   clientId: 1,
   beneficiary: {
@@ -19,7 +19,7 @@ const initialState = {
   },
   recipient: {},
   status: "Pagado",
-  payments: [{ typeId: 1 }],
+  payments: [{}],
   invoiceCreationDate: "",
   invoiceDueDate: "",
   subTotal: 0,
@@ -65,7 +65,7 @@ const invoiceSlice = createSlice({
     },
     updateRecipient: (state, { payload }) => {
       state.clientId = payload.id;
-      state.typeId = payload.typeId;
+      // state.typeId = payload.typeId;
       state.recipient.name = payload.name;
       state.recipient.address = payload.addresses[0].address1;
       state.recipient.phone = payload.contacts[0].number;
@@ -75,7 +75,7 @@ const invoiceSlice = createSlice({
       const itemPrice = state.details.find(
         (item) => item.productId === actions.payload.id
       );
-      if (actions.payload.value <= -1) {
+      if (actions.payload.value <= -1 || actions.payload.value === null) {
         itemPrice.price = 1;
       } else {
         itemPrice.price = actions.payload.value;
@@ -100,8 +100,8 @@ const invoiceSlice = createSlice({
       state.taxesAmount = num;
     },
     updatePayment: (state, { payload }) => {
-      state.payments[0].amount = payload.paymentQuantity;
-      // state.payments.paymentTypeId = 1;
+      state.payments[0].amount = payload.pquantity;
+      state.payments[0].typeId = 1;
     },
     addItem: (state, { payload }) => {
       let newProduct = state.details.find(

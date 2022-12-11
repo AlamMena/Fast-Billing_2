@@ -76,7 +76,10 @@ export default function CreateInvoice() {
     details,
     recipient,
     typeId,
+    ncfTypeId,
     totalPayed,
+    warehouseId,
+    payments,
   } = invoice;
 
   const { axiosInstance } = useAxios();
@@ -107,27 +110,20 @@ export default function CreateInvoice() {
     setWarehouse(apiResponse.data);
   };
 
-  // const setDataAsync = async () => {
-  //   try {
-  //     const response = await axiosInstance.get("contacts?page=1&limit=200");
-  //     setData({ isLoading: false, data: response.data });
-  //   } catch (error) {
-  //     toast.error(`Opps!, something went wrong${error}`);
-  //     setData({ isLoading: false, data: [] });
-  //   }
-  // };
+  // handles
 
-  // const setProductsAsync = async () => {
-  //   try {
-  //     const response = await axiosInstance.get("v1/products?limit=20&page=1");
-  //     setProducts({ isLoading: false, data: response.data });
-  //   } catch (error) {
-  //     toast.error(`Opps!, something went wrong${error}`);
-  //     setProducts({ isLoading: false, data: [] });
-  //   }
-  // };
-
-  // handle Discount Price
+  const handleInvoiceError = (error) => {
+    console.log(error);
+    if (
+      error.response.data.status === 400 &&
+      error.response.data.message ===
+        "The client does not have permission to this type of invoice"
+    ) {
+      setConfirmOpen(false);
+      return "Este cliente no tiene permiso a este tipo de factura";
+    }
+    return "Oops, algo ha ocurrido";
+  };
 
   const handleDiscount = (e) => {
     dispatch(updateDiscount(e));
@@ -194,28 +190,47 @@ export default function CreateInvoice() {
 
   const upserAsyncInvoice = async () => {
     try {
-      if (Object.keys(recipient) <= 0 || details.length <= 0) {
+      if (
+        Object.keys(recipient) <= 0 ||
+        details.length <= 0 ||
+        ncfTypeId === 0 ||
+        warehouseId === 0 ||
+        typeId === 0 ||
+        payments[0].amount < total
+      ) {
         if (Object.keys(recipient) <= 0) {
           toast.error(`Porfavor agrega un recipiente`);
         }
-        if (details.length <= 0) {
-          toast.error(`Porfavor agrega al menos un detalle`);
-        }
-        if (typeId === 0) {
+        if (ncfTypeId === 0) {
           toast.error(`Porfavor agrega el tipo de NCF`);
         }
+        if (typeId === 0) {
+          toast.error(`Porfavor agrega el tipo de factura`);
+        }
+        if (warehouseId === 0) {
+          toast.error(`Porfavor agrega el almacen`);
+        }
         if (details.length <= 0) {
           toast.error(`Porfavor agrega al menos un detalle`);
         }
+        if (payments[0].amount < total) {
+          toast.error(
+            `El monto a pagar tiene que ser igual o mayor al precio a pagar`
+          );
+        }
       } else {
-        console.log("enviado");
-        if (invoice._id !== undefined) {
+        console.log(invoice);
+        if (invoice.id !== undefined) {
           // logic
           // if the item exists
           await toast.promise(axiosInstance.put("/invoice", invoice), {
             pending: "Creando factura",
             success: "Genial!, tu factura ha sido actualizada.",
-            error: "Oops, algo ha ocurrido",
+            error: {
+              render({ data }) {
+                return handleInvoiceError(data);
+              },
+            },
           });
           router.push("/facturas");
         } else {
@@ -223,7 +238,11 @@ export default function CreateInvoice() {
           await toast.promise(axiosInstance.post("/invoice", invoice), {
             pending: "Actualizando factura",
             success: "Genial!, tu factura ha sido creada.",
-            error: "Oops, algo ha ocurrido",
+            error: {
+              render({ data }) {
+                return handleInvoiceError(data);
+              },
+            },
           });
           router.push("/facturas");
         }
@@ -231,9 +250,7 @@ export default function CreateInvoice() {
       }
 
       setConfirmOpen(false);
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   };
 
   return (
@@ -665,8 +682,7 @@ export default function CreateInvoice() {
             <span className=" w-32 text-right overflow-hidden">
               {(totalPayed <= 0 && <span>-</span>) || (
                 <span>
-                  $
-                  {totalPayed.toLocaleString("en-US", {
+                  {payments[0].amount.toLocaleString("en-US", {
                     minimumFractionDigits: 2,
                   })}
                 </span>
