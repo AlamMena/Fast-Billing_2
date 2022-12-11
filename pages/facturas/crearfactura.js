@@ -446,9 +446,10 @@ export default function CreateInvoice() {
                   }
                 >
                   {ncfstypes.length > 0 &&
-                    ncfstypes.map((item) => {
+                    ncfstypes.map((item, index) => {
                       return (
                         <MenuItem
+                          key={index}
                           value={item.id}
                           onClick={() => handleNCFtype(item.name, item.id)}
                         >
@@ -485,9 +486,10 @@ export default function CreateInvoice() {
                   }
                 >
                   {invoicetypes.length > 0 &&
-                    invoicetypes.map((item) => {
+                    invoicetypes.map((item, index) => {
                       return (
                         <MenuItem
+                          key={index}
                           value={item.id}
                           onClick={() => handleInvoicetype(item.name, item.id)}
                         >
@@ -524,9 +526,10 @@ export default function CreateInvoice() {
                   }
                 >
                   {warehouse.length > 0 &&
-                    warehouse.map((item) => {
+                    warehouse.map((item, index) => {
                       return (
                         <MenuItem
+                          key={index}
                           value={item.id}
                           onClick={() => handleWarehouse(item.name, item.id)}
                         >
