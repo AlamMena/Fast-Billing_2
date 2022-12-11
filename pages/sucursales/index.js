@@ -1,5 +1,5 @@
 import React from "react";
-import CPage from "../../components/CRUD/CPage";
+import CPage from "../../Components/CRUD/CPage";
 
 export default function Branch() {
   const locationRoutes = [

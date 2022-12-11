@@ -3,7 +3,7 @@ import useAxios from "../../Axios/Axios";
 import PageHeader from "../../Components/Globals/PageHeader";
 import { Box, Tabs, Tab, Typography } from "@mui/material";
 import { AccountCircle, Receipt } from "@mui/icons-material";
-import SuplierForm from "../../Components/Suppliers/SupplierForm";
+import SuplierForm from "../../Components/Suppliers/SuppliersForm";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
