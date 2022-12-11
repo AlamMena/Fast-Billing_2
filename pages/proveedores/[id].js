@@ -4,7 +4,7 @@ import PageHeader from "../../Components/Globals/PageHeader";
 import { Box, Tabs, Tab, Typography } from "@mui/material";
 import { AccountCircle, Receipt } from "@mui/icons-material";
 import { fontSize } from "@mui/system";
-import SuplierForm from "../../Components/Supliers/SupliersForm";
+import SupliersForm from "../../components/Suppliers/SuppliersForm";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -103,7 +103,7 @@ export default function UpsertSuplier({ id }) {
         </Tabs>
       </Box>
       <TabPanel value={value} index={0}>
-        <SuplierForm suplier={suplier} />
+        <SupliersForm suplier={suplier} />
       </TabPanel>
       <TabPanel value={value} index={1}>
         {/* <ContactHistory contact={contact} /> */}

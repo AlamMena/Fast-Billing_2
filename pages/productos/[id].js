@@ -1,23 +1,19 @@
 import { useEffect, useState } from "react";
 import useAxios from "../../Axios/Axios";
-import ProductFrom from "../../Components/Products/ProductForm";
+import ProductsForm from "../../components/Products/ProductForm";
 
-export default function UpsertProduct({ id }) {
-  const [product, setProduct] = useState();
+export default function Product({ id }) {
+  const [product, setProduct] = useState({});
   const { axiosInstance } = useAxios();
-
-  const getProductAsync = async () => {
-    const { data } = await axiosInstance.get(`product/${id}`);
-    setProduct(data);
-  };
-
   useEffect(() => {
+    const getProductAsync = async () => {
+      const { data } = await axiosInstance.get(`product/${id}`);
+      setProduct(data);
+    };
     getProductAsync();
-    // alert(JSON.stringify(product));
   }, []);
-  return <ProductFrom product={product} />;
+  return <ProductsForm product={product} />;
 }
-
 export async function getServerSideProps({ params }) {
   return {
     props: { id: params.id },

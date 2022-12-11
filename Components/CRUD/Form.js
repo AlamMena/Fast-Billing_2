@@ -50,9 +50,10 @@ export default function Form({ onSave, open, setOpen, data, fields }) {
               <Divider className="mt-4" />
             </div>
 
-            {fields.map((item) => {
+            {fields.map((item, index) => {
               return (
                 <Controller
+                  key={index}
                   control={control}
                   name={item.name}
                   rules={item.validation}
