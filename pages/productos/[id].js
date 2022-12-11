@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import useAxios from "../../Axios/Axios";
-import ProductsForm from "../../components/Products/ProductForm";
+import ProductForm from "../../Components/Products/ProductForm";
 
 export default function Product({ id }) {
   const [product, setProduct] = useState({});
@@ -12,7 +12,7 @@ export default function Product({ id }) {
     };
     getProductAsync();
   }, []);
-  return <ProductsForm product={product} />;
+  return <ProductForm product={product} />;
 }
 export async function getServerSideProps({ params }) {
   return {

@@ -1,4 +1,4 @@
-import List from "../CRUD/List.js";
+import List from "./List.js";
 import { useState, useEffect, useRef } from "react";
 import useAxios from "../../Axios/Axios";
 import PageHeader from "../Globals/PageHeader";

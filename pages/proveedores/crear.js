@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import useAxios from "../../Axios/Axios";
 import ContactForm from "../../Components/Contacts/ContactForm";
 import PageHeader from "../../Components/Globals/PageHeader";
-import SuppliersForm from "../../components/Suppliers/SuppliersForm";
+import SuppliersForm from "../../Components/Suppliers/SuppliersForm";
 
 export default function CreateSuplier() {
   const locationRoutes = [
