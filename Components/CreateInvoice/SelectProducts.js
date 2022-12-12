@@ -65,7 +65,6 @@ export default function SelectProducts({ data, open, setProductPop }) {
       <ProductList
         statusFilter={"false"}
         actions={false}
-        maxRow={3}
         onRowClick={handleProduct}
       />
     </Dialog>

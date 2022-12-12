@@ -30,7 +30,7 @@ export default function ProductList({
   const [pageState, setPageState] = useState({
     isLoading: true,
     data: [],
-    pageSize: maxRow ? maxRow : 10,
+    pageSize: 5,
     page: 1,
     filter: {
       value: "",
@@ -257,7 +257,7 @@ export default function ProductList({
           getRowId={(row) => row.id}
           rows={pageState.data}
           rowCount={pageState.totalData}
-          pageSize={maxRow ? maxRow : pageState.pageSize}
+          pageSize={pageState.pageSize}
           page={pageState.page - 1}
           loading={pageState.isLoading}
           onPageChange={onDataGridPageChange}
@@ -267,11 +267,9 @@ export default function ProductList({
           rowsPerPageOptions={[5]}
           experimentalFeatures={{ newEditingApi: true }}
           paginationMode="server"
-          className={`p-2 h-96 ${maxRow && `h-${80}`}`}
+          className={`p-2 h-96 `}
           rowHeight={60}
           pagination
-          autoPageSize={maxRow}
-          autoHeight={maxRow ? false : true}
           disableColumnFilter
           selectionModel={false}
           disableColumnSelector
