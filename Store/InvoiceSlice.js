@@ -6,10 +6,9 @@ const initialState = {
   companyId: 1,
   branchId: 1,
   invoiceNo: "F00000",
-  invoiceTypeId: 1,
-  ncfTypeId: 1,
-  warehouseId: 1,
-  typeId: 1,
+  warehouseId: 0,
+  ncfTypeId: 0,
+  typeId: 0,
   clientId: 1,
   beneficiary: {
     imageUrl: "https://cdn-icons-png.flaticon.com/128/3321/3321752.png",
@@ -20,7 +19,7 @@ const initialState = {
   },
   recipient: {},
   status: "Pagado",
-  payments: [{ typeId: 1 }],
+  payments: [{ amount: 0 }],
   invoiceCreationDate: "",
   invoiceDueDate: "",
   subTotal: 0,
@@ -43,11 +42,20 @@ const invoiceSlice = createSlice({
   reducers: {
     updateBeneficiary: (state, { payload }) => {
       state.beneficiary.name = payload.name;
-      state.beneficiary.address = payload.address;
-      state.beneficiary.phone = payload.phone;
+      state.beneficiary.address = payload.addresses[0].address1;
+      state.beneficiary.phone = payload.contacts[0].number;
     },
     updateStatus: (state, actions) => {
       state.status = actions.payload;
+    },
+    updateNCFType: (state, actions) => {
+      state.ncfTypeId = actions.payload;
+    },
+    updateWarehouse: (state, actions) => {
+      state.warehouseId = actions.payload;
+    },
+    updateInvoiceType: (state, actions) => {
+      state.typeId = actions.payload;
     },
     updateCreationDate: (state, actions) => {
       state.invoiceCreationDate = actions.payload;
@@ -57,17 +65,17 @@ const invoiceSlice = createSlice({
     },
     updateRecipient: (state, { payload }) => {
       state.clientId = payload.id;
-      state.typeId = payload.typeId;
+      // state.typeId = payload.typeId;
       state.recipient.name = payload.name;
-      state.recipient.address = payload.address;
-      state.recipient.phone = payload.phone;
+      state.recipient.address = payload.addresses[0].address1;
+      state.recipient.phone = payload.contacts[0].number;
       state.recipient.imageUrl = payload.imageUrl;
     },
     updateItemPrice: (state, actions) => {
       const itemPrice = state.details.find(
         (item) => item.productId === actions.payload.id
       );
-      if (actions.payload.value <= -1) {
+      if (actions.payload.value <= -1 || actions.payload.value === null) {
         itemPrice.price = 1;
       } else {
         itemPrice.price = actions.payload.value;
@@ -92,9 +100,12 @@ const invoiceSlice = createSlice({
       state.taxesAmount = num;
     },
     updatePayment: (state, { payload }) => {
-      state.payments[0].amount = payload.paymentQuantity;
-      // state.payments.paymentTypeId = 1;
+      state.payments[0].amount = payload.pquantity;
+      state.payments[0].typeId = payload.method;
     },
+    // updatePaymentType: (state, actions) => {
+    //   state.payments.typeId = actions.payload;
+    // },
     addItem: (state, { payload }) => {
       let newProduct = state.details.find(
         (item) => item.productId === payload.id
@@ -150,6 +161,9 @@ export const {
   updateRecipient,
   updateItemPrice,
   updateCreationDate,
+  updateInvoiceType,
+  updateNCFType,
+  updateWarehouse,
   updateDiscount,
   updateDueDate,
   updateTaxes,
