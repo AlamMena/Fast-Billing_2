@@ -10,6 +10,7 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
+import { formatCurrency } from "../utils/methods";
 
 function createData(name, calories, fat, carbs, protein) {
   return { name, calories, fat, carbs, protein };
@@ -26,7 +27,7 @@ const rows = [
 export default function Home() {
   return (
     <>
-      {/* <div className="px-10 max-w-2xl mx-8 md:mx-0 space-x-4 bg-green-200 flex md:flex-nowrap justify-center flex-wrap items-center p-8 rounded-2xl">
+      <div className="px-10 max-w-2xl mx-8 md:mx-0 space-x-4 bg-green-200 flex md:flex-nowrap justify-center flex-wrap items-center p-8 rounded-2xl">
         <div className="flex flex-col ">
           <span className="font-semibold text-2xl tracking-wider">
             Welcome back Alam
@@ -37,7 +38,7 @@ export default function Home() {
           </p>
           <div className="flex w-full justify-center md:justify-start my-4">
             <button
-              onClick={generatePDF}
+              // onClick={generatePDF}
               className=" my-4 shadow-sm w-24 bg-green-500 py-2 px-4 text-xs rounded-xl text-white"
             >
               Go now
@@ -51,7 +52,7 @@ export default function Home() {
             src="/dashboard_welcome.png"
           />
         </div>
-      </div> */}
+      </div>
     </>
   );
 }

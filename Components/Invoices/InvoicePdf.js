@@ -14,66 +14,195 @@ import { formatCurrency } from "../../utils/methods";
 
 function InvoicePdf({ invoice }) {
   return (
-    <>
-      <div className="w-full flex flex-col space-y-2 mb-10">
-        <span className=" text-4xl font-bold tracking-widest">Factura</span>
-        <span className=" text-sm  tracking-wide">Fast Billing</span>
-      </div>
-      <TableContainer component={Paper}>
-        <Table sx={{ minWidth: 650 }} aria-label="simple table">
-          <TableHead>
-            <TableRow className="bg-slate-800 h-6">
-              <TableCell className="font-bold text-white">Id</TableCell>
+    <section>
+      <div className="max-w-5xl mx-auto  bg-white">
+        <article className="overflow-hidden">
+          <div className="bg-[white] rounded-b-md">
+            <div className="p-2">
+              <div className="space-y-6 text-slate-700">
+                <img
+                  className="object-cover h-12"
+                  src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTDERLwwAIqQ01S6ftSksvj0NaXIX7964O3MQ&usqp=CAU"
+                />
 
-              <TableCell className="font-bold text-white">Nombre</TableCell>
-              <TableCell className="font-bold text-white" align="right">
-                Qty
-              </TableCell>
-              <TableCell align="right" className="font-bold text-white">
-                Impuesto
-              </TableCell>
-              <TableCell align="right" className="font-bold text-white">
-                Total
-              </TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {invoice.details.map((row, index) => (
-              <TableRow
-                key={index}
-                className="odd:bg-white even:bg-slate-50"
-                sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-              >
-                <TableCell>{row.productId}</TableCell>
+                <p className="text-xl font-extrabold tracking-tight uppercase font-body">
+                  Factura TEST 0001
+                </p>
+              </div>
+            </div>
+            <div className="p-2">
+              <div className="flex w-full">
+                <div className="grid grid-cols-4 gap-12">
+                  <div className="text-sm font-light text-slate-500">
+                    <p className="text-sm font-normal text-slate-700">
+                      Detalles:
+                    </p>
+                    <p>Fast Billing</p>
+                    <p>Fake Street 123</p>
+                    <p>San Javier</p>
+                    <p>CA 1234</p>
+                  </div>
+                  {/* <div className="text-sm font-light text-slate-500">
+                    <p className="text-sm font-normal text-slate-700">Cliente</p>
+                    <p>The Boring Company</p>
+                    <p>Tesla Street 007</p>
+                    <p>Frisco</p>
+                    <p>CA 0000</p>
+                  </div> */}
+                  <div className="text-sm font-light text-slate-500">
+                    <p className="text-sm font-normal text-slate-700">NCF</p>
+                    <p>{invoice.ncf}</p>
 
-                <TableCell component="th" scope="row">
-                  N/A
-                </TableCell>
-                <TableCell align="right">{row.quantity}</TableCell>
-                <TableCell align="right">%18</TableCell>
-                <TableCell align="right">{row.total}</TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-      <div className="w-full flex justify-end">
-        <div className="flex flex-col w-80 space-y-4">
-          <div className="flex justify-between">
-            <span>Impuesto</span>
-            <span>{formatCurrency(invoice.taxAmount)}</span>
+                    <p classNameName="mt-2 text-sm font-normal text-slate-700">
+                      Fecha factura
+                    </p>
+                    <p>{invoice.date}</p>
+                  </div>
+                  {/* <div className="text-sm font-light text-slate-500">
+                    <p className="text-sm font-normal text-slate-700">Terms</p>
+                    <p>0 Days</p>
+
+                    <p className="mt-2 text-sm font-normal text-slate-700">Due</p>
+                    <p>00.00.00</p>
+                  </div> */}
+                </div>
+              </div>
+            </div>
+
+            <div className="p-2">
+              <div className="flex flex-col mx-0 mt-8">
+                <table className="min-w-full divide-y divide-slate-500">
+                  <thead>
+                    <tr>
+                      <th
+                        scope="col"
+                        className="py-3.5 pl-4 pr-3 text-left text-sm font-normal text-slate-700 sm:pl-6 md:pl-0"
+                      >
+                        Descripcion
+                      </th>
+                      <th
+                        scope="col"
+                        className="hidden py-3.5 px-3 text-right text-sm font-normal text-slate-700 sm:table-cell"
+                      >
+                        Cantidad
+                      </th>
+                      <th
+                        scope="col"
+                        className="hidden py-3.5 px-3 text-right text-sm font-normal text-slate-700 sm:table-cell"
+                      >
+                        Impuesto
+                      </th>
+                      <th
+                        scope="col"
+                        className="py-3.5 pl-3 pr-4 text-right text-sm font-normal text-slate-700 sm:pr-6 md:pr-0"
+                      >
+                        Total
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {invoice.details.map((detail, index) => {
+                      return (
+                        <tr key={index} className="border-b border-slate-200">
+                          <td className="py-4 pl-4 pr-3 text-sm sm:pl-6 md:pl-0">
+                            <div className="font-medium text-slate-700">
+                              Product name
+                            </div>
+                          </td>
+                          <td className="hidden px-3 py-4 text-sm text-right text-slate-500 sm:table-cell">
+                            {detail.quantity}
+                          </td>
+                          <td className="hidden px-3 py-4 text-sm text-right text-slate-500 sm:table-cell">
+                            18%
+                          </td>
+                          <td className="py-4 pl-3 pr-4 text-sm text-right text-slate-500 sm:pr-6 md:pr-0">
+                            {formatCurrency(detail.total)}
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                  <tfoot>
+                    <tr>
+                      <th
+                        scope="row"
+                        colSpan="3"
+                        className="hidden pt-6 pl-6 pr-3 text-sm font-light text-right text-slate-500 sm:table-cell md:pl-0"
+                      >
+                        Subtotal
+                      </th>
+                      <th
+                        scope="row"
+                        className="pt-6 pl-4 pr-3 text-sm font-light text-left text-slate-500 sm:hidden"
+                      >
+                        Subtotal
+                      </th>
+                      <td className="pt-6 pl-3 pr-4 text-sm text-right text-slate-500 sm:pr-6 md:pr-0">
+                        $0.00
+                      </td>
+                    </tr>
+                    <tr>
+                      <th
+                        scope="row"
+                        colSpan="3"
+                        className="hidden pt-6 pl-6 pr-3 text-sm font-light text-right text-slate-500 sm:table-cell md:pl-0"
+                      >
+                        Discount
+                      </th>
+                      <th
+                        scope="row"
+                        className="pt-6 pl-4 pr-3 text-sm font-light text-left text-slate-500 sm:hidden"
+                      >
+                        Discount
+                      </th>
+                      <td className="pt-6 pl-3 pr-4 text-sm text-right text-slate-500 sm:pr-6 md:pr-0">
+                        {formatCurrency(invoice.disccount)}
+                      </td>
+                    </tr>
+                    <tr>
+                      <th
+                        scope="row"
+                        colSpan="3"
+                        className="hidden pt-4 pl-6 pr-3 text-sm font-light text-right text-slate-500 sm:table-cell md:pl-0"
+                      >
+                        Tax
+                      </th>
+                      <th
+                        scope="row"
+                        className="pt-4 pl-4 pr-3 text-sm font-light text-left text-slate-500 sm:hidden"
+                      >
+                        Tax
+                      </th>
+                      <td className="pt-4 pl-3 pr-4 text-sm text-right text-slate-500 sm:pr-6 md:pr-0">
+                        {formatCurrency(invoice.taxAmount)}
+                      </td>
+                    </tr>
+                    <tr>
+                      <th
+                        scope="row"
+                        colSpan="3"
+                        className="hidden pt-4 pl-6 pr-3 text-sm font-normal text-right text-slate-700 sm:table-cell md:pl-0"
+                      >
+                        Total
+                      </th>
+                      <th
+                        scope="row"
+                        className="pt-4 pl-4 pr-3 text-sm font-normal text-left text-slate-700 sm:hidden"
+                      >
+                        Total
+                      </th>
+                      <td className="pt-4 pl-3 pr-4 text-sm font-normal text-right text-slate-700 sm:pr-6 md:pr-0">
+                        {formatCurrency(invoice.total)}
+                      </td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+            </div>
           </div>
-          <div className="flex justify-between ">
-            <span>Descuento</span>
-            <span>{formatCurrency(invoice.disccount)}</span>
-          </div>
-          <div className="flex justify-between ">
-            <span>Total</span>
-            <span>{formatCurrency(invoice.total)}</span>
-          </div>
-        </div>
+        </article>
       </div>
-    </>
+    </section>
   );
 }
 
