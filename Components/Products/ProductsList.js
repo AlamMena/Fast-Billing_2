@@ -101,7 +101,7 @@ export default function ProductList({
       width: 120,
       headerName: "Beneficio",
       renderCell: (cells) => {
-        return <span>{currency(cells.row.benefit).format()}</span>;
+        return <span>{currency(cells.row.marginBenefit).format()}</span>;
       },
     },
 
@@ -110,7 +110,7 @@ export default function ProductList({
       width: 90,
       headerName: "Cantidad",
       renderCell: (cells) => {
-        return <span>5 UD</span>;
+        return <span>{cells.row.stock}</span>;
       },
     },
     {

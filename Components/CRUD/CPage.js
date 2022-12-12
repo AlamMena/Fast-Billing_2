@@ -20,6 +20,8 @@ export default function CPage({
   headerText,
   locationRoutes,
   fields,
+  formatAutoComplete,
+  formatApiResult,
   cols,
 }) {
   const [pageState, setPageState] = useState({
@@ -33,7 +35,7 @@ export default function CPage({
 
   // upsert states
   const [formOpen, setFormOpen] = useState(false);
-  const [formData, setFormData] = useState();
+  const [formData, setFormData] = useState({});
 
   // confirmation form states
   const [confirmOpen, setConfirmOpen] = useState(false);
@@ -179,6 +181,8 @@ export default function CPage({
           data={formData}
           onSave={upsertAsync}
           fields={fields}
+          formatAutoComplete={formatAutoComplete}
+          formatApiResult={formatApiResult}
         />
       </div>
     </>

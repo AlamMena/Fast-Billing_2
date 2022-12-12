@@ -30,6 +30,7 @@ import { toast } from "react-toastify";
 import Alert from "../Globals/Alert";
 import {
   AttachMoneyRounded,
+  Inventory2Rounded,
   MoneyRounded,
   PercentOutlined,
   RemoveCircleOutline,
@@ -38,6 +39,7 @@ import { TransitionGroup } from "react-transition-group";
 import useAxios from "../../Axios/Axios";
 import { useRouter } from "next/router";
 import { debounce } from "../../utils/methods";
+import PageHeader from "../Globals/PageHeader";
 export default function ProductsForm({ product }) {
   const {
     handleSubmit,
@@ -95,21 +97,25 @@ export default function ProductsForm({ product }) {
   const handlePriceChange = (e) => {
     const currentProduct = getValues();
     const { price, cost } = currentProduct;
-    let benefit;
+    let marginBenefit;
     if (e.target.id === "input-price") {
-      benefit = ((e.target.value - cost) / e.target.value) * 100;
+      marginBenefit = parseFloat(
+        ((e.target.value - cost) / e.target.value) * 100
+      ).toFixed(2);
       reset({
         ...currentProduct,
         price: e.target.value,
-        benefit,
+        marginBenefit,
       });
     }
     if (e.target.id === "input-cost") {
-      benefit = ((price - e.target.value) / price) * 100;
+      marginBenefit = parseFloat(
+        ((price - e.target.value) / price) * 100
+      ).toFixed(2);
       reset({
         ...currentProduct,
         cost: e.target.value,
-        benefit,
+        marginBenefit,
       });
     }
   };
@@ -195,257 +201,165 @@ export default function ProductsForm({ product }) {
   const handleSearchWarehouses = debounce((e) =>
     getWarehousesAsync(e.target.value)
   );
-
+  const locationRoutes = [
+    {
+      text: "Inicio",
+      link: "/",
+    },
+    {
+      text: "Productos",
+      link: "/productos",
+    },
+  ];
   return (
     <form className="flex" onSubmit={handleSubmit(onSubmit)}>
-      <div className="grid grid-cols-12 gap-x-8 mx-4 mb-16">
-        <div className="shadow-md col-span-12 lg:col-span-8 p-8 space-y-6 rounded-xl h-min">
-          <div className="flex flex-col mx-2 space-y-1">
-            <span className="font-bold tracking-wider">
-              Informacion general
-            </span>
-            <span className="text-sm text-neutral-500">
-              Ingresa los datos basicos de tu producto.
-            </span>
-          </div>
-          <TextField
-            {...register("name", { required: true })}
-            className="input-rounded"
-            label="Nombre *"
-            placeholder="Producto - 001"
-            fullWidth
-            error={errors.name}
-            InputLabelProps={{
-              shrink: true,
-            }}
-            helperText={errors.name && "El nombre es requerido"}
+      <div className="flex flex-col">
+        <div>
+          <PageHeader
+            header="Productos"
+            locationRoutes={locationRoutes}
+            Icon={<Inventory2Rounded className="text-green-400" />}
           />
-          <TextField
-            {...register("description")}
-            className="input-rounded w-full outline-2 outline-slate-500"
-            minRows={4}
-            placeholder="Descripcion producto 001"
-            multiline
-            label="Descripcion"
-            InputLabelProps={{
-              shrink: true,
-            }}
-            error={errors.description}
-            helperText={errors.description && "La descripcion es requerida"}
-            fullWidth
-          />
-          {/* image list */}
-          <div className="space-y-6 rounded-xl h-min">
-            <div className="flex flex-col mx-2 space-y-1">
-              <span className="font-bold tracking-wider">
-                Informacion monetaria
-              </span>
-              <span className="text-sm text-neutral-500">
-                Ingresa los datos monetarios y los beneficios que desea para su
-                producto.
-              </span>
-            </div>
-
-            <TextField
-              {...register("cost", { required: true })}
-              className="input-rounded"
-              type="number"
-              id="input-cost"
-              error={errors.cost}
-              helperText={errors.cost && "El costo no es valido"}
-              onChange={handlePriceChange}
-              InputLabelProps={{
-                shrink: true,
-              }}
-              label="Costo *"
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <AttachMoneyRounded
-                      className={`${errors.cost && "text-red-500"} `}
-                    />
-                  </InputAdornment>
-                ),
-              }}
-              placeholder="0.00"
-              fullWidth
-            />
-            <TextField
-              {...register("price", { required: true })}
-              className="input-rounded"
-              type="number"
-              id="input-price"
-              label="Precio *"
-              error={errors.price}
-              helperText={errors.price && "El precio no es valido"}
-              InputLabelProps={{
-                shrink: true,
-              }}
-              onChange={handlePriceChange}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <AttachMoneyRounded
-                      className={`${errors.price && "text-red-500"} `}
-                    />
-                  </InputAdornment>
-                ),
-              }}
-              placeholder="0.00"
-              fullWidth
-            />
-            <TextField
-              {...register("marginBenefit")}
-              className="input-rounded"
-              type="number"
-              disabled
-              label="Margen de beneficio"
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <PercentOutlined />
-                  </InputAdornment>
-                ),
-              }}
-              placeholder="0.00"
-              fullWidth
-            />
-          </div>
         </div>
-
-        <div className="col-span-12 lg:col-span-4 space-y-4">
-          <div className=" p-8 space-y-6 shadow-md rounded-xl h-min">
+        <div className="grid grid-cols-12 gap-x-8 mx-4 mb-16">
+          <div className="shadow-md col-span-12 lg:col-span-8 p-8 space-y-6 rounded-xl h-min">
             <div className="flex flex-col mx-2 space-y-1">
               <span className="font-bold tracking-wider">
-                Informacion detallada
+                Informacion general
               </span>
               <span className="text-sm text-neutral-500">
-                Ingresa datos especificos de almacen.
+                Ingresa los datos basicos de tu producto.
               </span>
             </div>
-            <FormControlLabel
-              className="text-xs"
-              control={<Switch defaultChecked />}
-              label="disponible"
+            <TextField
+              {...register("name", { required: true })}
+              className="input-rounded"
+              label="Nombre *"
+              placeholder="Producto - 001"
+              fullWidth
+              error={errors.name}
+              InputLabelProps={{
+                shrink: true,
+              }}
+              helperText={errors.name && "El nombre es requerido"}
             />
             <TextField
-              {...register("barCode")}
-              className="input-rounded"
-              label="Codigo"
-              InputLabelProps={{ shrink: true }}
-              placeholder="P001-C001"
+              {...register("description")}
+              className="input-rounded w-full outline-2 outline-slate-500"
+              minRows={4}
+              placeholder="Descripcion producto 001"
+              multiline
+              label="Descripcion"
+              InputLabelProps={{
+                shrink: true,
+              }}
+              error={errors.description}
+              helperText={errors.description && "La descripcion es requerida"}
               fullWidth
             />
-            <FormControl fullWidth>
-              <Controller
-                rules={{ require: true }}
-                render={({
-                  field: { ref, onChange, ...field },
-                  fieldState: { error },
-                }) => (
-                  <Autocomplete
-                    {...field}
-                    options={categories}
-                    disableClearable
-                    onChange={(_, data) => {
-                      onChange(data);
-                    }}
-                    getOptionLabel={(option) => option.name}
-                    renderInput={(params) => (
-                      <TextField
-                        {...params}
-                        className="input-rounded"
-                        error={error != undefined}
-                        onChange={handleSearchCategories}
-                        inputRef={ref}
-                        helperText={error && "Campo requerido"}
-                        label="Categoria"
-                        variant="outlined"
+            {/* image list */}
+            <div className="space-y-6 rounded-xl h-min">
+              <div className="flex flex-col mx-2 space-y-1">
+                <span className="font-bold tracking-wider">
+                  Informacion monetaria
+                </span>
+                <span className="text-sm text-neutral-500">
+                  Ingresa los datos monetarios y los beneficios que desea para
+                  su producto.
+                </span>
+              </div>
+
+              <TextField
+                {...register("cost", { required: true })}
+                className="input-rounded"
+                type="number"
+                id="input-cost"
+                disabled={product && true}
+                error={errors.cost}
+                helperText={errors.cost && "El costo no es valido"}
+                onChange={handlePriceChange}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                label="Costo *"
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <AttachMoneyRounded
+                        className={`${errors.cost && "text-red-500"} `}
                       />
-                    )}
-                  />
-                )}
-                name="category"
-                control={control}
+                    </InputAdornment>
+                  ),
+                }}
+                placeholder="0.00"
+                fullWidth
               />
-            </FormControl>
-            <FormControl fullWidth>
-              <Controller
-                rules={{ require: true }}
-                render={({
-                  field: { ref, onChange, ...field },
-                  fieldState: { error },
-                }) => (
-                  <Autocomplete
-                    {...field}
-                    options={subCategories}
-                    disableClearable
-                    onChange={(_, data) => {
-                      onChange(data);
-                    }}
-                    getOptionLabel={(option) => option.name}
-                    renderInput={(params) => (
-                      <TextField
-                        {...params}
-                        className="input-rounded"
-                        error={error != undefined}
-                        onChange={handleSearchSubcategories}
-                        inputRef={ref}
-                        helperText={error && "campo requerido"}
-                        label="Subcategoria"
-                        variant="outlined"
+              <TextField
+                {...register("price", { required: true })}
+                className="input-rounded"
+                type="number"
+                id="input-price"
+                disabled={product && true}
+                label="Precio *"
+                error={errors.price}
+                helperText={errors.price && "El precio no es valido"}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                onChange={handlePriceChange}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <AttachMoneyRounded
+                        className={`${errors.price && "text-red-500"} `}
                       />
-                    )}
-                  />
-                )}
-                name="subcategory"
-                control={control}
+                    </InputAdornment>
+                  ),
+                }}
+                placeholder="0.00"
+                fullWidth
               />
-            </FormControl>{" "}
-            <FormControl fullWidth>
-              <Controller
-                rules={{ require: true }}
-                render={({
-                  field: { ref, onChange, ...field },
-                  fieldState: { error },
-                }) => (
-                  <Autocomplete
-                    {...field}
-                    options={brands}
-                    disableClearable
-                    onChange={(_, data) => {
-                      onChange(data);
-                    }}
-                    getOptionLabel={(option) => option.name}
-                    renderInput={(params) => (
-                      <TextField
-                        {...params}
-                        className="input-rounded"
-                        error={error != undefined}
-                        onChange={handleSearchBrands}
-                        inputRef={ref}
-                        helperText={error && "Campo requerido"}
-                        label="Marcas"
-                        variant="outlined"
-                      />
-                    )}
-                  />
-                )}
-                name="brand"
-                control={control}
+              <TextField
+                {...register("marginBenefit")}
+                className="input-rounded"
+                disabled
+                label="Margen de beneficio"
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <PercentOutlined />
+                    </InputAdornment>
+                  ),
+                }}
+                placeholder="0.00"
+                fullWidth
               />
-            </FormControl>
-          </div>
-          <div className=" p-8 space-y-6 shadow-md rounded-xl h-min">
-            <div className="flex flex-col mx-2 space-y-1">
-              <span className="font-bold tracking-wider">
-                Informacion detallada
-              </span>
-              <span className="text-sm text-neutral-500">
-                Ingresa datos especificos de tus productos.
-              </span>
             </div>
-            {!product && (
+          </div>
+
+          <div className="col-span-12 lg:col-span-4 space-y-4">
+            <div className=" p-8 space-y-6 shadow-md rounded-xl h-min">
+              <div className="flex flex-col mx-2 space-y-1">
+                <span className="font-bold tracking-wider">
+                  Informacion detallada
+                </span>
+                <span className="text-sm text-neutral-500">
+                  Ingresa datos especificos de almacen.
+                </span>
+              </div>
+              <FormControlLabel
+                className="text-xs"
+                control={<Switch defaultChecked />}
+                label="disponible"
+              />
+              <TextField
+                {...register("barCode")}
+                className="input-rounded"
+                label="Codigo"
+                InputLabelProps={{ shrink: true }}
+                placeholder="P001-C001"
+                fullWidth
+              />
               <FormControl fullWidth>
                 <Controller
                   rules={{ require: true }}
@@ -455,7 +369,7 @@ export default function ProductsForm({ product }) {
                   }) => (
                     <Autocomplete
                       {...field}
-                      options={warehouses}
+                      options={categories}
                       disableClearable
                       onChange={(_, data) => {
                         onChange(data);
@@ -466,43 +380,155 @@ export default function ProductsForm({ product }) {
                           {...params}
                           className="input-rounded"
                           error={error != undefined}
-                          onChange={handleSearchWarehouses}
+                          onChange={handleSearchCategories}
                           inputRef={ref}
                           helperText={error && "Campo requerido"}
-                          label="Almacen"
+                          label="Categoria"
                           variant="outlined"
                         />
                       )}
                     />
                   )}
-                  name="warehouse"
+                  name="category"
                   control={control}
                 />
               </FormControl>
-            )}
+              <FormControl fullWidth>
+                <Controller
+                  rules={{ require: true }}
+                  render={({
+                    field: { ref, onChange, ...field },
+                    fieldState: { error },
+                  }) => (
+                    <Autocomplete
+                      {...field}
+                      options={subCategories}
+                      disableClearable
+                      onChange={(_, data) => {
+                        onChange(data);
+                      }}
+                      getOptionLabel={(option) => option.name}
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          className="input-rounded"
+                          error={error != undefined}
+                          onChange={handleSearchSubcategories}
+                          inputRef={ref}
+                          helperText={error && "campo requerido"}
+                          label="Subcategoria"
+                          variant="outlined"
+                        />
+                      )}
+                    />
+                  )}
+                  name="subcategory"
+                  control={control}
+                />
+              </FormControl>{" "}
+              <FormControl fullWidth>
+                <Controller
+                  rules={{ require: true }}
+                  render={({
+                    field: { ref, onChange, ...field },
+                    fieldState: { error },
+                  }) => (
+                    <Autocomplete
+                      {...field}
+                      options={brands}
+                      disableClearable
+                      onChange={(_, data) => {
+                        onChange(data);
+                      }}
+                      getOptionLabel={(option) => option.name}
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          className="input-rounded"
+                          error={error != undefined}
+                          onChange={handleSearchBrands}
+                          inputRef={ref}
+                          helperText={error && "Campo requerido"}
+                          label="Marcas"
+                          variant="outlined"
+                        />
+                      )}
+                    />
+                  )}
+                  name="brand"
+                  control={control}
+                />
+              </FormControl>
+            </div>
+            <div className=" p-8 space-y-6 shadow-md rounded-xl h-min">
+              <div className="flex flex-col mx-2 space-y-1">
+                <span className="font-bold tracking-wider">
+                  Informacion detallada
+                </span>
+                <span className="text-sm text-neutral-500">
+                  Ingresa datos especificos de tus productos.
+                </span>
+              </div>
+              {!product && (
+                <FormControl fullWidth>
+                  <Controller
+                    rules={{ require: true }}
+                    render={({
+                      field: { ref, onChange, ...field },
+                      fieldState: { error },
+                    }) => (
+                      <Autocomplete
+                        {...field}
+                        options={warehouses}
+                        disableClearable
+                        onChange={(_, data) => {
+                          onChange(data);
+                        }}
+                        getOptionLabel={(option) => option.name}
+                        renderInput={(params) => (
+                          <TextField
+                            {...params}
+                            className="input-rounded"
+                            error={error != undefined}
+                            onChange={handleSearchWarehouses}
+                            inputRef={ref}
+                            helperText={error && "Campo requerido"}
+                            label="Almacen"
+                            variant="outlined"
+                          />
+                        )}
+                      />
+                    )}
+                    name="warehouse"
+                    control={control}
+                  />
+                </FormControl>
+              )}
 
-            <TextField
-              {...register("stock")}
-              className="input-rounded"
-              label="Cantidad de productos"
-              placeholder="120"
-              InputLabelProps={{
-                shrink: true,
-              }}
-              fullWidth
-            />
-          </div>
+              <TextField
+                {...register("stock")}
+                disabled={product && true}
+                className="input-rounded"
+                label="Cantidad de productos"
+                placeholder="120"
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                fullWidth
+              />
+            </div>
 
-          <div className="flex justify-center">
-            <Button
-              className=" w-full max-w-xl shadow-lg text-white z-auto rounded-xl py-2 bg-green-600 hover:bg-green-700"
-              size="medium"
-              type="submit"
-              disabled={isLoading}
-              variant="contained"
-            >
-              Guardar
-            </Button>
+            <div className="flex justify-center">
+              <Button
+                className=" w-full max-w-xl shadow-lg text-white z-auto rounded-xl py-2 bg-green-600 hover:bg-green-700"
+                size="medium"
+                type="submit"
+                disabled={isLoading}
+                variant="contained"
+              >
+                Guardar
+              </Button>
+            </div>
           </div>
         </div>
       </div>

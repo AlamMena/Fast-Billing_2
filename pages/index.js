@@ -26,23 +26,6 @@ export default function Home() {
             src="/dashboard_welcome.png"
           />
         </div>
-
-        {/* <video
-          loop
-          autoPlay="autoplay"
-          muted
-          className="rounded-xl w-40 h-full"
-        >
-          <source
-            src="https://cdn.dribbble.com/users/2163229/screenshots/16754256/media/2d429d853bcfb01a12657c471db0595f.mp4"
-            type="video/mp4"
-          />
-          <source
-            src="https://cdn.dribbble.com/users/2163229/screenshots/16754256/media/2d429d853bcfb01a12657c471db0595f.mp4"
-            type="video/ogg"
-          />
-          Your browser does not support HTML video.
-        </video> */}
       </div>
     </>
   );

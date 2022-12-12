@@ -38,6 +38,18 @@ export default function Branch() {
       fullWidth: false,
     },
     {
+      name: "category",
+      placeholder: "categoria - 001",
+      label: "Cateogria",
+      validation: {
+        required: true,
+      },
+      fullWidth: true,
+      type: "autocomplete",
+      catalogName: "categories",
+    },
+
+    {
       name: "description",
       placeholder: "Subcategorias para productos x ...",
       label: "Descripcion",
@@ -45,6 +57,19 @@ export default function Branch() {
       fullWidth: false,
     },
   ];
+
+  const formatAutoComplete = (data) => {
+    return {
+      ...data,
+      categoryId: data.category.id,
+    };
+  };
+  const formatApiResult = (data) => {
+    return {
+      ...data,
+      category: { id: data.categoryId, name: data.categoryName },
+    };
+  };
   return (
     <CPage
       cols={cols}
@@ -53,6 +78,8 @@ export default function Branch() {
       updateUrl={"subcategory"}
       postUrl={"subcategory"}
       deleteUrl={"subcategory"}
+      formatAutoComplete={formatAutoComplete}
+      formatApiResult={formatApiResult}
       createButtonMessage={"Nueva subcategoria"}
       deleteConfirmMessage="¿Estas seguro que deseas eliminar esta subcategoria?"
       headerMessage="Cada vez que un negocio se expande trae mayores desafíos para todos los niveles de operación. Maneja tus subcategorias y cada uno de sus niveles operativos."

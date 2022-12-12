@@ -68,6 +68,11 @@ const routes = [
     Icon: <AddBoxRounded />,
     items: [
       {
+        text: "Alamacenes",
+        path: "/almacenes",
+        Icon: <Inventory2Outlined />,
+      },
+      {
         text: "Productos",
         path: "/productos",
         Icon: <Inventory2Outlined />,

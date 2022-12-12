@@ -1,25 +1,67 @@
 import { ApartmentRounded } from "@mui/icons-material";
-import { useEffect } from "react";
-import { Dialog, Divider, FormControl, TextField, Button } from "@mui/material";
+import { useEffect, useState } from "react";
+import {
+  Dialog,
+  Divider,
+  FormControl,
+  TextField,
+  Button,
+  Autocomplete,
+} from "@mui/material";
 import { Controller, useForm } from "react-hook-form";
+import useAxios from "../../Axios/Axios";
 
-export default function Form({ onSave, open, setOpen, data, fields }) {
+export default function Form({
+  onSave,
+  open,
+  setOpen,
+  data,
+  fields,
+  formatAutoComplete,
+  formatApiResult,
+}) {
   const {
     handleSubmit,
     control,
     reset,
+    setValue,
     formState: { errors },
   } = useForm({
-    defaultValues: data,
+    defaultValues: { ...data, category: { id: 9, name: "" } },
   });
 
+  const [catalog, setCatalog] = useState([]);
   const onSubmit = async (data) => {
-    await onSave(data);
+    let parsedData = data;
+    if (formatAutoComplete) {
+      parsedData = formatAutoComplete(parsedData);
+      alert(JSON.stringify(parsedData));
+    }
+    await onSave(parsedData);
     // alert(JSON.stringify(data));
   };
 
+  const { axiosInstance } = useAxios();
+  const getCatalogAsync = async (catalogName, filter) => {
+    const queryFilters = `page=${1}&limit=${100}&value=${filter}`;
+    const { data: apiResponse } = await axiosInstance.get(
+      `${catalogName}?${queryFilters}`
+    );
+    let catalog = apiResponse.data;
+    setCatalog(
+      catalog.map((item) => {
+        return { id: item.id, name: item.name };
+      })
+    );
+  };
+
   useEffect(() => {
-    reset(data);
+    let parsedData = {};
+
+    if (formatApiResult) {
+      parsedData = formatApiResult(data);
+    }
+    reset(parsedData);
   }, [data]);
 
   return (
@@ -51,6 +93,45 @@ export default function Form({ onSave, open, setOpen, data, fields }) {
             </div>
 
             {fields.map((item, index) => {
+              if (item.type === "autocomplete") {
+                return (
+                  <FormControl fullWidth>
+                    <Controller
+                      rules={{ require: true }}
+                      render={({
+                        field: { ref, onChange, ...field },
+                        fieldState: { error },
+                      }) => (
+                        <Autocomplete
+                          {...field}
+                          options={catalog}
+                          disableClearable
+                          onChange={(_, data) => {
+                            onChange(data);
+                          }}
+                          getOptionLabel={(option) => option.name}
+                          renderInput={(params) => (
+                            <TextField
+                              {...params}
+                              className="input-rounded"
+                              error={error != undefined}
+                              onChange={(e) =>
+                                getCatalogAsync(item.name, e.target.value)
+                              }
+                              inputRef={ref}
+                              helperText={error && "Campo requerido"}
+                              label={item.label}
+                              variant="outlined"
+                            />
+                          )}
+                        />
+                      )}
+                      name="category"
+                      control={control}
+                    />
+                  </FormControl>
+                );
+              }
               return (
                 <Controller
                   key={index}
