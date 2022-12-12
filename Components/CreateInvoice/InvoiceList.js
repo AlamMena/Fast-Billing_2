@@ -3,11 +3,13 @@ import { InputAdornment, OutlinedInput, Tab, Tabs } from "@mui/material";
 import {
   DeleteOutline,
   EditOutlined,
+  RemoveRedEyeOutlined,
   SearchRounded,
 } from "@mui/icons-material";
 import { DataGrid, GridToolBar } from "@mui/x-data-grid";
 import { useEffect } from "react";
 import { formatCurrency } from "../../utils/methods";
+import { generatePDF, InvoicePdf } from "../Invoices/InvoicePdf";
 
 export default function InvoiceList({ data }) {
   const columns = [
@@ -37,17 +39,33 @@ export default function InvoiceList({ data }) {
     },
     {
       field: "date",
-      minWidth: 160,
+      minWidth: 180,
       flex: 1,
-      headerName: "Dia de creacion",
+      headerName: "Fecha",
     },
     {
       field: "total",
-      minWidth: 160,
+      minWidth: 120,
       flex: 1,
       headerName: "Total",
       renderCell: (cells) => {
         return <span>{formatCurrency(cells.row.total)}</span>;
+      },
+    },
+    {
+      field: "action",
+      minWidth: 60,
+      flex: 1,
+      headerName: "",
+      renderCell: (cells) => {
+        return (
+          <>
+            <div className="hidden">
+              <InvoicePdf invoice={cells.row} />
+            </div>
+            <RemoveRedEyeOutlined onClick={() => generatePDF(cells.row)} />
+          </>
+        );
       },
     },
     // {

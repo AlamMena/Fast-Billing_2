@@ -97,7 +97,7 @@ export default function Form({
             {fields.map((item, index) => {
               if (item.type === "autocomplete") {
                 return (
-                  <FormControl fullWidth>
+                  <FormControl fullWidth key={index}>
                     <Controller
                       rules={{ require: true }}
                       render={({
