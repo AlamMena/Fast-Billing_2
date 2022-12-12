@@ -24,7 +24,7 @@ const initialState = {
   invoiceDueDate: "",
   subTotal: 0,
   discountAmount: 0,
-  taxesAmount: 0,
+  taxAmount: 0,
   total: 0,
   totalPayed: 0,
   NCF: "000001",
@@ -35,7 +35,12 @@ const initialState = {
   UpdatedAt: "1970-01-01T00:00:00.021Z",
   __v: 0,
 };
-
+const calculateTaxes = (details) => {
+  return details.reduce(
+    (n, crr) => n + (crr.taxes / 100) * crr.price * crr.quantity,
+    0
+  );
+};
 const invoiceSlice = createSlice({
   name: "invoice",
   initialState: initialState,
@@ -80,6 +85,7 @@ const invoiceSlice = createSlice({
       } else {
         itemPrice.price = actions.payload.value;
       }
+      state.taxAmount = calculateTaxes(state.details);
     },
     updateItemQuantity: (state, actions) => {
       const itemQuantity = state.details.find(
@@ -90,14 +96,19 @@ const invoiceSlice = createSlice({
       } else {
         itemQuantity.quantity = actions.payload.quantity;
       }
+      state.taxAmount = calculateTaxes(state.details);
     },
     updateDiscount: (state, actions) => {
       let num = Math.abs(actions.payload);
       state.discountAmount = num;
     },
     updateTaxes: (state, actions) => {
-      let num = Math.abs(actions.payload);
-      state.taxesAmount = num;
+      // let num = Math.abs(actions.payload);
+      // state.taxesAmount = num;
+      state.taxAmount = state.details.reduce(
+        (n, crr) => n + (crr.taxes / 100) * crr.price * crr.quantity,
+        0
+      );
     },
     updatePayment: (state, { payload }) => {
       state.payments[0].amount = payload.pquantity;
@@ -121,15 +132,22 @@ const invoiceSlice = createSlice({
           price: payload.price,
           description: payload.description,
           total: payload.price,
+          discount: payload.disccount,
+          taxes: payload.tax,
         };
+
         state.details = [...state.details, newDetail];
       }
+      state.taxAmount = calculateTaxes(state.details);
+
+      // alert(JSON.stringify(state.details));
     },
     removeItem: (state, actions) => {
       state.details = state.details.filter(
         (item, i) => item.productId !== actions.payload
       );
       // alert(JSON.stringify(actions.payload));
+      state.taxAmount = calculateTaxes(state.details);
     },
     calculateSubTotal: (state) => {
       let quantity = 0;
@@ -146,7 +164,7 @@ const invoiceSlice = createSlice({
     },
     calculateTotal: (state) => {
       let totaldisc = state.subTotal - state.discountAmount;
-      let total = totaldisc + state.taxesAmount;
+      let total = totaldisc + state.taxAmount;
 
       state.total = total;
     },

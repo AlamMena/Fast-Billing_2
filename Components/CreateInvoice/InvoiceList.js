@@ -7,29 +7,49 @@ import {
 } from "@mui/icons-material";
 import { DataGrid, GridToolBar } from "@mui/x-data-grid";
 import { useEffect } from "react";
+import { formatCurrency } from "../../utils/methods";
 
 export default function InvoiceList({ data }) {
   const columns = [
     {
-      field: "total",
-      width: 260,
-      headerName: "Cliente",
+      field: "id",
+      minWidth: 150,
+      flex: 1,
+      headerName: "Id",
     },
-    // {
-    //   field: "CreatonDate",
-    //   width: 160,
-    //   headerName: "Creado",
-    // },
-    // {
-    //   field: "DueDate",
-    //   width: 160,
-    //   headerName: "Se vence",
-    // },
-    // {
-    //   field: "total",
-    //   width: 160,
-    //   headerName: "Monto",
-    // },
+    {
+      field: "clientName",
+      minWidth: 160,
+      flex: 1,
+      headerName: "Recipiente",
+    },
+    {
+      field: "invoiceTypeName",
+      minWidth: 160,
+      flex: 1,
+      headerName: "Tipo de Factura",
+    },
+    {
+      field: "ncf",
+      minWidth: 160,
+      flex: 1,
+      headerName: "NCF",
+    },
+    {
+      field: "date",
+      minWidth: 160,
+      flex: 1,
+      headerName: "Dia de creacion",
+    },
+    {
+      field: "total",
+      minWidth: 160,
+      flex: 1,
+      headerName: "Total",
+      renderCell: (cells) => {
+        return <span>{formatCurrency(cells.row.total)}</span>;
+      },
+    },
     // {
     //   field: "IsDeleted",
     //   width: "150",
@@ -77,25 +97,6 @@ export default function InvoiceList({ data }) {
   return (
     <>
       <div className="flex flex-col h-full  w-full shadow-lg rounded-xl my-3">
-        <div className=" bg-slate-200 rounded-t-lg ">
-          <Tabs
-            // value={statusTab}
-            // onChange={handleTabChange}
-            className="text-neutral-500 "
-            TabIndicatorProps={{
-              style: {
-                backgroundColor: "rgb(22 163 74 / var(--tw-text-opacity))",
-              },
-            }}
-            aria-label="secondary tabs example"
-          >
-            {/* <Tab className=" capitalize" value="All" label="Todos" />
-            <Tab className=" capitalize" value="Active" label="Pagados" />
-            <Tab className=" capitalize" value="Disable" label="No Pagados" />
-            <Tab className=" capitalize" value="Disable" label="Overdue" />
-            <Tab className=" capitalize" value="Disable" label="Borrador" /> */}
-          </Tabs>
-        </div>
         <div className="flex items-center space-x-4 px-4 my-4">
           <OutlinedInput
             id="input-with-icon-adornment"
@@ -111,19 +112,18 @@ export default function InvoiceList({ data }) {
         </div>
 
         <div className="h-96 w-full my-2">
-          {/* <DataGrid
+          <DataGrid
             components={{ Toolbar: GridToolBar }}
-            // getRowId={(row) => row._id}
-            // rows={data.data}
+            getRowId={(row) => row.id}
+            rows={data.data}
             columns={columns}
             className="p-2"
             pageSize={5}
             // loading={dataFiltered.isLoading}
-            // rowsPerPageOptions={[5]}
-            checkboxSelection
+            rowsPerPageOptions={[5]}
             disableSelectionOnClick
-            // experimentalFeatures={{ newEditingApi: true }}
-          /> */}
+            experimentalFeatures={{ newEditingApi: true }}
+          />
         </div>
       </div>
     </>

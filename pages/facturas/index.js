@@ -7,6 +7,7 @@ import InvoiceList from "../../Components/CreateInvoice/InvoiceList";
 import useAxios from "../../Axios/Axios";
 import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
+import { SellOutlined } from "@mui/icons-material";
 
 export default function Invoices() {
   const [invoices, setInvoices] = useState({
@@ -20,7 +21,6 @@ export default function Invoices() {
     try {
       const response = await axiosInstance.get("/invoices?limit=200&page=1");
       setInvoices({ isLoading: false, data: response.data.data });
-      console.log(response);
     } catch (error) {
       toast.error(`Opps!, something went wrong${error}`);
     }
@@ -46,7 +46,11 @@ export default function Invoices() {
       <div className="w-full md:px-0 px-4 md:pr-8 flex flex-col">
         <div className="flex w-full justify-between items-center pr-8">
           <div>
-            <PageHeader header="Facturas" locationRoutes={locationRoutes} />
+            <PageHeader
+              header="Facturas"
+              locationRoutes={locationRoutes}
+              Icon={<SellOutlined />}
+            />
           </div>
           <div className="flex">
             <Button

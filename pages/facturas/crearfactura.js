@@ -16,7 +16,7 @@ import {
   TextField,
 } from "@mui/material";
 import { useState, useEffect } from "react";
-import { Add, DateRangeRounded, Edit } from "@mui/icons-material";
+import { Add, DateRangeRounded, Edit, SellOutlined } from "@mui/icons-material";
 import { MobileDatePicker } from "@mui/x-date-pickers";
 import { useForm } from "react-hook-form";
 import InvoiceDetail from "../../Components/CreateInvoice/InvoiceDetails";
@@ -71,7 +71,7 @@ export default function CreateInvoice() {
     discountAmount,
     subTotal,
     total,
-    taxesAmount,
+    taxAmount,
     invoiceNo,
     details,
     recipient,
@@ -258,7 +258,11 @@ export default function CreateInvoice() {
     <div className="w-full md:px-0 px-4 md:pr-8 flex flex-col pb-5">
       <div className="flex w-full justify-between items-center pr-8 ">
         <div>
-          <PageHeader header="Crear Factura" locationRoutes={locationRoutes} />
+          <PageHeader
+            header="Crear Factura"
+            locationRoutes={locationRoutes}
+            Icon={<SellOutlined />}
+          />
         </div>
       </div>
       <SelectPopUp
@@ -624,6 +628,7 @@ export default function CreateInvoice() {
                 Taxes
               </InputLabel>
               <OutlinedInput
+                disabled
                 id="outlined-adornment-name"
                 label="Taxes"
                 onChange={(e) => dispatch(updateTaxes(e.target.value))}
@@ -662,10 +667,10 @@ export default function CreateInvoice() {
           <div className="flex justify-end p-2">
             <span className="">Taxes:</span>
             <span className=" w-32 text-right overflow-hidden">
-              {(taxesAmount <= 0 && <span>-</span>) || (
+              {(taxAmount <= 0 && <span>-</span>) || (
                 <span>
                   $
-                  {taxesAmount.toLocaleString("en-US", {
+                  {taxAmount.toLocaleString("en-US", {
                     minimumFractionDigits: 2,
                   })}{" "}
                 </span>
@@ -684,8 +689,9 @@ export default function CreateInvoice() {
           <div className="flex justify-end p-2">
             <span className="">Monto a pagar:</span>
             <span className=" w-32 text-right overflow-hidden">
-              {(totalPayed <= 0 && <span>-</span>) || (
+              {(payments[0].amount <= 0 && <span>-</span>) || (
                 <span>
+                  $
                   {payments[0].amount.toLocaleString("en-US", {
                     minimumFractionDigits: 2,
                   })}

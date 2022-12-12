@@ -109,7 +109,7 @@ export default function PaymentPopUp({ open, setPaymentPopUp }) {
                 onChange={(e) => setPaymentQuantity(e.target.value)}
                 label="Monto a pagar"
                 size="large"
-                value={payments[0].amount}
+                value={pquantity}
                 className="rounded-xl"
                 variant="outlined"
                 startAdornment={

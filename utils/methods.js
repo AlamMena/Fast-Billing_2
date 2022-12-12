@@ -8,4 +8,12 @@ function debounce(func, timeout = 800) {
   };
 }
 
-export { debounce };
+const formatter = new Intl.NumberFormat("en-US", {
+  style: "currency",
+  currency: "USD",
+});
+
+const formatCurrency = (value) => {
+  return formatter.format(value);
+};
+export { debounce, formatCurrency };
