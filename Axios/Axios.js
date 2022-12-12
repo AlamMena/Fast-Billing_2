@@ -13,7 +13,7 @@ export default function useAxios() {
   // const { data: user } = useSelector((state) => state.user);
 
   const axiosInstance = axios.create({
-    baseURL: "https://localhost:7068/api",
+    baseURL: "https://fastbilling.azurewebsites.net/api",
   });
 
   axiosInstance.interceptors.request.use(
