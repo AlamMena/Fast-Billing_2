@@ -16,17 +16,20 @@ import { useState, useEffect } from "react";
 import { updatePayment } from "../../Store/InvoiceSlice";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
+import useAxios from "../../Axios/Axios";
 
 export default function PaymentPopUp({ open, setPaymentPopUp }) {
   const invoice = useSelector((state) => state.invoice);
   const { paymentQuantity, payments, total } = invoice;
+  const { axiosInstance } = useAxios();
 
-  const [method, setMethod] = useState("cash");
+  const [method, setMethod] = useState(1);
   const [pquantity, setPaymentQuantity] = useState();
   const dispatch = useDispatch();
+  const [paymentType, setPaymentTypes] = useState([]);
 
-  const handleMethod = (value) => {
-    setMethod(value);
+  const handleMethod = (id) => {
+    setMethod(id);
     // dispatch(updateStatus(value));
   };
 
@@ -35,6 +38,16 @@ export default function PaymentPopUp({ open, setPaymentPopUp }) {
     dispatch(updatePayment(obj));
     setPaymentPopUp(false);
   };
+
+  const getPaymentTypes = async () => {
+    const { data: apiResponse } = await axiosInstance.get(`/payment/types`);
+    setPaymentTypes(apiResponse);
+    // alert(JSON.stringify(apiResponse));
+  };
+
+  useEffect(() => {
+    getPaymentTypes();
+  }, []);
 
   return (
     <>
@@ -60,7 +73,19 @@ export default function PaymentPopUp({ open, setPaymentPopUp }) {
                   </InputAdornment>
                 }
               >
-                <MenuItem value={"debit"} onClick={() => handleMethod("debit")}>
+                {paymentType.length > 0 &&
+                  paymentType.map((item) => {
+                    return (
+                      <MenuItem
+                        key={item.id}
+                        value={item.id}
+                        onClick={() => handleMethod(item.id)}
+                      >
+                        {item.name}
+                      </MenuItem>
+                    );
+                  })}
+                {/* <MenuItem value={"debit"} onClick={() => handleMethod("debit")}>
                   Tarjeta Debito
                 </MenuItem>
                 <MenuItem
@@ -71,7 +96,7 @@ export default function PaymentPopUp({ open, setPaymentPopUp }) {
                 </MenuItem>
                 <MenuItem value={"cash"} onClick={() => handleMethod("cash")}>
                   Efectivo
-                </MenuItem>
+                </MenuItem> */}
               </Select>
             </FormControl>
             <FormControl className="w-full">
@@ -84,7 +109,7 @@ export default function PaymentPopUp({ open, setPaymentPopUp }) {
                 onChange={(e) => setPaymentQuantity(e.target.value)}
                 label="Monto a pagar"
                 size="large"
-                defaultValue={pquantity}
+                value={payments[0].amount}
                 className="rounded-xl"
                 variant="outlined"
                 startAdornment={
@@ -97,7 +122,7 @@ export default function PaymentPopUp({ open, setPaymentPopUp }) {
           </FormControl>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setPaymentPopUp(false)}>Cerrar</Button>
+          {/* <Button onClick={() => setPaymentPopUp(false)}>Cerrar</Button> */}
           <Button onClick={() => upsertPaymentMethod()}>Aceptar</Button>
         </DialogActions>
       </Dialog>

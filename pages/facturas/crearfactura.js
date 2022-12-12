@@ -196,7 +196,8 @@ export default function CreateInvoice() {
         ncfTypeId === 0 ||
         warehouseId === 0 ||
         typeId === 0 ||
-        payments[0].amount < total
+        payments[0].amount < total ||
+        payments[0].amount === undefined
       ) {
         if (Object.keys(recipient) <= 0) {
           toast.error(`Porfavor agrega un recipiente`);
@@ -213,7 +214,7 @@ export default function CreateInvoice() {
         if (details.length <= 0) {
           toast.error(`Porfavor agrega al menos un detalle`);
         }
-        if (payments[0].amount < total) {
+        if (payments[0].amount < total || payments[0].amount === undefined) {
           toast.error(
             `El monto a pagar tiene que ser igual o mayor al precio a pagar`
           );

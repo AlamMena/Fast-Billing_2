@@ -19,7 +19,7 @@ const initialState = {
   },
   recipient: {},
   status: "Pagado",
-  payments: [{}],
+  payments: [{ amount: 0 }],
   invoiceCreationDate: "",
   invoiceDueDate: "",
   subTotal: 0,
@@ -101,8 +101,11 @@ const invoiceSlice = createSlice({
     },
     updatePayment: (state, { payload }) => {
       state.payments[0].amount = payload.pquantity;
-      state.payments[0].typeId = 1;
+      state.payments[0].typeId = payload.method;
     },
+    // updatePaymentType: (state, actions) => {
+    //   state.payments.typeId = actions.payload;
+    // },
     addItem: (state, { payload }) => {
       let newProduct = state.details.find(
         (item) => item.productId === payload.id
