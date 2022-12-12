@@ -7,6 +7,7 @@ import { Button } from "@mui/material";
 import ConfirmationForm from "../Globals/ConfirmationForm.js";
 import Form from "./Form.js";
 import { toast } from "react-toastify";
+import { he } from "date-fns/locale";
 export default function CPage({
   getUrl,
   postUrl,
@@ -23,6 +24,7 @@ export default function CPage({
   formatAutoComplete,
   formatApiResult,
   cols,
+  icon,
 }) {
   const [pageState, setPageState] = useState({
     isLoading: true,
@@ -139,7 +141,7 @@ export default function CPage({
               header={headerText}
               locationRoutes={locationRoutes}
               text={headerMessage}
-              Icon={<ApartmentRounded className="" />}
+              Icon={icon}
             />
           </div>
           <div className="flex">
@@ -181,6 +183,8 @@ export default function CPage({
           data={formData}
           onSave={upsertAsync}
           fields={fields}
+          icon={icon}
+          headerText={headerText}
           formatAutoComplete={formatAutoComplete}
           formatApiResult={formatApiResult}
         />

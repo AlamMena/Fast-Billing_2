@@ -190,6 +190,7 @@ export default function Index() {
             </SearchIconWrapper>
             <StyledInputBase
               placeholder="Search…"
+              className="input-rounded"
               inputProps={{ "aria-label": "search" }}
             />
           </Search>{" "}

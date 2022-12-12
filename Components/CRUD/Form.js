@@ -10,6 +10,7 @@ import {
 } from "@mui/material";
 import { Controller, useForm } from "react-hook-form";
 import useAxios from "../../Axios/Axios";
+import { stringify } from "postcss";
 
 export default function Form({
   onSave,
@@ -19,6 +20,8 @@ export default function Form({
   fields,
   formatAutoComplete,
   formatApiResult,
+  headerText,
+  icon,
 }) {
   const {
     handleSubmit,
@@ -27,7 +30,7 @@ export default function Form({
     setValue,
     formState: { errors },
   } = useForm({
-    defaultValues: { ...data, category: { id: 9, name: "" } },
+    defaultValues: data,
   });
 
   const [catalog, setCatalog] = useState([]);
@@ -56,7 +59,7 @@ export default function Form({
   };
 
   useEffect(() => {
-    let parsedData = {};
+    let parsedData = data;
 
     if (formatApiResult) {
       parsedData = formatApiResult(data);
@@ -81,13 +84,12 @@ export default function Form({
           >
             <div>
               <div className="flex items-center mb-2">
-                <div className="bg-neutral-100 rounded-full p-2">
-                  <ApartmentRounded className="text-green-400" />
-                </div>
-                <h2 className="text-xl font-bold ml-2">Sucursales </h2>
+                <div className="bg-neutral-100 rounded-full p-2">{icon}</div>
+                <h2 className="text-xl font-bold ml-2">{headerText} </h2>
               </div>
               <span className="text-sm text-black text-opacity-50">
-                Crea o edita tus sucursales y manten tu empresa organizada.
+                Crea o edita tus {headerText.toLowerCase()} y manten tu empresa
+                organizada.
               </span>
               <Divider className="mt-4" />
             </div>

@@ -1,3 +1,4 @@
+import { ApartmentOutlined } from "@mui/icons-material";
 import React from "react";
 import CPage from "../../Components/CRUD/CPage";
 
@@ -83,6 +84,7 @@ export default function Branch() {
       succesUpsertMessage={"Sucursal guardada exitosamente!"}
       successDeleteMessage={"Sucursal eliminada exitosamente!"}
       headerText={"Sucursales"}
+      icon={<ApartmentOutlined className="text-green-400" />}
       locationRoutes={locationRoutes}
     />
   );

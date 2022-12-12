@@ -21,8 +21,8 @@ export default function PrivateRouter({ children }) {
     Auth.onAuthStateChanged(function (userCredential) {
       if (userCredential) {
         setUser(userCredential);
-        setIsLoading(false);
       }
+      setIsLoading(false);
     });
   }, [user]);
 
@@ -34,5 +34,5 @@ export default function PrivateRouter({ children }) {
   } else if (!user && !isLoading) {
     return <Login />;
   }
-  return <Login />;
+  return <Loading />;
 }

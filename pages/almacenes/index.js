@@ -1,3 +1,4 @@
+import { WarehouseOutlined } from "@mui/icons-material";
 import React from "react";
 import CPage from "../../Components/CRUD/CPage";
 
@@ -59,6 +60,7 @@ export default function Branch() {
       succesUpsertMessage={"Almacen guardado exitosamente!"}
       successDeleteMessage={"Almacen eliminado exitosamente!"}
       headerText={"Almacenes"}
+      icon={<WarehouseOutlined className="text-green-400" />}
       locationRoutes={locationRoutes}
     />
   );

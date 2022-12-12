@@ -1,3 +1,4 @@
+import { CategoryOutlined } from "@mui/icons-material";
 import React from "react";
 import CPage from "../../Components/CRUD/CPage";
 
@@ -59,6 +60,7 @@ export default function Branch() {
       succesUpsertMessage={"Categoria guardada exitosamente!"}
       successDeleteMessage={"Categoria eliminada exitosamente!"}
       headerText={"Categorias"}
+      icon={<CategoryOutlined className="text-green-400" />}
       locationRoutes={locationRoutes}
     />
   );

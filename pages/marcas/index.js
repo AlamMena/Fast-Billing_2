@@ -1,3 +1,4 @@
+import { MuseumOutlined } from "@mui/icons-material";
 import React from "react";
 import CPage from "../../Components/CRUD/CPage";
 
@@ -59,6 +60,7 @@ export default function Branch() {
       succesUpsertMessage={"Marca guardada exitosamente!"}
       successDeleteMessage={"Marca eliminada exitosamente!"}
       headerText={"Marcas"}
+      icon={<MuseumOutlined />}
       locationRoutes={locationRoutes}
     />
   );

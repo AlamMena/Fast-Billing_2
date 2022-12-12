@@ -1,3 +1,4 @@
+import { AccountTreeOutlined } from "@mui/icons-material";
 import React from "react";
 import CPage from "../../Components/CRUD/CPage";
 
@@ -67,7 +68,7 @@ export default function Branch() {
   const formatApiResult = (data) => {
     return {
       ...data,
-      category: { id: data.categoryId, name: data.categoryName },
+      category: { id: data.categoryId, name: data.categoryName ?? "" },
     };
   };
   return (
@@ -86,6 +87,7 @@ export default function Branch() {
       succesUpsertMessage={"Subcategoria guardada exitosamente!"}
       successDeleteMessage={"Subcategoria eliminada exitosamente!"}
       headerText={"Subcategorias"}
+      icon={<AccountTreeOutlined className="text-green-400" />}
       locationRoutes={locationRoutes}
     />
   );
