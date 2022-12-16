@@ -4,6 +4,7 @@ import PageHeader from "../../Components/Globals/PageHeader";
 import { useState } from "react";
 import SettingsIcon from "@mui/icons-material/Settings";
 import ProfileSettings from "./perfil";
+import { SettingsOutlined } from "@mui/icons-material";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -51,10 +52,11 @@ export default function Settings() {
 
   return (
     <div className="-full md:px-0 px-4 md:pr-8 flex flex-col pb-5">
-      <div className="flex w-full justify-between items-center pr-8 ">
+      <div className="flex w-full justify-between items-center pr-8 wid">
         <PageHeader
           header="Ajustes de Perfil"
           locationRoutes={locationRoutes}
+          Icon={<SettingsOutlined />}
         />
       </div>
       <Box sx={{ borderBottom: 1, borderColor: "divider" }}>

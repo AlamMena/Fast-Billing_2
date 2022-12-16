@@ -3,7 +3,7 @@ import useAxios from "../../Axios/Axios";
 import ContactForm from "../../Components/Contacts/ContactForm";
 import PageHeader from "../../Components/Globals/PageHeader";
 import { Box, Tabs, Tab, Typography } from "@mui/material";
-import { AccountCircle, Receipt } from "@mui/icons-material";
+import { AccountCircle, Receipt, SettingsOutlined } from "@mui/icons-material";
 import ContactHistory from "../../Components/Contacts/ContactHistory";
 import { fontSize } from "@mui/system";
 
@@ -68,6 +68,7 @@ export default function UpsertContact({ id }) {
         <PageHeader
           header="Modificar Cliente"
           locationRoutes={locationRoutes}
+          Icon={<SettingsOutlined />}
         />
       </div>
       {/* <Box sx={{ borderBottom: 1, borderColor: "divider" }}>

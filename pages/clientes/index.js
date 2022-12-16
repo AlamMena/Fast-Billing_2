@@ -1,4 +1,4 @@
-import { Add } from "@mui/icons-material";
+import { Add, ContactPageOutlined } from "@mui/icons-material";
 import useAxios from "../../Axios/Axios";
 import { Button } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
@@ -87,7 +87,11 @@ export default function Contacts() {
     <div className="w-full md:px-0 px-4 md:pr-8 flex flex-col">
       <div className="flex w-full justify-between items-center pr-8">
         <div>
-          <PageHeader header="Clientes" locationRoutes={locationRoutes} />
+          <PageHeader
+            header="Clientes"
+            locationRoutes={locationRoutes}
+            Icon={<ContactPageOutlined />}
+          />
         </div>
         <div className="flex">
           <Button

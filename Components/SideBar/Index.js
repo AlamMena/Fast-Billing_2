@@ -215,10 +215,13 @@ export default function Index() {
           !open && "hidden"
         } md:flex z-50 overflow-y-auto fixed bg-white flex-col w-64 h-screen px-4 shadow-md`}
       >
-        <img
-          className=" w-8 h-8 my-4"
-          src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ3bAlqaZSh0mViahdE_MNIduBQZBWwyBEZtA&usqp=CAU"
-        ></img>
+        <div className="flex items-center space-x-4">
+          <img
+            className=" w-8 h-8 my-4"
+            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ3bAlqaZSh0mViahdE_MNIduBQZBWwyBEZtA&usqp=CAU"
+          ></img>
+          <span>Fast Billing 2</span>
+        </div>
         <div className=" px-4 py-2 my-4 flex space-x-3 bg-neutral-100 rounded-lg">
           <img
             className=" rounded-full w-12 h-12"
